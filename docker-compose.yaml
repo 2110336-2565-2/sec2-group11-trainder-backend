@@ -1,0 +1,19 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+
+  database:
+    image: mongo
+    networks:
+      - backend
+    environment:
+      MONGO_INITDB_DATABASE: trainder
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+
+networks:
+  backend: {}
