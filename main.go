@@ -2,16 +2,20 @@ package main
 
 import (
 	"net/http"
+	"trainder-api/routes"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	r := gin.Default()
-	r.GET("/hello", func(c *gin.Context) {
+	router := gin.Default()
+	router.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "hello software engineering 2",
+			"data": "Welcome to Trainder API",
 		})
 	})
-	r.Run()
+
+	routes.AuthRoute(router)
+	routes.ProtectedRoute(router)
+	router.Run(":8080")
 }
