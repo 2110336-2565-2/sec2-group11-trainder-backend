@@ -16,5 +16,6 @@ func main() {
 	})
 
 	routes.AuthRoute(router)
+	routes.ProtectedRoute(router)
 	router.Run(":8080")
 }

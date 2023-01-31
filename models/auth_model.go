@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 	"trainder-api/configs"
+	"trainder-api/utils/tokens"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -77,4 +78,16 @@ func CreateUser(username string, password string) (user User, err error) {
 
 func (user *User) VerifyPassword(password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(user.HashedPassword), []byte(password))
+}
+
+func (user *User) LoginCheck(password string) (token string, err error) {
+	err = user.VerifyPassword(password)
+	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
+		return "", err
+	}
+	token, err = tokens.GenerateToken(user.Username)
+	if err != nil {
+		return "", err
+	}
+	return token, err
 }

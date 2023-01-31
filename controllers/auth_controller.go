@@ -42,22 +42,22 @@ func Login() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input LoginInput
 		if err := c.ShouldBindJSON(&input); err != nil {
-			c.JSON(http.StatusBadRequest, responses.RegisterResponse{Status: http.StatusBadRequest, Message: "error"})
+			c.JSON(http.StatusBadRequest, responses.LoginResponse{Status: http.StatusBadRequest, Message: "error"})
 			return
 		}
 
 		user, err := models.FindUser(input.Username)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.RegisterResponse{Status: http.StatusBadRequest, Message: "user not found"})
+			c.JSON(http.StatusBadRequest, responses.LoginResponse{Status: http.StatusBadRequest, Message: "user not found"})
 			return
 		}
 
-		err = user.VerifyPassword(input.Password)
+		token, err := user.LoginCheck(input.Password)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.RegisterResponse{Status: http.StatusBadRequest, Message: "password is incorrect"})
+			c.JSON(http.StatusBadRequest, responses.LoginResponse{Status: http.StatusBadRequest, Message: "password is incorrect"})
 			return
 		}
-		c.JSON(http.StatusOK, responses.RegisterResponse{Status: http.StatusOK, Message: "logged in"})
+		c.JSON(http.StatusOK, responses.LoginResponse{Status: http.StatusOK, Message: "logged in", Token: token})
 	}
 
 }
