@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"trainder-api/controllers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,5 +14,8 @@ func main() {
 			"message": "hello software engineering 2",
 		})
 	})
-	r.Run()
+	public := r.Group("/api")
+	public.POST("/register", controllers.Register)
+
+	r.Run(":8080")
 }
