@@ -16,6 +16,15 @@ var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users"
 type User struct {
 	Username       string `bson:"username"`
 	HashedPassword string `bson:"hashedPassword"`
+	UserType       string `bson:"usertype"`
+	Firstname      string `bson:"firstname" `
+	Lastname       string `bson:"lastname"`
+	Birthdate      string `bason:"birthdate"`
+	CitizenId      string `bason:"citizenid"`
+	Gender         string `bason:"gender"`
+	PhoneNumber    string `bason:"phonenumber"`
+	Address        string `bson:"addresss"`
+	SubAddress     string `bson:"subaddresss"`
 }
 
 func FindUser(username string) (user User, err error) {
@@ -48,7 +57,7 @@ func (e *UserAlreadyExist) Error() string {
 	return "error: user already existed"
 }
 
-func CreateUser(username string, password string) (user User, err error) {
+func CreateUser(username string, password string, usertype string, firstname string, lastname string, birthdate string, citizenid string, gender string, phonenumber string, address string, subaddress string) (user User, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -70,6 +79,15 @@ func CreateUser(username string, password string) (user User, err error) {
 	user = User{
 		Username:       username,
 		HashedPassword: string(hashedPassword),
+		UserType:       usertype,
+		Firstname:      firstname,
+		Lastname:       lastname,
+		Birthdate:      birthdate,
+		CitizenId:      citizenid,
+		Gender:         gender,
+		PhoneNumber:    phonenumber,
+		Address:        address,
+		SubAddress:     subaddress,
 	}
 
 	_, err = userCollection.InsertOne(ctx, user)
