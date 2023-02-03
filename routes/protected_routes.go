@@ -11,4 +11,6 @@ func ProtectedRoute(router *gin.Engine) {
 	protected := router.Group("/protected")
 	protected.Use(middlewares.JwtAuthMiddleware())
 	protected.GET("/user", controllers.CurrentUser())
+	protected.POST("/udprof", controllers.UpdateProfile())
+
 }
