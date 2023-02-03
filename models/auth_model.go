@@ -25,6 +25,8 @@ type User struct {
 	PhoneNumber    string `bason:"phonenumber"`
 	Address        string `bson:"addresss"`
 	SubAddress     string `bson:"subaddresss"`
+	Cardnumber     string `bson:"cardnumber"`
+	CCV            string `bson:"ccv"`
 }
 
 func FindUser(username string) (user User, err error) {
