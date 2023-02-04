@@ -57,7 +57,7 @@ func Login() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, responses.LoginResponse{Status: http.StatusBadRequest, Message: "password is incorrect"})
 			return
 		}
-		c.JSON(http.StatusOK, responses.LoginResponse{Status: http.StatusOK, Message: "logged in", Token: token})
+		c.JSON(http.StatusOK, responses.LoginResponse{Status: http.StatusOK, Message: "logged in", Token: token, Username: input.Username})
 	}
 
 }
