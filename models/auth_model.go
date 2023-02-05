@@ -19,10 +19,10 @@ type User struct {
 	UserType       string `bson:"usertype"`
 	Firstname      string `bson:"firstname" `
 	Lastname       string `bson:"lastname"`
-	Birthdate      string `bason:"birthdate"`
-	CitizenId      string `bason:"citizenid"`
-	Gender         string `bason:"gender"`
-	PhoneNumber    string `bason:"phonenumber"`
+	Birthdate      string `bson:"birthdate"`
+	CitizenId      string `bson:"citizenid"`
+	Gender         string `bson:"gender"`
+	PhoneNumber    string `bson:"phonenumber"`
 	Address        string `bson:"addresss"`
 	SubAddress     string `bson:"subaddresss"`
 	Cardnumber     string `bson:"cardnumber"`

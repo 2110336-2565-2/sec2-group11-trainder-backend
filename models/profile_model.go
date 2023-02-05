@@ -10,7 +10,7 @@ import (
 	// "go.mongodb.org/mongo-driver/mongo"
 )
 
-func FindProflie(username string) (userProfile bson.M, err error) {
+func FindProfile(username string) (userProfile bson.M, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	var result bson.M

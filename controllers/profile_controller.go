@@ -34,7 +34,8 @@ func UpdateProfile() gin.HandlerFunc {
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, responses.ProfileResponses{
 				Status:  http.StatusBadRequest,
-				Message: err.Error()})
+				Message: err.Error(),
+			})
 			return
 		}
 		username, err := tokens.ExtractTokenUsername(c)
@@ -90,7 +91,7 @@ func GetProfile() gin.HandlerFunc {
 			return
 		}
 
-		result, err := models.FindProflie(username)
+		result, err := models.FindProfile(username)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
 				Status:  http.StatusBadRequest,
@@ -100,8 +101,8 @@ func GetProfile() gin.HandlerFunc {
 		}
 
 		c.JSON(http.StatusOK, responses.GetProfileResponses{
-			Status:       http.StatusOK,
-			Profile_info: result,
+			Status:      http.StatusOK,
+			ProfileInfo: result,
 		})
 	}
 }
