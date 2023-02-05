@@ -17,16 +17,14 @@ type User struct {
 	Username       string `bson:"username"`
 	HashedPassword string `bson:"hashedPassword"`
 	UserType       string `bson:"usertype"`
-	Firstname      string `bson:"firstname" `
-	Lastname       string `bson:"lastname"`
-	Birthdate      string `bson:"birthdate"`
+	FirstName      string `bson:"firstname" `
+	LastName       string `bson:"lastname"`
+	BirthDate      string `bson:"birthdate"`
 	CitizenId      string `bson:"citizenid"`
 	Gender         string `bson:"gender"`
 	PhoneNumber    string `bson:"phonenumber"`
 	Address        string `bson:"addresss"`
 	SubAddress     string `bson:"subaddresss"`
-	Cardnumber     string `bson:"cardnumber"`
-	CCV            string `bson:"ccv"`
 }
 
 func FindUser(username string) (user User, err error) {
@@ -59,7 +57,7 @@ func (e *UserAlreadyExist) Error() string {
 	return "error: user already existed"
 }
 
-func CreateUser(username string, password string, usertype string, firstname string, lastname string, birthdate string, citizenid string, gender string, phonenumber string, address string, subaddress string) (user User, err error) {
+func CreateUser(username string, password string, userType string, firstName string, lastName string, birthDate string, citizenID string, gender string, phoneNumber string, address string, subAddress string) (user User, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -81,15 +79,15 @@ func CreateUser(username string, password string, usertype string, firstname str
 	user = User{
 		Username:       username,
 		HashedPassword: string(hashedPassword),
-		UserType:       usertype,
-		Firstname:      firstname,
-		Lastname:       lastname,
-		Birthdate:      birthdate,
-		CitizenId:      citizenid,
+		UserType:       userType,
+		FirstName:      firstName,
+		LastName:       lastName,
+		BirthDate:      birthDate,
+		CitizenId:      citizenID,
 		Gender:         gender,
-		PhoneNumber:    phonenumber,
+		PhoneNumber:    phoneNumber,
 		Address:        address,
-		SubAddress:     subaddress,
+		SubAddress:     subAddress,
 	}
 
 	_, err = userCollection.InsertOne(ctx, user)
