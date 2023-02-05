@@ -1,21 +1,14 @@
 package controllers
 
 import (
-	"trainder-api/configs"
 	"trainder-api/models"
 	"trainder-api/responses"
 	"trainder-api/utils/tokens"
 
-	"context"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
-
-var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
 
 type ProfileInput struct {
 	FirstName   string `json:"firstname" binding:"required"`
@@ -46,24 +39,7 @@ func UpdateProfile() gin.HandlerFunc {
 			})
 			return
 		}
-		//update mongo
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		defer cancel()
-		result, err := userCollection.UpdateOne(
-			ctx,
-			bson.M{"username": username},
-			bson.M{"$set": bson.M{
-				"firstname":   input.FirstName,
-				"lastname":    input.LastName,
-				"birthdate":   input.BirthDate,
-				"citizenid":   input.CitizenId,
-				"gender":      input.Gender,
-				"phonenumber": input.PhoneNumber,
-				"addressss":   input.Address,
-				"subaddresss": input.SubAddress,
-			}},
-		)
-		_ = result
+		_, err = models.UpdateUserProfile(username, input.FirstName, input.LastName, input.BirthDate, input.CitizenId, input.Gender, input.PhoneNumber, input.Address, input.SubAddress)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
 				Status:  http.StatusBadRequest,
