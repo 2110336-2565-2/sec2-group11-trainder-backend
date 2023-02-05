@@ -20,7 +20,7 @@ var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users"
 type ProfileInput struct {
 	FirstName   string `json:"firstname" binding:"required"`
 	LastName    string `json:"lastname" binding:"required"`
-	Birthdate   string `json:"birthdate" binding:"required"`
+	BirthDate   string `json:"birthdate" binding:"required"`
 	CitizenId   string `json:"citizenid" binding:"required"`
 	Gender      string `json:"gender" binding:"required"`
 	PhoneNumber string `json:"phonenumber" binding:"required"`
@@ -55,7 +55,7 @@ func UpdateProfile() gin.HandlerFunc {
 			bson.M{"$set": bson.M{
 				"firstname":   input.FirstName,
 				"lastname":    input.LastName,
-				"birthdate":   input.Birthdate,
+				"birthdate":   input.BirthDate,
 				"citizenid":   input.CitizenId,
 				"gender":      input.Gender,
 				"phonenumber": input.PhoneNumber,
