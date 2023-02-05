@@ -17,7 +17,7 @@ type RegisterInput struct {
 	Birthdate   string `json:"birthdate" binding:"required"`
 	CitizenId   string `jason:"citizenid" binding:"required"`
 	Gender      string `jason:"gender" binding:"required"`
-	PhoneNumber string `jason:"phonenumber" binding:"required"`
+	PhoneNumber string `json:"phonenumber" binding:"required"`
 	Address     string `json:"address" binding:"required"`
 	SubAddress  string `json:"subaddress" binding:"required"`
 }
