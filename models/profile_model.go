@@ -4,10 +4,7 @@ import (
 	"context"
 	"time"
 
-	// "trainder-api/configs"
-
 	"go.mongodb.org/mongo-driver/bson"
-	// "go.mongodb.org/mongo-driver/mongo"
 )
 
 func FindProfile(username string) (userProfile bson.M, err error) {
