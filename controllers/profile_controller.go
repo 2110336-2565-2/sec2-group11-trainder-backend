@@ -18,9 +18,9 @@ import (
 var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
 
 type ProfileInput struct {
-	Firstname   string `json:"firstname" binding:"required"`
-	Lastname    string `json:"lastname" binding:"required"`
-	Birthdate   string `jason:"birthdate" binding:"required"`
+	FirstName   string `json:"firstname" binding:"required"`
+	LastName    string `json:"lastname" binding:"required"`
+	Birthdate   string `json:"birthdate" binding:"required"`
 	CitizenId   string `json:"citizenid" binding:"required"`
 	Gender      string `json:"gender" binding:"required"`
 	PhoneNumber string `json:"phonenumber" binding:"required"`
@@ -30,7 +30,6 @@ type ProfileInput struct {
 
 func UpdateProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// fmt.Println("test")
 		var input ProfileInput
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, responses.ProfileResponses{
@@ -38,7 +37,7 @@ func UpdateProfile() gin.HandlerFunc {
 				Message: err.Error()})
 			return
 		}
-		Username, err := tokens.ExtractTokenUsername(c)
+		username, err := tokens.ExtractTokenUsername(c)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
 				Status:  http.StatusBadRequest,
@@ -51,10 +50,10 @@ func UpdateProfile() gin.HandlerFunc {
 		defer cancel()
 		result, err := userCollection.UpdateOne(
 			ctx,
-			bson.M{"username": Username},
+			bson.M{"username": username},
 			bson.M{"$set": bson.M{
-				"firstname":   input.Firstname,
-				"lastname":    input.Lastname,
+				"firstname":   input.FirstName,
+				"lastname":    input.LastName,
 				"birthdate":   input.Birthdate,
 				"citizenid":   input.CitizenId,
 				"gender":      input.Gender,
@@ -75,16 +74,13 @@ func UpdateProfile() gin.HandlerFunc {
 		c.JSON(http.StatusCreated,
 			responses.ProfileResponses{
 				Status:  http.StatusCreated,
-				Message: Username + ` update success!`,
+				Message: username + ` update success!`,
 			})
 	}
 }
 
 func GetProfile() gin.HandlerFunc {
-	// fmt.Println("GetProfile222222")
 	return func(c *gin.Context) {
-		// fmt.Println("GetProfile")
-
 		username, err := tokens.ExtractTokenUsername(c)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
@@ -102,7 +98,6 @@ func GetProfile() gin.HandlerFunc {
 			})
 			return
 		}
-		// fmt.Println("Retrieved user profile information for", username, ":", result)
 
 		c.JSON(http.StatusOK, responses.GetProfileResponses{
 			Status:       http.StatusOK,
