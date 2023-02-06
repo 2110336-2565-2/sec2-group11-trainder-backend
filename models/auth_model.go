@@ -14,17 +14,19 @@ import (
 var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
 
 type User struct {
-	Username       string `bson:"username"`
-	HashedPassword string `bson:"hashedPassword"`
-	UserType       string `bson:"usertype"`
-	FirstName      string `bson:"firstname" `
-	LastName       string `bson:"lastname"`
-	BirthDate      string `bson:"birthdate"`
-	CitizenId      string `bson:"citizenId"`
-	Gender         string `bson:"gender"`
-	PhoneNumber    string `bson:"phoneNumber"`
-	Address        string `bson:"address"`
-	SubAddress     string `bson:"subAddress"`
+	Username       string    `bson:"username"`
+	HashedPassword string    `bson:"hashedPassword"`
+	UserType       string    `bson:"usertype"`
+	FirstName      string    `bson:"firstname" `
+	LastName       string    `bson:"lastname"`
+	BirthDate      string    `bson:"birthdate"`
+	CitizenId      string    `bson:"citizenId"`
+	Gender         string    `bson:"gender"`
+	PhoneNumber    string    `bson:"phoneNumber"`
+	Address        string    `bson:"address"`
+	SubAddress     string    `bson:"subAddress"`
+	CreatedAt      time.Time `bson:"createdAt"`
+	UpdatedAt      time.Time `bson:"updatedAt"`
 }
 
 func FindUser(username string) (user User, err error) {
@@ -88,6 +90,8 @@ func CreateUser(username string, password string, userType string, firstName str
 		PhoneNumber:    phoneNumber,
 		Address:        address,
 		SubAddress:     subAddress,
+		CreatedAt:      time.Now(),
+		UpdatedAt:      time.Now(),
 	}
 
 	_, err = userCollection.InsertOne(ctx, user)
