@@ -56,6 +56,14 @@ func UpdateProfile() gin.HandlerFunc {
 			})
 			return
 		}
+		err = models.ProfileConditionCheck(input.FirstName, input.LastName, input.BirthDate, input.CitizenId, input.Gender, input.PhoneNumber)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
 		_, err = models.UpdateUserProfile(username, input.FirstName, input.LastName, input.BirthDate, input.CitizenId, input.Gender, input.PhoneNumber, input.Address, input.SubAddress)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
