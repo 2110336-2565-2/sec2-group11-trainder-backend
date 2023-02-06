@@ -88,15 +88,15 @@ func GetProfile() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
 				Status:  http.StatusBadRequest,
-				Message: `cannot find this user profile`,
+				Message: `User profile retrieval unsuccessful`,
 			})
 			return
 		}
 
 		c.JSON(http.StatusFound, responses.GetProfileResponses{
-			Status: http.StatusFound,
-			User: result,
+			Status:  http.StatusFound,
+			Message: `Successfully retrieve user profile`,
+			User:    result,
 		})
-		_ = result
 	}
 }

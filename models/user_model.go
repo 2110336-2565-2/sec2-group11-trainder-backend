@@ -2,7 +2,6 @@ package models
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -23,9 +22,7 @@ func FindProfile(username string) (resultMap map[string]interface{}, err error) 
 	delete(result, "updatedAt")
 	delete(result, "hashedPassword")
 	resultMap = result
-	for k, v := range resultMap {
-		fmt.Println(k, "value is", v)
-	}
+
 	return resultMap, nil
 
 }
