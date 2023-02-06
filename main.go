@@ -6,6 +6,7 @@ import (
 	// "trainder-api/configs"
 	"trainder-api/routes"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	// "trainder-api/controllers" //nat edited
 	// "go.mongodb.org/mongo-driver/bson"//nat edited
@@ -14,6 +15,11 @@ import (
 
 func main() {
 	router := gin.Default()
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AddAllowHeaders("Origin", "Authorization")
+	router.Use(cors.New(config))
+
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"data": "Welcome to Trainder API",
