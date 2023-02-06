@@ -5,6 +5,7 @@ import (
 	"time"
 	"trainder-api/configs"
 	"trainder-api/utils/tokens"
+	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -19,7 +20,7 @@ type User struct {
 	UserType       string    `bson:"usertype"`
 	FirstName      string    `bson:"firstname" `
 	LastName       string    `bson:"lastname"`
-	BirthDate      string    `bson:"birthdate"`
+	BirthDate      time.Time `bson:"birthdate"`
 	CitizenId      string    `bson:"citizenId"`
 	Gender         string    `bson:"gender"`
 	PhoneNumber    string    `bson:"phoneNumber"`
@@ -77,6 +78,12 @@ func CreateUser(username string, password string, userType string, firstName str
 	if err != nil {
 		return user, err
 	}
+	layout := "2006-01-02"
+	date, error := time.Parse(layout, birthDate)
+
+	if error != nil {
+		return user, err
+	}
 
 	user = User{
 		Username:       username,
@@ -84,7 +91,7 @@ func CreateUser(username string, password string, userType string, firstName str
 		UserType:       userType,
 		FirstName:      firstName,
 		LastName:       lastName,
-		BirthDate:      birthDate,
+		BirthDate:      date,
 		CitizenId:      citizenID,
 		Gender:         gender,
 		PhoneNumber:    phoneNumber,
