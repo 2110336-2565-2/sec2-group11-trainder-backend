@@ -47,6 +47,16 @@ type LoginInput struct {
 	Password string `json:"password" binding:"required"`
 }
 
+// Login godoc
+//
+//	@Summary		Login
+//	@Description	login with username and password
+//	@Tags			authentication
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	responses.LoginResponse
+//
+//	@Router			/login [post]
 func Login() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input LoginInput
