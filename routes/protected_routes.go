@@ -12,5 +12,5 @@ func ProtectedRoute(router *gin.Engine) {
 	protected.Use(middlewares.JwtAuthMiddleware())
 	protected.GET("/user", controllers.CurrentUser())
 	protected.POST("/update-profile", controllers.UpdateProfile())
-	protected.GET("/get-profile", controllers.GetProfile())
+	protected.GET("/profile", controllers.GetProfile())
 }
