@@ -9,8 +9,17 @@ import (
 )
 
 type RegisterInput struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Username    string `json:"username" binding:"required"`
+	Password    string `json:"password" binding:"required"`
+	UserType    string `json:"usertype" binding:"required"`
+	Firstname   string `json:"firstname" binding:"required"`
+	Lastname    string `json:"lastname" binding:"required"`
+	Birthdate   string `json:"birthdate" binding:"required"`
+	CitizenId   string `json:"citizenId" binding:"required"`
+	Gender      string `json:"gender" binding:"required"`
+	PhoneNumber string `json:"phoneNumber" binding:"required"`
+	Address     string `json:"address" binding:"required"`
+	SubAddress  string `json:"subAddress" binding:"required"`
 }
 
 func Register() gin.HandlerFunc {
@@ -22,7 +31,7 @@ func Register() gin.HandlerFunc {
 			return
 		}
 
-		_, err := models.CreateUser(input.Username, input.Password)
+		_, err := models.CreateUser(input.Username, input.Password, input.UserType, input.Firstname, input.Lastname, input.Birthdate, input.CitizenId, input.Gender, input.PhoneNumber, input.Address, input.SubAddress)
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, responses.RegisterResponse{Status: http.StatusInternalServerError, Message: err.Error()})

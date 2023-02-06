@@ -14,8 +14,19 @@ import (
 var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
 
 type User struct {
-	Username       string `bson:"username"`
-	HashedPassword string `bson:"hashedPassword"`
+	Username       string    `bson:"username"`
+	HashedPassword string    `bson:"hashedPassword"`
+	UserType       string    `bson:"usertype"`
+	FirstName      string    `bson:"firstname" `
+	LastName       string    `bson:"lastname"`
+	BirthDate      time.Time `bson:"birthdate"`
+	CitizenId      string    `bson:"citizenId"`
+	Gender         string    `bson:"gender"`
+	PhoneNumber    string    `bson:"phoneNumber"`
+	Address        string    `bson:"address"`
+	SubAddress     string    `bson:"subAddress"`
+	CreatedAt      time.Time `bson:"createdAt"`
+	UpdatedAt      time.Time `bson:"updatedAt"`
 }
 
 func FindUser(username string) (user User, err error) {
@@ -48,7 +59,7 @@ func (e *UserAlreadyExist) Error() string {
 	return "error: user already existed"
 }
 
-func CreateUser(username string, password string) (user User, err error) {
+func CreateUser(username string, password string, userType string, firstName string, lastName string, birthDate string, citizenID string, gender string, phoneNumber string, address string, subAddress string) (user User, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -66,10 +77,27 @@ func CreateUser(username string, password string) (user User, err error) {
 	if err != nil {
 		return user, err
 	}
+	layout := "2006-01-02"
+	date, error := time.Parse(layout, birthDate)
+
+	if error != nil {
+		return user, err
+	}
 
 	user = User{
 		Username:       username,
 		HashedPassword: string(hashedPassword),
+		UserType:       userType,
+		FirstName:      firstName,
+		LastName:       lastName,
+		BirthDate:      date,
+		CitizenId:      citizenID,
+		Gender:         gender,
+		PhoneNumber:    phoneNumber,
+		Address:        address,
+		SubAddress:     subAddress,
+		CreatedAt:      time.Now(),
+		UpdatedAt:      time.Now(),
 	}
 
 	_, err = userCollection.InsertOne(ctx, user)
