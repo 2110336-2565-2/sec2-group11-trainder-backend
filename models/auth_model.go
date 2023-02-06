@@ -20,11 +20,11 @@ type User struct {
 	FirstName      string `bson:"firstname" `
 	LastName       string `bson:"lastname"`
 	BirthDate      string `bson:"birthdate"`
-	CitizenId      string `bson:"citizenid"`
+	CitizenId      string `bson:"citizenId"`
 	Gender         string `bson:"gender"`
-	PhoneNumber    string `bson:"phonenumber"`
-	Address        string `bson:"addresss"`
-	SubAddress     string `bson:"subaddresss"`
+	PhoneNumber    string `bson:"phoneNumber"`
+	Address        string `bson:"address"`
+	SubAddress     string `bson:"subAddress"`
 }
 
 func FindUser(username string) (user User, err error) {

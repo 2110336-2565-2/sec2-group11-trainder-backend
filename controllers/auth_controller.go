@@ -15,11 +15,11 @@ type RegisterInput struct {
 	Firstname   string `json:"firstname" binding:"required"`
 	Lastname    string `json:"lastname" binding:"required"`
 	Birthdate   string `json:"birthdate" binding:"required"`
-	CitizenId   string `json:"citizenid" binding:"required"`
+	CitizenId   string `json:"citizenId" binding:"required"`
 	Gender      string `json:"gender" binding:"required"`
-	PhoneNumber string `json:"phonenumber" binding:"required"`
+	PhoneNumber string `json:"phoneNumber" binding:"required"`
 	Address     string `json:"address" binding:"required"`
-	SubAddress  string `json:"subaddress" binding:"required"`
+	SubAddress  string `json:"subAddress" binding:"required"`
 }
 
 func Register() gin.HandlerFunc {

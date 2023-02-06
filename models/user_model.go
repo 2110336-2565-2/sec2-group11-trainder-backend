@@ -32,7 +32,7 @@ func UpdateUserProfile(username string, firstName string, lastName string, birth
 			"gender":      gender,
 			"phonenumber": phoneNumber,
 			"address":     address,
-			"subaddresss": subAddress,
+			"subaddress": subAddress,
 		}},
 	)
 	return result, err
