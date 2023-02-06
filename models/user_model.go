@@ -2,19 +2,31 @@ package models
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func FindProfile(username string) (userProfile bson.M, err error) {
+func FindProfile(username string) (resultMap map[string]interface{}, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	var result bson.M
 	err = userCollection.FindOne(ctx, bson.M{"username": username}).Decode(&result)
+	if err != nil {
+		return nil, err
+	}
 
-	return result, err
+	delete(result, "_id")
+	delete(result, "createdAt")
+	delete(result, "updatedAt")
+	delete(result, "hashedPassword")
+	resultMap = result
+	for k, v := range resultMap {
+		fmt.Println(k, "value is", v)
+	}
+	return resultMap, nil
 
 }
 
@@ -41,7 +53,7 @@ func UpdateUserProfile(username string, firstName string, lastName string, birth
 			"phoneNumber": phoneNumber,
 			"address":     address,
 			"subAddress":  subAddress,
-			"updatedAt":    time.Now(),
+			"updatedAt":   time.Now(),
 		}},
 	)
 	return

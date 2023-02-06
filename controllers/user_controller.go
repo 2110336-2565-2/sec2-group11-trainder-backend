@@ -3,9 +3,9 @@ package controllers
 import (
 	"net/http"
 
+	"trainder-api/models"
 	"trainder-api/responses"
 	"trainder-api/utils/tokens"
-	"trainder-api/models"
 
 	"github.com/gin-gonic/gin"
 )
@@ -93,10 +93,10 @@ func GetProfile() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, responses.GetProfileResponses{
-			Status:      http.StatusOK,
-			ProfileInfo: result,
+		c.JSON(http.StatusFound, responses.GetProfileResponses{
+			Status: http.StatusFound,
+			User: result,
 		})
+		_ = result
 	}
 }
-
