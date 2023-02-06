@@ -31,11 +31,11 @@ type ProfileInput struct {
 	FirstName   string `json:"firstname" binding:"required"`
 	LastName    string `json:"lastname" binding:"required"`
 	BirthDate   string `json:"birthdate" binding:"required"`
-	CitizenId   string `json:"citizenid" binding:"required"`
+	CitizenId   string `json:"citizenId" binding:"required"`
 	Gender      string `json:"gender" binding:"required"`
-	PhoneNumber string `json:"phonenumber" binding:"required"`
-	Address     string `json:"addresss" binding:"required"`
-	SubAddress  string `json:"subaddresss" binding:"required"`
+	PhoneNumber string `json:"phoneNumber" binding:"required"`
+	Address     string `json:"address" binding:"required"`
+	SubAddress  string `json:"subAddress" binding:"required"`
 }
 
 func UpdateProfile() gin.HandlerFunc {

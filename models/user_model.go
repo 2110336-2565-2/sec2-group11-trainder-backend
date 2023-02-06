@@ -21,19 +21,28 @@ func FindProfile(username string) (userProfile bson.M, err error) {
 func UpdateUserProfile(username string, firstName string, lastName string, birthDate string, citizenID string, gender string, phoneNumber string, address string, subAddress string) (result *mongo.UpdateResult, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
+
+	layout := "2006-01-02"
+	date, error := time.Parse(layout, birthDate)
+
+	if error != nil {
+		return
+	}
+
 	result, err = userCollection.UpdateOne(
 		ctx,
 		bson.M{"username": username},
 		bson.M{"$set": bson.M{
 			"firstname":   firstName,
 			"lastname":    lastName,
-			"birthdate":   birthDate,
-			"citizenid":   citizenID,
+			"birthdate":   date,
+			"citizenId":   citizenID,
 			"gender":      gender,
-			"phonenumber": phoneNumber,
+			"phoneNumber": phoneNumber,
 			"address":     address,
-			"subaddress": subAddress,
+			"subAddress":  subAddress,
+			"updatedAt":    time.Now(),
 		}},
 	)
-	return result, err
+	return
 }
