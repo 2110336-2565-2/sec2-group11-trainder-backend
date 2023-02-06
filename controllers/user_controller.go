@@ -98,5 +98,6 @@ func GetProfile() gin.HandlerFunc {
 			Message: `Successfully retrieve user profile`,
 			User:    result,
 		})
+		_ = result
 	}
 }
