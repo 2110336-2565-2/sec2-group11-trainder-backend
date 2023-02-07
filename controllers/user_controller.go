@@ -77,9 +77,9 @@ func UpdateProfile() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusCreated,
+		c.JSON(http.StatusOK,
 			responses.ProfileResponses{
-				Status:  http.StatusCreated,
+				Status:  http.StatusOK,
 				Message: username + ` update success!`,
 			})
 	}
@@ -131,8 +131,8 @@ func GetTrainer() gin.HandlerFunc {
 			})
 			return
 		}
-		c.JSON(http.StatusFound, responses.GetProfileResponses{
-			Status:  http.StatusFound,
+		c.JSON(http.StatusOK, responses.GetProfileResponses{
+			Status:  http.StatusOK,
 			Message: `Successfully retrieve trainer profile`,
 			User:    result,
 		})
