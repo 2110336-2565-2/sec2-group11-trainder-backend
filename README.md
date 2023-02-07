@@ -39,7 +39,24 @@ go install github.com/swaggo/swag/cmd/swag@latest
 
 ## Development using Docker
 
-1. Build the image `docker build -t trainder-api .
-2. Run the built images `docker run -p 8080:8080 -it trainder-api`
+With docker the development process can be easier. The database and the go environment will be automatically set up for you.
+You will need docker and docker-compose. The processes for running using docker as as follows.
+
+1. Build the images
+
+```sh
+docker-compose build
+```
+
+2. Start the service by
+
+```sh
+docker-compose up
+```
 
 The API will be available at [localhost:8080](http://localhost:8080)
+
+### Notes about using docker
+
+When you build the images all of the file of this repository will be copied to the container. Then the go compiler will be run in the container.
+Which means if you made change to the code **you must re run** `docker-compose build`

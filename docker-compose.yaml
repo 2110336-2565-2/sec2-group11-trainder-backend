@@ -5,9 +5,18 @@ services:
       - "8080:8080"
     networks:
       - backend
+    environment:
+      TRAINDER_DO_NOT_USE_DOTENV: true
+      MONGO_URI: mongodb://root:password@trainder-mongo:27017
+      MONGO_DATABASE_NAME: trainder
+      TOKEN_HOUR_LIFESPAN: 1
+      API_SECRET: YOUR_API_SECRET
 
   database:
-    image: mongo
+    image: mongo:6.0.4-jammy
+    container_name: trainder-mongo
+    ports:
+      - "27017:27017"
     networks:
       - backend
     environment:
