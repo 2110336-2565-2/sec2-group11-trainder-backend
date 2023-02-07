@@ -41,6 +41,86 @@
                 }
             }
         },
+        "/protected/profile": {
+            "get": {
+                "description": "getProfile of the current user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "getProfile of the current user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.GetProfileResponses"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/update-profile": {
+            "post": {
+                "description": "updateProfile of the current user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "updateProfile of the current user",
+                "parameters": [
+                    {
+                        "description": "put profile input json and pass to  gin.Context",
+                        "name": "json_in_ginContext",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ProfileInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ProfileResponses"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/user": {
+            "get": {
+                "description": "get the current user's username.  After getting token replied from logging in, put token in ginContext's token field",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "get the current user's username",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.CurrentUserResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/register": {
             "post": {
                 "description": "Register with username,password,UserType [\"trainer\",\"trainee\"],Firstname,Lastname,Birthdate (\"yyyy-mm-dd\"),CitizenId (len == 13),Gender [\"Male\",\"Female\",\"Other\"],PhoneNumber (len ==10),Address,SubAddress",
