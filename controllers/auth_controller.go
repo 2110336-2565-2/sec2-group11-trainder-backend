@@ -22,6 +22,17 @@ type RegisterInput struct {
 	SubAddress  string `json:"subAddress" binding:"required"`
 }
 
+// @Summary		Register user
+// @Description	Register with username,password,UserType ["trainer","trainee"],Firstname,Lastname,Birthdate ("yyyy-mm-dd"),CitizenId (len == 13),Gender ["Male","Female","Other"],PhoneNumber (len ==10),Address,SubAddress
+// @Tags		authentication
+// @ID			register-user
+// @Accept		json
+// @Produce		json
+//
+//	@Param   	json_in_ginContext     body    RegisterInput     true  "put register input and pass to  gin.Context"
+//
+// @Success		200	{object}	responses.RegisterResponse
+// @Router		/register [post]
 func Register() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
@@ -54,6 +65,7 @@ type LoginInput struct {
 //	@Tags			authentication
 //	@Accept			json
 //	@Produce		json
+//	@Param   		json_in_ginContext     body    LoginInput     true  "put login input and pass to  gin.Context"
 //	@Success		200	{object}	responses.LoginResponse
 //
 //	@Router			/login [post]

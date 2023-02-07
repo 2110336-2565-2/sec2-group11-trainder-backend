@@ -37,6 +37,38 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/register": {
+            "post": {
+                "description": "Register with username,password,UserType,Firstname,Lastname,Birthdate,CitizenId,Gender,PhoneNumber,Address,SubAddress",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "authentication"
+                ],
+                "summary": "Register user",
+                "operationId": "register-user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "string example",
+                        "name": "example",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.RegisterResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -54,6 +86,17 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "responses.RegisterResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         }
