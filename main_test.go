@@ -60,10 +60,6 @@ func TestRegisterHandler(t *testing.T) {
 
 }
 
-func SetupRouter() {
-	panic("unimplemented")
-}
-
 func TestLoginHandler(t *testing.T) {
 	r := SetUpRouter()
 	r.POST("/login", controllers.Login())
