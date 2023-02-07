@@ -105,8 +105,8 @@ func GetProfile() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusFound, responses.GetProfileResponses{
-			Status:  http.StatusFound,
+		c.JSON(http.StatusOK, responses.GetProfileResponses{
+			Status:  http.StatusOK,
 			Message: `Successfully retrieve user profile`,
 			User:    result,
 		})
