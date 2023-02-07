@@ -1,9 +1,5 @@
 package responses
 
-import (
-	"go.mongodb.org/mongo-driver/bson"
-)
-
 type CurrentUserResponse struct {
 	Status   int    `json:"status"`
 	Message  string `json:"message,omitempty"`
@@ -16,6 +12,7 @@ type ProfileResponses struct {
 }
 
 type GetProfileResponses struct {
-	Status      int    `json:"status"`
-	ProfileInfo bson.M `bson:"message,omitempty"`
+	Status  int                 `json:"status"`
+	Message string              `json:"message,omitempty"`
+	User    map[string]interface{} `json:"user,omitempty"`
 }
