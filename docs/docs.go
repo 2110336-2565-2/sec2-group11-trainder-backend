@@ -62,17 +62,6 @@ const docTemplate = `{
                     "user"
                 ],
                 "summary": "getProfile of the current user",
-                "parameters": [
-                    {
-                        "description": "put token and pass to  gin.Context",
-                        "name": "token_in_ginContext",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -97,15 +86,6 @@ const docTemplate = `{
                 ],
                 "summary": "updateProfile of the current user",
                 "parameters": [
-                    {
-                        "description": "put token and pass to  gin.Context",
-                        "name": "token_in_ginContext",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
                     {
                         "description": "put profile input json and pass to  gin.Context",
                         "name": "json_in_ginContext",
@@ -139,17 +119,6 @@ const docTemplate = `{
                     "user"
                 ],
                 "summary": "get the current user's username",
-                "parameters": [
-                    {
-                        "description": "put token and pass to  gin.Context",
-                        "name": "token_in_ginContext",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",

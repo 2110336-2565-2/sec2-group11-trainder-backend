@@ -17,7 +17,6 @@ import (
 //	@Tags			user
 //	@Accept			json
 //	@Produce		json
-//	@Param   		token_in_ginContext     body    string     true  "put token and pass to  gin.Context"
 //	@Success		200	{object}	responses.CurrentUserResponse
 //
 //	@Router			/protected/user [get]
@@ -56,7 +55,6 @@ type ProfileInput struct {
 //	@Tags			user
 //	@Accept			json
 //	@Produce		json
-//	@Param 			token_in_ginContext     body    string     true  "put token and pass to  gin.Context"
 //	@Param   		json_in_ginContext     body    ProfileInput     true  "put profile input json and pass to  gin.Context"
 //	@Success		200	{object}	responses.ProfileResponses
 //
@@ -111,7 +109,6 @@ func UpdateProfile() gin.HandlerFunc {
 //	@Tags			user
 //	@Accept			json
 //	@Produce		json
-//	@Param 			token_in_ginContext     body    string     true  "put token and pass to  gin.Context"
 //	@Success		200	{object}	responses.GetProfileResponses
 //
 //	@Router			/protected/profile [get]
