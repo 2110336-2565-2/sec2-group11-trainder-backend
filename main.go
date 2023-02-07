@@ -46,6 +46,11 @@ func main() {
 	// router.Run(":8080")
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+<<<<<<< HEAD
 	// router.Run(":8080")
 	router.Run("127.0.0.1:8080")
+=======
+	router.Run(":8080")
+	// router.Run("127.0.0.1:8080")
+>>>>>>> 3ea37127235db70002246fa4fb7584dea51eb65e
 }
