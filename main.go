@@ -1,9 +1,7 @@
 package main
 
 import (
-	// "fmt"
 	"net/http"
-	// "trainder-api/configs"
 	"trainder-api/routes"
 
 	_ "trainder-api/docs"
@@ -32,6 +30,8 @@ func main() {
 
 	routes.AuthRoute(router)
 	routes.ProtectedRoute(router)
+
+	// router.Run(":8080")
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run(":8080")
