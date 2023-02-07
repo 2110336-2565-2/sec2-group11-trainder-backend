@@ -30,6 +30,7 @@ func main() {
 
 	routes.AuthRoute(router)
 	routes.ProtectedRoute(router)
+	routes.TrainerRoute(router)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run(":8080")
