@@ -6,13 +6,17 @@ import (
 	// "trainder-api/configs"
 	"trainder-api/routes"
 
+	_ "trainder-api/docs"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	// "trainder-api/controllers" //nat edited
-	// "go.mongodb.org/mongo-driver/bson"//nat edited
-	// "go.mongodb.org/mongo-driver/mongo" //nat edited
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+// @title			Trainder API
+// @version		0.1
+// @description	API for Trainder
 func main() {
 	router := gin.Default()
 	config := cors.DefaultConfig()
@@ -41,5 +45,7 @@ func main() {
 	routes.ProtectedRoute(router)
 	// router.Run(":8080")
 
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	// router.Run(":8080")
 	router.Run("127.0.0.1:8080")
 }

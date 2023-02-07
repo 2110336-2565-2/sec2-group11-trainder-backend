@@ -22,3 +22,17 @@ API_SECRET=<YOUR API SECRET>
 5. `go run .` to start the API
 
 The API will be available at [localhost:8080](http://localhost:8080)
+
+## Generating the Documentation
+
+This repo use swagger as the documentation. The generation process of the documentation is a follows. More info at [https://github.com/swaggo/swag](https://github.com/swaggo/swag)
+
+1. Add comments to your API source code.
+2. Install swag cli tools by:
+
+```sh
+go install github.com/swaggo/swag/cmd/swag@latest
+```
+
+3. Run `swag init` to generate the documentation.
+4. The documentation will be available at [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
