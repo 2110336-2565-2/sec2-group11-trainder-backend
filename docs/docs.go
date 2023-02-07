@@ -28,6 +28,17 @@ const docTemplate = `{
                     "authentication"
                 ],
                 "summary": "Login",
+                "parameters": [
+                    {
+                        "description": "put login input and pass to  gin.Context",
+                        "name": "json_in_ginContext",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.LoginInput"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -40,7 +51,7 @@ const docTemplate = `{
         },
         "/register": {
             "post": {
-                "description": "Register with username,password,UserType,Firstname,Lastname,Birthdate,CitizenId,Gender,PhoneNumber,Address,SubAddress",
+                "description": "Register with username,password,UserType [\"trainer\",\"trainee\"],Firstname,Lastname,Birthdate (\"yyyy-mm-dd\"),CitizenId (len == 13),Gender [\"Male\",\"Female\",\"Other\"],PhoneNumber (len ==10),Address,SubAddress",
                 "consumes": [
                     "application/json"
                 ],
@@ -54,10 +65,13 @@ const docTemplate = `{
                 "operationId": "register-user",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "string example",
-                        "name": "example",
-                        "in": "path"
+                        "description": "put register input and pass to  gin.Context",
+                        "name": "json_in_ginContext",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.RegisterInput"
+                        }
                     }
                 ],
                 "responses": {
@@ -72,6 +86,72 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "controllers.LoginInput": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.RegisterInput": {
+            "type": "object",
+            "required": [
+                "address",
+                "birthdate",
+                "citizenId",
+                "firstname",
+                "gender",
+                "lastname",
+                "password",
+                "phoneNumber",
+                "subAddress",
+                "username",
+                "usertype"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "birthdate": {
+                    "type": "string"
+                },
+                "citizenId": {
+                    "type": "string"
+                },
+                "firstname": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "phoneNumber": {
+                    "type": "string"
+                },
+                "subAddress": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "usertype": {
+                    "type": "string"
+                }
+            }
+        },
         "responses.LoginResponse": {
             "type": "object",
             "properties": {
