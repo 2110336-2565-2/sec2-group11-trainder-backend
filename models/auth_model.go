@@ -33,7 +33,6 @@ func FindUser(username string) (user User, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	filter := bson.D{{Key: "username", Value: username}}
-
 	err = userCollection.FindOne(ctx, filter).Decode(&user)
 	return user, err
 }

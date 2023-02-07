@@ -3,9 +3,9 @@ package controllers
 import (
 	"net/http"
 
+	"trainder-api/models"
 	"trainder-api/responses"
 	"trainder-api/utils/tokens"
-	"trainder-api/models"
 
 	"github.com/gin-gonic/gin"
 )
@@ -56,6 +56,14 @@ func UpdateProfile() gin.HandlerFunc {
 			})
 			return
 		}
+		err = models.ProfileConditionCheck(input.FirstName, input.LastName, input.BirthDate, input.CitizenId, input.Gender, input.PhoneNumber)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
 		_, err = models.UpdateUserProfile(username, input.FirstName, input.LastName, input.BirthDate, input.CitizenId, input.Gender, input.PhoneNumber, input.Address, input.SubAddress)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
@@ -88,15 +96,16 @@ func GetProfile() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
 				Status:  http.StatusBadRequest,
-				Message: `cannot find this user profile`,
+				Message: `User profile retrieval unsuccessful`,
 			})
 			return
 		}
 
-		c.JSON(http.StatusOK, responses.GetProfileResponses{
-			Status:      http.StatusOK,
-			ProfileInfo: result,
+		c.JSON(http.StatusFound, responses.GetProfileResponses{
+			Status:  http.StatusFound,
+			Message: `Successfully retrieve user profile`,
+			User:    result,
 		})
+		_ = result
 	}
 }
-
