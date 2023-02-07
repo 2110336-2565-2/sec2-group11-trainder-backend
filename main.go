@@ -1,7 +1,9 @@
 package main
 
 import (
+	// "fmt"
 	"net/http"
+	// "trainder-api/configs"
 	"trainder-api/routes"
 
 	_ "trainder-api/docs"
@@ -12,9 +14,9 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-//	@title			Trainder API
-//	@version		0.1
-//	@description	API for Trainder
+// @title			Trainder API
+// @version		0.1
+// @description	API for Trainder
 func main() {
 	router := gin.Default()
 	config := cors.DefaultConfig()
@@ -32,6 +34,9 @@ func main() {
 	routes.ProtectedRoute(router)
 	routes.TrainerRoute(router)
 
+	// router.Run(":8080")
+
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run(":8080")
+	// router.Run("127.0.0.1:8080")
 }
