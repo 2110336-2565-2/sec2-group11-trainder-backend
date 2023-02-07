@@ -96,7 +96,7 @@ func GetProfile() gin.HandlerFunc {
 			return
 		}
 
-		result, err := models.FindProfile(username)
+		result, err := models.FindProfile(username, "")
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
 				Status:  http.StatusBadRequest,
@@ -123,11 +123,11 @@ func GetTrainer() gin.HandlerFunc {
 				Message: "input missing"})
 			return
 		}
-		result, err := models.FindTrainer(input.Username)
+		result, err := models.FindProfile(input.Username, "trainer")
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
 				Status:  http.StatusBadRequest,
-				Message: `trainer profile  retrieval unsuccessful`,
+				Message: `trainer profile retrieval unsuccessful`,
 			})
 			return
 		}
