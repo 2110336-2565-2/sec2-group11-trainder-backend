@@ -16,3 +16,9 @@ type GetProfileResponses struct {
 	Message string              `json:"message,omitempty"`
 	User    map[string]interface{} `json:"user,omitempty"`
 }
+
+type GetTrainerResponses struct {
+	Status  int                 `json:"status"`
+	Message string              `json:"message,omitempty"`
+	User    map[string]interface{} `json:"user,omitempty"`
+}

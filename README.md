@@ -36,3 +36,27 @@ go install github.com/swaggo/swag/cmd/swag@latest
 
 3. Run `swag init` to generate the documentation.
 4. The documentation will be available at [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
+
+## Development using Docker
+
+With docker the development process can be easier. The database and the go environment will be automatically set up for you.
+You will need docker and docker-compose. The processes for running using docker as as follows.
+
+1. Build the images
+
+```sh
+docker-compose build
+```
+
+2. Start the service by
+
+```sh
+docker-compose up
+```
+
+The API will be available at [localhost:8080](http://localhost:8080)
+
+### Notes about using docker
+
+When you build the images all of the file of this repository will be copied to the container. Then the go compiler will be run in the container.
+Which means if you made change to the code **you must re run** `docker-compose build`
