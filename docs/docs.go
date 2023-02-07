@@ -49,6 +49,86 @@ const docTemplate = `{
                 }
             }
         },
+        "/protected/profile": {
+            "get": {
+                "description": "getProfile of the current user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "getProfile of the current user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.GetProfileResponses"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/update-profile": {
+            "post": {
+                "description": "updateProfile of the current user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "updateProfile of the current user",
+                "parameters": [
+                    {
+                        "description": "put profile input json and pass to  gin.Context",
+                        "name": "json_in_ginContext",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ProfileInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ProfileResponses"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/user": {
+            "get": {
+                "description": "get the current user's username.  After getting token replied from logging in, put token in ginContext's token field",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "get the current user's username",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.CurrentUserResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/register": {
             "post": {
                 "description": "Register with username,password,UserType [\"trainer\",\"trainee\"],Firstname,Lastname,Birthdate (\"yyyy-mm-dd\"),CitizenId (len == 13),Gender [\"Male\",\"Female\",\"Other\"],PhoneNumber (len ==10),Address,SubAddress",
@@ -97,6 +177,45 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.ProfileInput": {
+            "type": "object",
+            "required": [
+                "address",
+                "birthdate",
+                "citizenId",
+                "firstname",
+                "gender",
+                "lastname",
+                "phoneNumber",
+                "subAddress"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "birthdate": {
+                    "type": "string"
+                },
+                "citizenId": {
+                    "type": "string"
+                },
+                "firstname": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "phoneNumber": {
+                    "type": "string"
+                },
+                "subAddress": {
                     "type": "string"
                 }
             }
@@ -152,6 +271,35 @@ const docTemplate = `{
                 }
             }
         },
+        "responses.CurrentUserResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.GetProfileResponses": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "user": {
+                    "type": "object",
+                    "additionalProperties": true
+                }
+            }
+        },
         "responses.LoginResponse": {
             "type": "object",
             "properties": {
@@ -166,6 +314,17 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "responses.ProfileResponses": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         },

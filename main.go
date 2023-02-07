@@ -1,9 +1,7 @@
 package main
 
 import (
-	// "fmt"
 	"net/http"
-	// "trainder-api/configs"
 	"trainder-api/routes"
 
 	_ "trainder-api/docs"
@@ -37,5 +35,6 @@ func main() {
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run(":8080")
+
 	// router.Run("127.0.0.1:8080")
 }

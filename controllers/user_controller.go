@@ -25,6 +25,16 @@ type GetTrainerInput struct {
 	Username string `json:"username" binding:"required"`
 }
 
+// CurrentUser godoc
+//
+//	@Summary		get the current user's username
+//	@Description	get the current user's username.  After getting token replied from logging in, put token in ginContext's token field
+//	@Tags			user
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	responses.CurrentUserResponse
+//
+//	@Router			/protected/user [get]
 func CurrentUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		username, err := tokens.ExtractTokenUsername(c)
@@ -42,6 +52,17 @@ func CurrentUser() gin.HandlerFunc {
 
 }
 
+// UpdateProfile godoc
+//
+//	@Summary		updateProfile of the current user
+//	@Description	updateProfile of the current user
+//	@Tags			user
+//	@Accept			json
+//	@Produce		json
+//	@Param   		json_in_ginContext     body    ProfileInput     true  "put profile input json and pass to  gin.Context"
+//	@Success		200	{object}	responses.ProfileResponses
+//
+//	@Router			/protected/update-profile [post]
 func UpdateProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input ProfileInput
@@ -85,6 +106,16 @@ func UpdateProfile() gin.HandlerFunc {
 	}
 }
 
+// getProfile godoc
+//
+//	@Summary		getProfile of the current user
+//	@Description	getProfile of the current user
+//	@Tags			user
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	responses.GetProfileResponses
+//
+//	@Router			/protected/profile [get]
 func GetProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		username, err := tokens.ExtractTokenUsername(c)
