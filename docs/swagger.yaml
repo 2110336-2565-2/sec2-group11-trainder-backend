@@ -9,6 +9,34 @@ definitions:
     - password
     - username
     type: object
+  controllers.ProfileInput:
+    properties:
+      address:
+        type: string
+      birthdate:
+        type: string
+      citizenId:
+        type: string
+      firstname:
+        type: string
+      gender:
+        type: string
+      lastname:
+        type: string
+      phoneNumber:
+        type: string
+      subAddress:
+        type: string
+    required:
+    - address
+    - birthdate
+    - citizenId
+    - firstname
+    - gender
+    - lastname
+    - phoneNumber
+    - subAddress
+    type: object
   controllers.RegisterInput:
     properties:
       address:
@@ -46,6 +74,25 @@ definitions:
     - username
     - usertype
     type: object
+  responses.CurrentUserResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+      username:
+        type: string
+    type: object
+  responses.GetProfileResponses:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+      user:
+        additionalProperties: true
+        type: object
+    type: object
   responses.LoginResponse:
     properties:
       message:
@@ -56,6 +103,13 @@ definitions:
         type: string
       username:
         type: string
+    type: object
+  responses.ProfileResponses:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
     type: object
   responses.RegisterResponse:
     properties:
@@ -92,6 +146,79 @@ paths:
       summary: Login
       tags:
       - authentication
+  /protected/profile:
+    get:
+      consumes:
+      - application/json
+      description: getProfile of the current user
+      parameters:
+      - description: put token and pass to  gin.Context
+        in: body
+        name: token_in_ginContext
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.GetProfileResponses'
+      summary: getProfile of the current user
+      tags:
+      - user
+  /protected/update-profile:
+    post:
+      consumes:
+      - application/json
+      description: updateProfile of the current user
+      parameters:
+      - description: put token and pass to  gin.Context
+        in: body
+        name: token_in_ginContext
+        required: true
+        schema:
+          type: string
+      - description: put profile input json and pass to  gin.Context
+        in: body
+        name: json_in_ginContext
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.ProfileInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ProfileResponses'
+      summary: updateProfile of the current user
+      tags:
+      - user
+  /protected/user:
+    get:
+      consumes:
+      - application/json
+      description: get the current user's username.  After getting token replied from
+        logging in, put token in ginContext's token field
+      parameters:
+      - description: put token and pass to  gin.Context
+        in: body
+        name: token_in_ginContext
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.CurrentUserResponse'
+      summary: get the current user's username
+      tags:
+      - user
   /register:
     post:
       consumes:

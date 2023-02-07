@@ -10,6 +10,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetThisUserUsername godoc
+//
+//	@Summary		get the current user's username
+//	@Description	get the current user's username.  After getting token replied from logging in, put token in ginContext's token field
+//	@Tags			user
+//	@Accept			json
+//	@Produce		json
+//	@Param   		token_in_ginContext     body    string     true  "put token and pass to  gin.Context"
+//	@Success		200	{object}	responses.CurrentUserResponse
+//
+//	@Router			/protected/user [get]
 func CurrentUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		username, err := tokens.ExtractTokenUsername(c)
@@ -38,6 +49,18 @@ type ProfileInput struct {
 	SubAddress  string `json:"subAddress" binding:"required"`
 }
 
+// updateProfile godoc
+//
+//	@Summary		updateProfile of the current user
+//	@Description	updateProfile of the current user
+//	@Tags			user
+//	@Accept			json
+//	@Produce		json
+//	@Param 			token_in_ginContext     body    string     true  "put token and pass to  gin.Context"
+//	@Param   		json_in_ginContext     body    ProfileInput     true  "put profile input json and pass to  gin.Context"
+//	@Success		200	{object}	responses.ProfileResponses
+//
+//	@Router			/protected/update-profile [post]
 func UpdateProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input ProfileInput
@@ -81,6 +104,17 @@ func UpdateProfile() gin.HandlerFunc {
 	}
 }
 
+// getProfile godoc
+//
+//	@Summary		getProfile of the current user
+//	@Description	getProfile of the current user
+//	@Tags			user
+//	@Accept			json
+//	@Produce		json
+//	@Param 			token_in_ginContext     body    string     true  "put token and pass to  gin.Context"
+//	@Success		200	{object}	responses.GetProfileResponses
+//
+//	@Router			/protected/profile [get]
 func GetProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		username, err := tokens.ExtractTokenUsername(c)
