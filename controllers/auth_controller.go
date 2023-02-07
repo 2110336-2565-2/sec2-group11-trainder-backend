@@ -29,7 +29,7 @@ type RegisterInput struct {
 // @Accept		json
 // @Produce		json
 //
-//	@Param   	example     body    RegisterInput     true  "xxxx"
+//	@Param   	json_in_ginContext     body    RegisterInput     true  "put register input and pass to  gin.Context"
 //
 // @Success		200	{object}	responses.RegisterResponse
 // @Router		/register [post]
@@ -65,6 +65,7 @@ type LoginInput struct {
 //	@Tags			authentication
 //	@Accept			json
 //	@Produce		json
+//	@Param   		json_in_ginContext     body    LoginInput     true  "put login input and pass to  gin.Context"
 //	@Success		200	{object}	responses.LoginResponse
 //
 //	@Router			/login [post]
