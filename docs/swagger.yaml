@@ -1,4 +1,51 @@
 definitions:
+  controllers.LoginInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  controllers.RegisterInput:
+    properties:
+      address:
+        type: string
+      birthdate:
+        type: string
+      citizenId:
+        type: string
+      firstname:
+        type: string
+      gender:
+        type: string
+      lastname:
+        type: string
+      password:
+        type: string
+      phoneNumber:
+        type: string
+      subAddress:
+        type: string
+      username:
+        type: string
+      usertype:
+        type: string
+    required:
+    - address
+    - birthdate
+    - citizenId
+    - firstname
+    - gender
+    - lastname
+    - password
+    - phoneNumber
+    - subAddress
+    - username
+    - usertype
+    type: object
   responses.LoginResponse:
     properties:
       message:
@@ -9,6 +56,13 @@ definitions:
         type: string
       username:
         type: string
+    type: object
+  responses.RegisterResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
     type: object
 info:
   contact: {}
@@ -21,6 +75,13 @@ paths:
       consumes:
       - application/json
       description: login with username and password
+      parameters:
+      - description: put login input and pass to  gin.Context
+        in: body
+        name: json_in_ginContext
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.LoginInput'
       produces:
       - application/json
       responses:
@@ -29,6 +90,31 @@ paths:
           schema:
             $ref: '#/definitions/responses.LoginResponse'
       summary: Login
+      tags:
+      - authentication
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register with username,password,UserType ["trainer","trainee"],Firstname,Lastname,Birthdate
+        ("yyyy-mm-dd"),CitizenId (len == 13),Gender ["Male","Female","Other"],PhoneNumber
+        (len ==10),Address,SubAddress
+      operationId: register-user
+      parameters:
+      - description: put register input and pass to  gin.Context
+        in: body
+        name: json_in_ginContext
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.RegisterInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.RegisterResponse'
+      summary: Register user
       tags:
       - authentication
 swagger: "2.0"
