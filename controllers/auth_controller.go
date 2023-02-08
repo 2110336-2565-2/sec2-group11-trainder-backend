@@ -43,6 +43,23 @@ func Register() gin.HandlerFunc {
 			return
 		}
 
+		profileErr := models.ProfileConditionCheck(input.Firstname, input.Lastname, input.Birthdate, input.CitizenId, input.Gender, input.PhoneNumber)
+		if profileErr != nil {
+			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+				Status:  http.StatusBadRequest,
+				Message: profileErr.Error(),
+			})
+			return
+		}
+		userTypeErr := models.UserTypeCheck(input.UserType)
+		if userTypeErr != nil {
+			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+				Status:  http.StatusBadRequest,
+				Message: userTypeErr.Error(),
+			})
+			return
+		}
+    
 		_, err := models.CreateUser(input.Username, input.Password, input.UserType, input.Firstname, input.Lastname, input.Birthdate, input.CitizenId, input.Gender, input.PhoneNumber, input.Address, input.SubAddress, input.AvatarUrl)
 
 		if err != nil {
