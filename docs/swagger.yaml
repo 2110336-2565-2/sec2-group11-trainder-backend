@@ -13,6 +13,8 @@ definitions:
     properties:
       address:
         type: string
+      avatarUrl:
+        type: string
       birthdate:
         type: string
       citizenId:
@@ -29,6 +31,7 @@ definitions:
         type: string
     required:
     - address
+    - avatarUrl
     - birthdate
     - citizenId
     - firstname
@@ -40,6 +43,8 @@ definitions:
   controllers.RegisterInput:
     properties:
       address:
+        type: string
+      avatarUrl:
         type: string
       birthdate:
         type: string
@@ -82,6 +87,18 @@ definitions:
         type: integer
       username:
         type: string
+    type: object
+  responses.FilterTrainerResponses:
+    properties:
+      Trainers:
+        items:
+          additionalProperties: true
+          type: object
+        type: array
+      message:
+        type: string
+      status:
+        type: integer
     type: object
   responses.GetProfileResponses:
     properties:
@@ -146,6 +163,21 @@ paths:
       summary: Login
       tags:
       - authentication
+  /protected/filter-trainer:
+    get:
+      consumes:
+      - application/json
+      description: FilterTrainer base on filter input
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.FilterTrainerResponses'
+      summary: FilterTrainer base on filter input
+      tags:
+      - user
   /protected/profile:
     get:
       consumes:

@@ -14,20 +14,22 @@ import (
 var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
 
 type User struct {
-	Username       string    `bson:"username"`
-	HashedPassword string    `bson:"hashedPassword"`
-	UserType       string    `bson:"usertype"`
-	FirstName      string    `bson:"firstname" `
-	LastName       string    `bson:"lastname"`
-	BirthDate      time.Time `bson:"birthdate"`
-	CitizenId      string    `bson:"citizenId"`
-	Gender         string    `bson:"gender"`
-	PhoneNumber    string    `bson:"phoneNumber"`
-	Address        string    `bson:"address"`
-	SubAddress     string    `bson:"subAddress"`
-	CreatedAt      time.Time `bson:"createdAt"`
-	UpdatedAt      time.Time `bson:"updatedAt"`
-	AvatarUrl      string    `bson:"avatarUrl"`
+	Username       string                   `bson:"username"`
+	HashedPassword string                   `bson:"hashedPassword"`
+	UserType       string                   `bson:"usertype"`
+	FirstName      string                   `bson:"firstname" `
+	LastName       string                   `bson:"lastname"`
+	BirthDate      time.Time                `bson:"birthdate"`
+	CitizenId      string                   `bson:"citizenId"`
+	Gender         string                   `bson:"gender"`
+	PhoneNumber    string                   `bson:"phoneNumber"`
+	Address        string                   `bson:"address"`
+	SubAddress     string                   `bson:"subAddress"`
+	CreatedAt      time.Time                `bson:"createdAt"`
+	UpdatedAt      time.Time                `bson:"updatedAt"`
+	AvatarUrl      string                   `bson:"avatarUrl"`
+	TrainerInfo    []map[string]interface{} `bson:"trainerInfo"`
+	// Speciality     []string  `bson:"speciality"` //nat added
 }
 
 func FindUser(username string) (user User, err error) {

@@ -49,6 +49,29 @@ const docTemplate = `{
                 }
             }
         },
+        "/protected/filter-trainer": {
+            "get": {
+                "description": "FilterTrainer base on filter input",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "FilterTrainer base on filter input",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.FilterTrainerResponses"
+                        }
+                    }
+                }
+            }
+        },
         "/protected/profile": {
             "get": {
                 "description": "getProfile of the current user",
@@ -185,6 +208,7 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "address",
+                "avatarUrl",
                 "birthdate",
                 "citizenId",
                 "firstname",
@@ -195,6 +219,9 @@ const docTemplate = `{
             ],
             "properties": {
                 "address": {
+                    "type": "string"
+                },
+                "avatarUrl": {
                     "type": "string"
                 },
                 "birthdate": {
@@ -237,6 +264,9 @@ const docTemplate = `{
             ],
             "properties": {
                 "address": {
+                    "type": "string"
+                },
+                "avatarUrl": {
                     "type": "string"
                 },
                 "birthdate": {
@@ -282,6 +312,24 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "responses.FilterTrainerResponses": {
+            "type": "object",
+            "properties": {
+                "Trainers": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         },
