@@ -11,7 +11,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
-	"fmt"
 )
 
 func FindProfile(username, userType string) (map[string]interface{}, error) {
@@ -25,7 +24,6 @@ func FindProfile(username, userType string) (map[string]interface{}, error) {
 	var user User
 	err := userCollection.FindOne(ctx, filter, opts).Decode(&user)
 	if err != nil {
-		fmt.Print(err.Error())
 		return nil, err
 	}
 	result := map[string]interface{}{
