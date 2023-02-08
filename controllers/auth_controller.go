@@ -42,19 +42,19 @@ func Register() gin.HandlerFunc {
 			return
 		}
 
-		profile_err := models.ProfileConditionCheck(input.Firstname, input.Lastname, input.Birthdate, input.CitizenId, input.Gender, input.PhoneNumber)
-		if profile_err != nil {
+		profileErr := models.ProfileConditionCheck(input.Firstname, input.Lastname, input.Birthdate, input.CitizenId, input.Gender, input.PhoneNumber)
+		if profileErr != nil {
 			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
 				Status:  http.StatusBadRequest,
-				Message: profile_err.Error(),
+				Message: profileErr.Error(),
 			})
 			return
 		}
-		userType_err := models.UserTypeCheck(input.UserType)
-		if userType_err != nil {
+		userTypeErr := models.UserTypeCheck(input.UserType)
+		if userTypeErr != nil {
 			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
 				Status:  http.StatusBadRequest,
-				Message: userType_err.Error(),
+				Message: userTypeErr.Error(),
 			})
 			return
 		}
