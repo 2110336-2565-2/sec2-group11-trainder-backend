@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"runtime"
 	"trainder-api/routes"
 
 	_ "trainder-api/docs"
@@ -31,10 +32,11 @@ func main() {
 	routes.AuthRoute(router)
 	routes.ProtectedRoute(router)
 
-	// router.Run(":8080")
-
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	router.Run(":8080")
-
-	// router.Run("127.0.0.1:8080")
+	os := runtime.GOOS
+	if os == "windows" {
+		router.Run("127.0.0.1:8080")
+	} else {
+		router.Run(":8080")
+	}
 }
