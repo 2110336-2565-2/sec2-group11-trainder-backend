@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"regexp"
+	"strconv"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -70,13 +71,20 @@ func UpdateUserProfile(username string, firstName string, lastName string, birth
 }
 
 func ProfileConditionCheck(firstName string, lastName string, birthDate string, citizenID string, gender string, phoneNumber string) error {
-	//---------------check firstName not contain strange character
+	//---------------check firstName not contain strange character, number  (accepting)
+	if alpha := isAlphaString(firstName); !alpha {
+		return errors.New("firstName invalid")
+	}
+
+	if alpha := isAlphaString(lastName); !alpha {
+		return errors.New("lastName invalid")
+	}
 	//---------------check date format
 
 	const dateFormat = `^\d{4}-\d{2}-\d{2}$`
 	match, err := regexp.MatchString(dateFormat, birthDate)
 	if err != nil {
-		fmt.Println("xxxx")
+		// fmt.Println("xxxx")
 		return err
 	}
 	if !match {
@@ -122,27 +130,49 @@ func ProfileConditionCheck(firstName string, lastName string, birthDate string, 
 	return nil
 }
 
-// TODO: enable id checking for production" uncomment below
-// func assertThaiID(thaiID string) error {
-// 	re := regexp.MustCompile(`(\d{12})(\d)`)
-// 	matches := re.FindStringSubmatch(thaiID)
-// 	if len(matches) == 0 {
-// 		return errors.New("bad input from user, invalid thaiID, length != 13")
+func assertThaiID(thaiID string) error {
+	re := regexp.MustCompile(`(\d{12})(\d)`)
+	matches := re.FindStringSubmatch(thaiID)
+	if len(matches) == 0 {
+		return errors.New("bad input from user, invalid thaiID, length != 13")
 
-// 	}
+	}
 
-// 	digits := matches[1]
-// 	sum := 0
-// 	for i, digit := range digits {
-// 		d, _ := strconv.Atoi(string(digit))
-// 		sum += (13 - i) * d
-// 	}
-// 	lastDigit := (11 - sum%11) % 10
-// 	inputLastDigit, _ := strconv.Atoi(matches[2])
-// 	if lastDigit != inputLastDigit {
-// 		return errors.New("bad input from user, invalid thaiID")
+	digits := matches[1]
+	sum := 0
+	for i, digit := range digits {
+		d, _ := strconv.Atoi(string(digit))
+		sum += (13 - i) * d
+	}
+	lastDigit := (11 - sum%11) % 10
+	inputLastDigit, _ := strconv.Atoi(matches[2])
+	if lastDigit != inputLastDigit {
+		return errors.New("bad input from user, invalid thaiID")
 
-// 	}
+	}
 
-// 	return nil
-// }
+	return nil
+}
+
+func isAlphaString(input string) bool {
+	// Use a regular expression to match only alphabet characters
+	match, _ := regexp.MatchString("^[a-zA-Z\u0E00-\u0E7F]+$", input)
+	return match
+}
+
+func UserTypeCheck(userType string) error {
+	validUserType := []string{"Trainer", "Trainee"}
+
+	isValidUserType := false
+	for _, v := range validUserType {
+		if v == userType {
+			isValidUserType = true
+			break
+		}
+	}
+
+	if !isValidUserType {
+		return errors.New(" userType is not valid, valid userType in ['Trainer', 'Trainee'] ")
+	}
+	return nil
+}
