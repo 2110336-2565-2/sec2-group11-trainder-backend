@@ -4,6 +4,7 @@ import (
 	// "fmt"
 	"net/http"
 	// "trainder-api/configs"
+	"runtime"
 	"trainder-api/routes"
 
 	_ "trainder-api/docs"
@@ -36,7 +37,13 @@ func main() {
 	// router.Run(":8080")
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	router.Run(":8080")
-	// router.Run("127.0.0.1:8080")
->>>>>>> 3ea37127235db70002246fa4fb7584dea51eb65e
+	// router.Run(":8080")
+	os := runtime.GOOS
+	if os == "windows" {
+		router.Run("127.0.0.1:8080")
+	} else {
+		router.Run(":8080")
+	}
+	//
+
 }
