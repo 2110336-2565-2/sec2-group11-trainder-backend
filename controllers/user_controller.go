@@ -22,10 +22,6 @@ type ProfileInput struct {
 	AvatarUrl   string `json:"avatarUrl" binding:"required"`
 }
 
-type GetTrainerInput struct {
-	Username string `json:"username" binding:"required"`
-}
-
 // CurrentUser godoc
 //
 //	@Summary		get the current user's username
@@ -143,30 +139,5 @@ func GetProfile() gin.HandlerFunc {
 			User:    result,
 		})
 		_ = result
-	}
-}
-
-func GetTrainer() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var input GetTrainerInput
-		if err := c.ShouldBindJSON(&input); err != nil {
-			c.JSON(http.StatusBadRequest, responses.GetTrainerResponses{
-				Status:  http.StatusBadRequest,
-				Message: "input missing"})
-			return
-		}
-		result, err := models.FindProfile(input.Username, "trainer")
-		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
-				Status:  http.StatusBadRequest,
-				Message: `trainer profile retrieval unsuccessful`,
-			})
-			return
-		}
-		c.JSON(http.StatusOK, responses.GetProfileResponses{
-			Status:  http.StatusOK,
-			Message: `Successfully retrieve trainer profile`,
-			User:    result,
-		})
 	}
 }
