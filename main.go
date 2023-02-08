@@ -39,6 +39,4 @@ func main() {
 	} else {
 		router.Run(":8080")
 	}
-	//
-
 }
