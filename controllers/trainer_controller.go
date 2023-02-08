@@ -43,13 +43,13 @@ func FilterTrainer() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
 				Status:  http.StatusBadRequest,
-				Message: `trainer profile retrieval unsuccessful`,
+				Message: `filter trainer profile retrieval unsuccessful`,
 			})
 			return
 		}
 		c.JSON(http.StatusOK, responses.FilterTrainerResponses{
 			Status:   http.StatusOK,
-			Message:  `Successfully retrieve trainer profile`,
+			Message:  `Successfully retrieve filtered trainer profile`,
 			Trainers: result,
 		})
 	}
