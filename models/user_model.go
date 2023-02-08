@@ -35,11 +35,12 @@ func FindProfile(username, userType string) (map[string]interface{}, error) {
 		"phoneNumber": user.PhoneNumber,
 		"address":     user.Address,
 		"subAddress":  user.SubAddress,
+		"avatarUrl":   user.AvatarUrl,
 	}
 	return result, nil
 }
 
-func UpdateUserProfile(username string, firstName string, lastName string, birthDate string, citizenID string, gender string, phoneNumber string, address string, subAddress string) (result *mongo.UpdateResult, err error) {
+func UpdateUserProfile(username string, firstName string, lastName string, birthDate string, citizenID string, gender string, phoneNumber string, address string, subAddress string, avatarUrl string) (result *mongo.UpdateResult, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -65,6 +66,7 @@ func UpdateUserProfile(username string, firstName string, lastName string, birth
 			"address":     address,
 			"subAddress":  subAddress,
 			"updatedAt":   time.Now(),
+			"avatarUrl":   avatarUrl,
 		}},
 	)
 	return
