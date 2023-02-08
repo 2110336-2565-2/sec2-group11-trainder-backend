@@ -20,6 +20,7 @@ type RegisterInput struct {
 	PhoneNumber string `json:"phoneNumber" binding:"required"`
 	Address     string `json:"address" binding:"required"`
 	SubAddress  string `json:"subAddress" binding:"required"`
+	AvatarUrl   string `json:"avatarUrl" binding:"requeired"`
 }
 
 // @Summary		Register user
@@ -58,8 +59,8 @@ func Register() gin.HandlerFunc {
 			})
 			return
 		}
-
-		_, err := models.CreateUser(input.Username, input.Password, input.UserType, input.Firstname, input.Lastname, input.Birthdate, input.CitizenId, input.Gender, input.PhoneNumber, input.Address, input.SubAddress)
+    
+		_, err := models.CreateUser(input.Username, input.Password, input.UserType, input.Firstname, input.Lastname, input.Birthdate, input.CitizenId, input.Gender, input.PhoneNumber, input.Address, input.SubAddress, input.AvatarUrl)
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, responses.RegisterResponse{Status: http.StatusInternalServerError, Message: err.Error()})

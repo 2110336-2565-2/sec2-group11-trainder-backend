@@ -19,6 +19,7 @@ type ProfileInput struct {
 	PhoneNumber string `json:"phoneNumber" binding:"required"`
 	Address     string `json:"address" binding:"required"`
 	SubAddress  string `json:"subAddress" binding:"required"`
+	AvatarUrl   string `json:"avatarUrl" binding:"required"`
 }
 
 type GetTrainerInput struct {
@@ -89,7 +90,7 @@ func UpdateProfile() gin.HandlerFunc {
 			})
 			return
 		}
-		_, err = models.UpdateUserProfile(username, input.FirstName, input.LastName, input.BirthDate, input.CitizenId, input.Gender, input.PhoneNumber, input.Address, input.SubAddress)
+		_, err = models.UpdateUserProfile(username, input.FirstName, input.LastName, input.BirthDate, input.CitizenId, input.Gender, input.PhoneNumber, input.Address, input.SubAddress, input.AvatarUrl)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
 				Status:  http.StatusBadRequest,
