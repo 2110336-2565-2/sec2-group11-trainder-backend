@@ -19,7 +19,7 @@ type ProfileInput struct {
 	PhoneNumber string `json:"phoneNumber" binding:"required"`
 	Address     string `json:"address" binding:"required"`
 	SubAddress  string `json:"subAddress" binding:"required"`
-	AvatarUrl   string `json:"avatarUrl" binding:"required"`
+	AvatarUrl   string `json:"avatarUrl"`
 }
 
 // CurrentUser godoc

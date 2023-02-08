@@ -10,19 +10,30 @@ import (
 
 func UpdateTrainerProfile(username string, speciality []string, rating float64, fee float64, traineeCount int32, certificateUrl string) (result *mongo.UpdateResult, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+
 	defer cancel()
+	update := bson.M{}
+	if len(speciality) > 0 {
+		update["trainerInfo.speciality"] = speciality
+	}
+	if rating > 0 {
+		update["trainerInfo.rating"] = rating
+	}
+	if fee > 0 {
+		update["trainerInfo.fee"] = fee
+	}
+	if traineeCount > 0 {
+		update["trainerInfo.traineeCount"] = traineeCount
+	}
+	if certificateUrl != "" {
+		update["trainerInfo.certificateUrl"] = certificateUrl
+	}
 	result, err = userCollection.UpdateOne(
 		ctx,
 		bson.M{"username": username},
 		bson.M{"$set": bson.M{
-			"trainerInfo": bson.M{
-				"speciality":     speciality,
-				"raiting":        rating,
-				"fee":            fee,
-				"traineeCount":   traineeCount,
-				"certificateUrl": certificateUrl,
-			},
-			"updatedAt": time.Now(),
+			"trainerInfo": update,
+			"updatedAt":   time.Now(),
 		}},
 	)
 	return

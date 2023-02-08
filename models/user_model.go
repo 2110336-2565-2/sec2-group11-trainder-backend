@@ -56,21 +56,25 @@ func UpdateUserProfile(username string, firstName string, lastName string, birth
 		return
 	}
 
+	info := bson.M{
+		"firstname":   firstName,
+		"lastname":    lastName,
+		"birthdate":   date,
+		"citizenId":   citizenID,
+		"gender":      gender,
+		"phoneNumber": phoneNumber,
+		"address":     address,
+		"subAddress":  subAddress,
+		"updatedAt":   time.Now(),
+	}
+	if avatarUrl != "" {
+		info["avartarUrl"] = avatarUrl
+	}
+
 	result, err = userCollection.UpdateOne(
 		ctx,
 		bson.M{"username": username},
-		bson.M{"$set": bson.M{
-			"firstname":   firstName,
-			"lastname":    lastName,
-			"birthdate":   date,
-			"citizenId":   citizenID,
-			"gender":      gender,
-			"phoneNumber": phoneNumber,
-			"address":     address,
-			"subAddress":  subAddress,
-			"updatedAt":   time.Now(),
-			"avatarUrl":   avatarUrl,
-		}},
+		bson.M{"$set": info},
 	)
 	return
 }
