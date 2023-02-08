@@ -42,6 +42,23 @@ func Register() gin.HandlerFunc {
 			return
 		}
 
+		profile_err := models.ProfileConditionCheck(input.Firstname, input.Lastname, input.Birthdate, input.CitizenId, input.Gender, input.PhoneNumber)
+		if profile_err != nil {
+			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+				Status:  http.StatusBadRequest,
+				Message: profile_err.Error(),
+			})
+			return
+		}
+		userType_err := models.UserTypeCheck(input.UserType)
+		if userType_err != nil {
+			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+				Status:  http.StatusBadRequest,
+				Message: userType_err.Error(),
+			})
+			return
+		}
+
 		_, err := models.CreateUser(input.Username, input.Password, input.UserType, input.Firstname, input.Lastname, input.Birthdate, input.CitizenId, input.Gender, input.PhoneNumber, input.Address, input.SubAddress)
 
 		if err != nil {
