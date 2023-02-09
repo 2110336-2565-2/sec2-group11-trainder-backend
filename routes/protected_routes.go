@@ -15,4 +15,5 @@ func ProtectedRoute(router *gin.Engine) {
 	protected.GET("/profile", controllers.GetProfile())
 	protected.GET("/trainer", controllers.GetTrainer())
 	protected.GET("/filter-trainer", controllers.FilterTrainer())
+	protected.GET("/update-trainer", controllers.UpdateTrainer())
 }
