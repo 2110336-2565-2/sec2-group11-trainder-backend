@@ -43,7 +43,7 @@ func Register() gin.HandlerFunc {
 
 		profileErr := models.ProfileConditionCheck(input.Firstname, input.Lastname, input.Birthdate, input.CitizenId, input.Gender, input.PhoneNumber)
 		if profileErr != nil {
-			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+			c.JSON(http.StatusBadRequest, responses.RegisterResponse{
 				Status:  http.StatusBadRequest,
 				Message: profileErr.Error(),
 			})
@@ -51,7 +51,7 @@ func Register() gin.HandlerFunc {
 		}
 		userTypeErr := models.UserTypeCheck(input.UserType)
 		if userTypeErr != nil {
-			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+			c.JSON(http.StatusBadRequest, responses.RegisterResponse{
 				Status:  http.StatusBadRequest,
 				Message: userTypeErr.Error(),
 			})
@@ -104,5 +104,4 @@ func Login() gin.HandlerFunc {
 		}
 		c.JSON(http.StatusOK, responses.LoginResponse{Status: http.StatusOK, Message: "logged in", Token: token, Username: input.Username})
 	}
-
 }

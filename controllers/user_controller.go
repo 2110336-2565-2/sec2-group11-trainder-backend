@@ -29,6 +29,7 @@ type ProfileInput struct {
 //	@Tags			user
 //	@Accept			json
 //	@Produce		json
+//	@Security		BearerAuth
 //	@Success		200	{object}	responses.CurrentUserResponse
 //	@Router			/protected/user [get]
 func CurrentUser() gin.HandlerFunc {
@@ -55,6 +56,7 @@ func CurrentUser() gin.HandlerFunc {
 //	@Tags			user
 //	@Accept			json
 //	@Produce		json
+//	@Security		BearerAuth
 //	@Param   		json_in_ginContext     body    ProfileInput     true  "put profile input json and pass to  gin.Context"
 //	@Success		200	{object}	responses.ProfileResponses
 //	@Router			/protected/update-profile [post]
@@ -70,7 +72,7 @@ func UpdateProfile() gin.HandlerFunc {
 		}
 		username, err := tokens.ExtractTokenUsername(c)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+			c.JSON(http.StatusBadRequest, responses.ProfileResponses{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			})
@@ -78,7 +80,7 @@ func UpdateProfile() gin.HandlerFunc {
 		}
 		err = models.ProfileConditionCheck(input.FirstName, input.LastName, input.BirthDate, input.CitizenId, input.Gender, input.PhoneNumber)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+			c.JSON(http.StatusBadRequest, responses.ProfileResponses{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			})
@@ -86,7 +88,7 @@ func UpdateProfile() gin.HandlerFunc {
 		}
 		_, err = models.UpdateUserProfile(username, input.FirstName, input.LastName, input.BirthDate, input.CitizenId, input.Gender, input.PhoneNumber, input.Address, input.SubAddress, input.AvatarUrl)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+			c.JSON(http.StatusBadRequest, responses.ProfileResponses{
 				Status:  http.StatusBadRequest,
 				Message: `update failed`,
 			})
@@ -107,6 +109,7 @@ func UpdateProfile() gin.HandlerFunc {
 // @Tags user
 // @Accept json
 // @Produce	json
+// @Security BearerAuth
 // @Success	200	{object} responses.GetProfileResponses
 // @Router /protected/profile [get]
 func GetProfile() gin.HandlerFunc {

@@ -13,6 +13,6 @@ func ProtectedRoute(router *gin.Engine) {
 	protected.GET("/user", controllers.CurrentUser())
 	protected.POST("/update-profile", controllers.UpdateProfile())
 	protected.GET("/profile", controllers.GetProfile())
-	protected.GET("/trainer", controllers.GetTrainer())
+	protected.POST("/trainer", controllers.GetTrainer())
 	protected.POST("/update-trainer", controllers.UpdateTrainer())
 }

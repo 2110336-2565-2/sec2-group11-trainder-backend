@@ -51,6 +51,11 @@ const docTemplate = `{
         },
         "/protected/profile": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "getProfile of the current user",
                 "consumes": [
                     "application/json"
@@ -73,7 +78,12 @@ const docTemplate = `{
             }
         },
         "/protected/trainer": {
-            "get": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Retrieves the trainer profile information of the user who made the request.",
                 "consumes": [
                     "application/json"
@@ -98,13 +108,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successfully retrieved the trainer profile",
+                        "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/responses.GetProfileResponses"
+                            "$ref": "#/definitions/responses.GetTrainerResponses"
                         }
                     },
                     "400": {
-                        "description": "Failed to retrieve the trainer profile",
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.GetTrainerResponses"
                         }
@@ -114,6 +124,11 @@ const docTemplate = `{
         },
         "/protected/update-profile": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "updateProfile of the current user",
                 "consumes": [
                     "application/json"
@@ -148,6 +163,11 @@ const docTemplate = `{
         },
         "/protected/update-trainer": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -171,19 +191,19 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successfully update the trainer's profile",
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.ProfileResponses"
                         }
                     },
                     "400": {
-                        "description": "Bad Request, either invalid input or user is not a trainer",
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.ProfileResponses"
                         }
                     },
                     "401": {
-                        "description": "Unauthorized, the user is not logged in",
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/responses.ProfileResponses"
                         }
@@ -193,6 +213,11 @@ const docTemplate = `{
         },
         "/protected/user": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "get the current user's username.  After getting token replied from logging in, put token in ginContext's token field",
                 "consumes": [
                     "application/json"
@@ -478,6 +503,13 @@ const docTemplate = `{
                     "type": "integer"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

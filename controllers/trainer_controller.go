@@ -28,10 +28,11 @@ type GetTrainerInput struct {
 // @Tags Trainer
 // @Accept  json
 // @Produce  json
+// @Security BearerAuth
 // @Param input body GetTrainerInput true "Put username input for retrieving the trainer profile"
-// @Success 200 {object} responses.GetProfileResponses "Successfully retrieved the trainer profile"
-// @Failure 400 {object} responses.GetTrainerResponses "Failed to retrieve the trainer profile"
-// @Router /protected/trainer [get]
+// @Success 200 {object} responses.GetTrainerResponses
+// @Failure 400 {object} responses.GetTrainerResponses
+// @Router /protected/trainer [post]
 func GetTrainer() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input GetTrainerInput
@@ -43,13 +44,13 @@ func GetTrainer() gin.HandlerFunc {
 		}
 		result, err := models.FindProfile(input.Username, "Trainer")
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+			c.JSON(http.StatusBadRequest, responses.GetTrainerResponses{
 				Status:  http.StatusBadRequest,
 				Message: `trainer profile retrieval unsuccessful`,
 			})
 			return
 		}
-		c.JSON(http.StatusOK, responses.GetProfileResponses{
+		c.JSON(http.StatusOK, responses.GetTrainerResponses{
 			Status:  http.StatusOK,
 			Message: `Successfully retrieve trainer profile`,
 			User:    result,
@@ -60,12 +61,13 @@ func GetTrainer() gin.HandlerFunc {
 // Update the trainer's profile information.
 // @Summary Update the trainer's profile information.
 // @Tags Trainer
-// @Accept  json
-// @Produce  json
+// @Accept json
+// @Produce json
+// @Security BearerAuth
 // @Param profile body TrainerInput true "Trainer's information to update"
-// @Success 200 {object} responses.ProfileResponses "Successfully update the trainer's profile"
-// @Failure 400 {object} responses.ProfileResponses "Bad Request, either invalid input or user is not a trainer"
-// @Failure 401 {object} responses.ProfileResponses "Unauthorized, the user is not logged in"
+// @Success 200 {object} responses.ProfileResponses
+// @Failure 400 {object} responses.ProfileResponses
+// @Failure 401 {object} responses.ProfileResponses
 // @Router /protected/update-trainer [post]
 func UpdateTrainer() gin.HandlerFunc {
 
@@ -80,7 +82,7 @@ func UpdateTrainer() gin.HandlerFunc {
 		}
 		username, err := tokens.ExtractTokenUsername(c)
 		if err != nil || !models.IsTrainer(username) {
-			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+			c.JSON(http.StatusBadRequest, responses.GetTrainerResponses{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			})
@@ -90,7 +92,7 @@ func UpdateTrainer() gin.HandlerFunc {
 			username, input.Speciality, input.Rating,
 			input.Fee, input.TraineeCount, input.CertificateUrl)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+			c.JSON(http.StatusBadRequest, responses.GetTrainerResponses{
 				Status:  http.StatusBadRequest,
 				Message: `update failed`,
 			})
@@ -98,7 +100,7 @@ func UpdateTrainer() gin.HandlerFunc {
 		}
 
 		c.JSON(http.StatusOK,
-			responses.ProfileResponses{
+			responses.GetTrainerResponses{
 				Status:  http.StatusOK,
 				Message: username + ` update success!`,
 			})
