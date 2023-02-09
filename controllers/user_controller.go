@@ -55,8 +55,9 @@ func CurrentUser() gin.HandlerFunc {
 //	@Tags			user
 //	@Accept			json
 //	@Produce		json
-//	@Param   		json_in_ginContext     body    ProfileInput     true  "put profile input json and pass to  gin.Context"
-//	@Success		200	{object}	responses.ProfileResponses
+//	@Param			json_in_ginContext	body		ProfileInput	true	"put profile input json and pass to  gin.Context"
+//	@Success		200					{object}	responses.ProfileResponses
+//
 //	@Router			/protected/update-profile [post]
 func UpdateProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {

@@ -30,7 +30,7 @@ const docTemplate = `{
                 "summary": "Login",
                 "parameters": [
                     {
-                        "description": "put login input and pass to gin.Context",
+                        "description": "put login input and pass to  gin.Context",
                         "name": "json_in_ginContext",
                         "in": "body",
                         "required": true,
@@ -44,6 +44,40 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.LoginResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/filter-trainer": {
+            "get": {
+                "description": "FilterTrainer base on filter input",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "FilterTrainer base on filter input",
+                "parameters": [
+                    {
+                        "description": "put FilterTrainerInput input json and pass to  gin.Context",
+                        "name": "json_in_ginContext",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.FilterTrainerInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.FilterTrainerResponses"
                         }
                     }
                 }
@@ -67,46 +101,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.GetProfileResponses"
-                        }
-                    }
-                }
-            }
-        },
-        "/protected/trainer": {
-            "get": {
-                "description": "Retrieves the trainer profile information of the user who made the request.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Trainer"
-                ],
-                "summary": "Retrieve trainer profile",
-                "parameters": [
-                    {
-                        "description": "Put username input for retrieving the trainer profile",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/controllers.GetTrainerInput"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved the trainer profile",
-                        "schema": {
-                            "$ref": "#/definitions/responses.GetProfileResponses"
-                        }
-                    },
-                    "400": {
-                        "description": "Failed to retrieve the trainer profile",
-                        "schema": {
-                            "$ref": "#/definitions/responses.GetTrainerResponses"
                         }
                     }
                 }
@@ -139,51 +133,6 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/responses.ProfileResponses"
-                        }
-                    }
-                }
-            }
-        },
-        "/protected/update-trainer": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Trainer"
-                ],
-                "summary": "Update the trainer's profile information.",
-                "parameters": [
-                    {
-                        "description": "Trainer's information to update",
-                        "name": "profile",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/controllers.TrainerInput"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully update the trainer's profile",
-                        "schema": {
-                            "$ref": "#/definitions/responses.ProfileResponses"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request, either invalid input or user is not a trainer",
-                        "schema": {
-                            "$ref": "#/definitions/responses.ProfileResponses"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized, the user is not logged in",
                         "schema": {
                             "$ref": "#/definitions/responses.ProfileResponses"
                         }
@@ -251,14 +200,20 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controllers.GetTrainerInput": {
+        "controllers.FilterTrainerInput": {
             "type": "object",
             "required": [
-                "username"
+                "limit"
             ],
             "properties": {
-                "username": {
-                    "type": "string"
+                "limit": {
+                    "type": "integer"
+                },
+                "speciality": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
@@ -373,29 +328,6 @@ const docTemplate = `{
                 }
             }
         },
-        "controllers.TrainerInput": {
-            "type": "object",
-            "properties": {
-                "certificateUrl": {
-                    "type": "string"
-                },
-                "fee": {
-                    "type": "number"
-                },
-                "rating": {
-                    "type": "number"
-                },
-                "speciality": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "traineeCount": {
-                    "type": "integer"
-                }
-            }
-        },
         "responses.CurrentUserResponse": {
             "type": "object",
             "properties": {
@@ -410,22 +342,25 @@ const docTemplate = `{
                 }
             }
         },
-        "responses.GetProfileResponses": {
+        "responses.FilterTrainerResponses": {
             "type": "object",
             "properties": {
+                "Trainers": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                    }
+                },
                 "message": {
                     "type": "string"
                 },
                 "status": {
                     "type": "integer"
-                },
-                "user": {
-                    "type": "object",
-                    "additionalProperties": true
                 }
             }
         },
-        "responses.GetTrainerResponses": {
+        "responses.GetProfileResponses": {
             "type": "object",
             "properties": {
                 "message": {

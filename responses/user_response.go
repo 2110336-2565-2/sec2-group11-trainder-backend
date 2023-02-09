@@ -12,13 +12,19 @@ type ProfileResponses struct {
 }
 
 type GetProfileResponses struct {
-	Status  int                 `json:"status"`
-	Message string              `json:"message,omitempty"`
+	Status  int                    `json:"status"`
+	Message string                 `json:"message,omitempty"`
 	User    map[string]interface{} `json:"user,omitempty"`
 }
 
 type GetTrainerResponses struct {
-	Status  int                 `json:"status"`
-	Message string              `json:"message,omitempty"`
+	Status  int                    `json:"status"`
+	Message string                 `json:"message,omitempty"`
 	User    map[string]interface{} `json:"user,omitempty"`
+}
+
+type FilterTrainerResponses struct {
+	Status   int                      `json:"status"`
+	Message  string                   `json:"message,omitempty"`
+	Trainers []map[string]interface{} `json:"Trainers,omitempty"`
 }
