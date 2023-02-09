@@ -30,6 +30,9 @@ type ProfileInput struct {
 //	@Accept			json
 //	@Produce		json
 //	@Success		200	{object}	responses.CurrentUserResponse
+//
+//	@Security		BearerAuth
+//
 //	@Router			/protected/user [get]
 func CurrentUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -57,6 +60,8 @@ func CurrentUser() gin.HandlerFunc {
 //	@Produce		json
 //	@Param			json_in_ginContext	body		ProfileInput	true	"put profile input json and pass to  gin.Context"
 //	@Success		200					{object}	responses.ProfileResponses
+//
+//	@Security		BearerAuth
 //
 //	@Router			/protected/update-profile [post]
 func UpdateProfile() gin.HandlerFunc {
@@ -103,13 +108,14 @@ func UpdateProfile() gin.HandlerFunc {
 }
 
 // getProfile godoc
-// @Summary getProfile of the current user
-// @Description getProfile of the current user
-// @Tags user
-// @Accept json
-// @Produce	json
-// @Success	200	{object} responses.GetProfileResponses
-// @Router /protected/profile [get]
+//	@Summary		getProfile of the current user
+//	@Description	getProfile of the current user
+//	@Tags			user
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	responses.GetProfileResponses
+//	@Security		BearerAuth
+//	@Router			/protected/profile [get]
 func GetProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		username, err := tokens.ExtractTokenUsername(c)
