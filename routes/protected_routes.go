@@ -14,5 +14,6 @@ func ProtectedRoute(router *gin.Engine) {
 	protected.POST("/update-profile", controllers.UpdateProfile())
 	protected.GET("/profile", controllers.GetProfile())
 	protected.POST("/trainer", controllers.GetTrainer())
+	protected.POST("/filter-trainer", controllers.FilterTrainer())
 	protected.POST("/update-trainer", controllers.UpdateTrainer())
 }

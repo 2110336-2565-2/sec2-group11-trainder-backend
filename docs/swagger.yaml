@@ -1,10 +1,14 @@
 definitions:
-  controllers.GetTrainerInput:
+  controllers.FilterTrainerInput:
     properties:
-      username:
-        type: string
+      limit:
+        type: integer
+      speciality:
+        items:
+          type: string
+        type: array
     required:
-    - username
+    - limit
     type: object
   controllers.LoginInput:
     properties:
@@ -85,21 +89,6 @@ definitions:
     - username
     - usertype
     type: object
-  controllers.TrainerInput:
-    properties:
-      certificateUrl:
-        type: string
-      fee:
-        type: number
-      rating:
-        type: number
-      speciality:
-        items:
-          type: string
-        type: array
-      traineeCount:
-        type: integer
-    type: object
   responses.CurrentUserResponse:
     properties:
       message:
@@ -109,17 +98,19 @@ definitions:
       username:
         type: string
     type: object
-  responses.GetProfileResponses:
+  responses.FilterTrainerResponses:
     properties:
+      Trainers:
+        items:
+          additionalProperties: true
+          type: object
+        type: array
       message:
         type: string
       status:
         type: integer
-      user:
-        additionalProperties: true
-        type: object
     type: object
-  responses.GetTrainerResponses:
+  responses.GetProfileResponses:
     properties:
       message:
         type: string
@@ -166,7 +157,7 @@ paths:
       - application/json
       description: login with username and password
       parameters:
-      - description: put login input and pass to gin.Context
+      - description: put login input and pass to  gin.Context
         in: body
         name: json_in_ginContext
         required: true
@@ -182,6 +173,28 @@ paths:
       summary: Login
       tags:
       - authentication
+  /protected/filter-trainer:
+    get:
+      consumes:
+      - application/json
+      description: FilterTrainer base on filter input
+      parameters:
+      - description: put FilterTrainerInput input json and pass to  gin.Context
+        in: body
+        name: json_in_ginContext
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.FilterTrainerInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.FilterTrainerResponses'
+      summary: FilterTrainer base on filter input
+      tags:
+      - user
   /protected/profile:
     get:
       consumes:
@@ -267,19 +280,17 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Successfully update the trainer's profile
           schema:
             $ref: '#/definitions/responses.ProfileResponses'
         "400":
-          description: Bad Request
+          description: Bad Request, either invalid input or user is not a trainer
           schema:
             $ref: '#/definitions/responses.ProfileResponses'
         "401":
-          description: Unauthorized
+          description: Unauthorized, the user is not logged in
           schema:
             $ref: '#/definitions/responses.ProfileResponses'
-      security:
-      - BearerAuth: []
       summary: Update the trainer's profile information.
       tags:
       - Trainer

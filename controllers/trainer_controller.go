@@ -1,15 +1,23 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"trainder-api/models"
 	"trainder-api/responses"
+
 	"trainder-api/utils/tokens"
 
 	"github.com/gin-gonic/gin"
 )
 
+type FilterTrainerInput struct {
+	Speciality []string `json:"speciality"`
+	Limit      int      `json:"limit" binding:"required"`
+	// Rating     float64 `json:"Rating" binding:"required"`
+	// Fee        float64 `json:"Fee" binding:"required"`
+}
 type TrainerInput struct {
 	Speciality     []string `json:"speciality"`
 	Rating         float64  `json:"rating"`
@@ -20,6 +28,69 @@ type TrainerInput struct {
 
 type GetTrainerInput struct {
 	Username string `json:"username" binding:"required"`
+}
+
+// FilterTrainer godoc
+//
+//	@Summary		FilterTrainer base on filter input
+//	@Description	FilterTrainer base on filter input
+//	@Tags			user
+//	@Accept			json
+//	@Produce		json
+//	@Param			json_in_ginContext	body		FilterTrainerInput	true	"put FilterTrainerInput input json and pass to  gin.Context"
+//	@Success		200					{object}	responses.FilterTrainerResponses
+//	@Router			/protected/filter-trainer [post]
+func FilterTrainer() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var input FilterTrainerInput
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(http.StatusBadRequest, responses.GetTrainerResponses{
+				Status:  http.StatusBadRequest,
+				Message: "input missing",
+			})
+			return
+		}
+		fmt.Println("FilterTrainer input ", input)
+		result, err := models.FindFilteredTrainer(input.Speciality, input.Limit)
+		fmt.Println(result)
+		// result, err := models.FindProfile(input.Username, "trainer")
+		if err != nil {
+			fmt.Println(err)
+			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+				Status:  http.StatusBadRequest,
+				Message: `filter trainer profile  unsuccessful`,
+			})
+			return
+		}
+		c.JSON(http.StatusOK, responses.FilterTrainerResponses{
+			Status:   http.StatusOK,
+			Message:  `Successfully retrieve filtered trainer`,
+			Trainers: result,
+		})
+
+		// if len(input.Speciality) == 0 {
+		// 	fmt.Println("Etude")
+
+		// } else {
+		// 	result, err := models.FindFilteredTrainer(input.Speciality, input.Limit)
+		// 	fmt.Println(result)
+		// 	// result, err := models.FindProfile(input.Username, "trainer")
+		// 	if err != nil {
+		// 		fmt.Println(err)
+		// 		c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+		// 			Status:  http.StatusBadRequest,
+		// 			Message: `filter trainer profile  unsuccessful`,
+		// 		})
+		// 		return
+		// 	}
+		// 	c.JSON(http.StatusOK, responses.FilterTrainerResponses{
+		// 		Status:   http.StatusOK,
+		// 		Message:  `Successfully retrieve filtered trainer`,
+		// 		Trainers: result,
+		// 	})
+		// }
+
+	}
 }
 
 // GetTrainer retrieves the trainer profile of the user who made the request

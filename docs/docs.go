@@ -30,7 +30,7 @@ const docTemplate = `{
                 "summary": "Login",
                 "parameters": [
                     {
-                        "description": "put login input and pass to gin.Context",
+                        "description": "put login input and pass to  gin.Context",
                         "name": "json_in_ginContext",
                         "in": "body",
                         "required": true,
@@ -44,6 +44,40 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.LoginResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/filter-trainer": {
+            "get": {
+                "description": "FilterTrainer base on filter input",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "FilterTrainer base on filter input",
+                "parameters": [
+                    {
+                        "description": "put FilterTrainerInput input json and pass to  gin.Context",
+                        "name": "json_in_ginContext",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.FilterTrainerInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.FilterTrainerResponses"
                         }
                     }
                 }
@@ -276,14 +310,20 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controllers.GetTrainerInput": {
+        "controllers.FilterTrainerInput": {
             "type": "object",
             "required": [
-                "username"
+                "limit"
             ],
             "properties": {
-                "username": {
-                    "type": "string"
+                "limit": {
+                    "type": "integer"
+                },
+                "speciality": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
@@ -398,29 +438,6 @@ const docTemplate = `{
                 }
             }
         },
-        "controllers.TrainerInput": {
-            "type": "object",
-            "properties": {
-                "certificateUrl": {
-                    "type": "string"
-                },
-                "fee": {
-                    "type": "number"
-                },
-                "rating": {
-                    "type": "number"
-                },
-                "speciality": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "traineeCount": {
-                    "type": "integer"
-                }
-            }
-        },
         "responses.CurrentUserResponse": {
             "type": "object",
             "properties": {
@@ -435,22 +452,25 @@ const docTemplate = `{
                 }
             }
         },
-        "responses.GetProfileResponses": {
+        "responses.FilterTrainerResponses": {
             "type": "object",
             "properties": {
+                "Trainers": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                    }
+                },
                 "message": {
                     "type": "string"
                 },
                 "status": {
                     "type": "integer"
-                },
-                "user": {
-                    "type": "object",
-                    "additionalProperties": true
                 }
             }
         },
-        "responses.GetTrainerResponses": {
+        "responses.GetProfileResponses": {
             "type": "object",
             "properties": {
                 "message": {
