@@ -10,6 +10,13 @@ definitions:
     required:
     - limit
     type: object
+  controllers.GetTrainerInput:
+    properties:
+      username:
+        type: string
+    required:
+    - username
+    type: object
   controllers.LoginInput:
     properties:
       password:
@@ -89,6 +96,21 @@ definitions:
     - username
     - usertype
     type: object
+  controllers.TrainerInput:
+    properties:
+      certificateUrl:
+        type: string
+      fee:
+        type: number
+      rating:
+        type: number
+      speciality:
+        items:
+          type: string
+        type: array
+      traineeCount:
+        type: integer
+    type: object
   responses.CurrentUserResponse:
     properties:
       message:
@@ -111,6 +133,16 @@ definitions:
         type: integer
     type: object
   responses.GetProfileResponses:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+      user:
+        additionalProperties: true
+        type: object
+    type: object
+  responses.GetTrainerResponses:
     properties:
       message:
         type: string
@@ -210,6 +242,33 @@ paths:
       summary: getProfile of the current user
       tags:
       - user
+  /protected/trainer:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves the trainer profile information of the user who made
+        the request.
+      parameters:
+      - description: Put username input for retrieving the trainer profile
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.GetTrainerInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved the trainer profile
+          schema:
+            $ref: '#/definitions/responses.GetProfileResponses'
+        "400":
+          description: Failed to retrieve the trainer profile
+          schema:
+            $ref: '#/definitions/responses.GetTrainerResponses'
+      summary: Retrieve trainer profile
+      tags:
+      - Trainer
   /protected/update-profile:
     post:
       consumes:
@@ -232,6 +291,35 @@ paths:
       summary: updateProfile of the current user
       tags:
       - user
+  /protected/update-trainer:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Trainer's information to update
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.TrainerInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully update the trainer's profile
+          schema:
+            $ref: '#/definitions/responses.ProfileResponses'
+        "400":
+          description: Bad Request, either invalid input or user is not a trainer
+          schema:
+            $ref: '#/definitions/responses.ProfileResponses'
+        "401":
+          description: Unauthorized, the user is not logged in
+          schema:
+            $ref: '#/definitions/responses.ProfileResponses'
+      summary: Update the trainer's profile information.
+      tags:
+      - Trainer
   /protected/user:
     get:
       consumes:

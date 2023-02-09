@@ -106,6 +106,46 @@ const docTemplate = `{
                 }
             }
         },
+        "/protected/trainer": {
+            "get": {
+                "description": "Retrieves the trainer profile information of the user who made the request.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Trainer"
+                ],
+                "summary": "Retrieve trainer profile",
+                "parameters": [
+                    {
+                        "description": "Put username input for retrieving the trainer profile",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.GetTrainerInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved the trainer profile",
+                        "schema": {
+                            "$ref": "#/definitions/responses.GetProfileResponses"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to retrieve the trainer profile",
+                        "schema": {
+                            "$ref": "#/definitions/responses.GetTrainerResponses"
+                        }
+                    }
+                }
+            }
+        },
         "/protected/update-profile": {
             "post": {
                 "description": "updateProfile of the current user",
@@ -133,6 +173,51 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ProfileResponses"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/update-trainer": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Trainer"
+                ],
+                "summary": "Update the trainer's profile information.",
+                "parameters": [
+                    {
+                        "description": "Trainer's information to update",
+                        "name": "profile",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.TrainerInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully update the trainer's profile",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ProfileResponses"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, either invalid input or user is not a trainer",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ProfileResponses"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, the user is not logged in",
                         "schema": {
                             "$ref": "#/definitions/responses.ProfileResponses"
                         }
@@ -214,6 +299,17 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
+                }
+            }
+        },
+        "controllers.GetTrainerInput": {
+            "type": "object",
+            "required": [
+                "username"
+            ],
+            "properties": {
+                "username": {
+                    "type": "string"
                 }
             }
         },
@@ -328,6 +424,29 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.TrainerInput": {
+            "type": "object",
+            "properties": {
+                "certificateUrl": {
+                    "type": "string"
+                },
+                "fee": {
+                    "type": "number"
+                },
+                "rating": {
+                    "type": "number"
+                },
+                "speciality": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "traineeCount": {
+                    "type": "integer"
+                }
+            }
+        },
         "responses.CurrentUserResponse": {
             "type": "object",
             "properties": {
@@ -361,6 +480,21 @@ const docTemplate = `{
             }
         },
         "responses.GetProfileResponses": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "user": {
+                    "type": "object",
+                    "additionalProperties": true
+                }
+            }
+        },
+        "responses.GetTrainerResponses": {
             "type": "object",
             "properties": {
                 "message": {
