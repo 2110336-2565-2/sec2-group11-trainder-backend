@@ -14,10 +14,10 @@ import (
 var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
 
 type TrainerInfo struct {
-	Speciality     []string `bson:"speciality" json:"speciality"`
-	Fee            int      `bson:"fee" json:"fee"`
-	CertificateURL string   `bson:"certificateUrl" json:"certificateUrl"`
-	Rating         float64  `json:"rating "`
+	Speciality     []string `bson:"speciality" `
+	Fee            int      `bson:"fee" `
+	CertificateURL string   `bson:"certificateUrl" `
+	Rating         float64  `json:"rating"`
 	TraineeCount   int32    `json:"traineeCount" `
 }
 type User struct {
@@ -35,7 +35,7 @@ type User struct {
 	CreatedAt      time.Time   `bson:"createdAt"`
 	UpdatedAt      time.Time   `bson:"updatedAt"`
 	AvatarUrl      string      `bson:"avatarUrl"`
-	TrainerInfo    TrainerInfo `bson:"trainerInfo" json:"trainerInfo"`
+	TrainerInfo    TrainerInfo //`bson:"trainerInfo" json:"trainerInfo"`
 }
 
 func FindUser(username string) (user User, err error) {
