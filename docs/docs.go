@@ -50,7 +50,7 @@ const docTemplate = `{
             }
         },
         "/protected/filter-trainer": {
-            "get": {
+            "post": {
                 "description": "FilterTrainer base on filter input",
                 "consumes": [
                     "application/json"

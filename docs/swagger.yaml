@@ -206,7 +206,7 @@ paths:
       tags:
       - authentication
   /protected/filter-trainer:
-    get:
+    post:
       consumes:
       - application/json
       description: FilterTrainer base on filter input
