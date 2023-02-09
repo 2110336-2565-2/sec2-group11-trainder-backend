@@ -29,9 +29,7 @@ type RegisterInput struct {
 // @ID			register-user
 // @Accept		json
 // @Produce		json
-//
-//	@Param   	json_in_ginContext     body    RegisterInput     true  "put register input and pass to  gin.Context"
-//
+// @Param   	json_in_ginContext     body    RegisterInput     true  "put register input and pass to  gin.Context"
 // @Success		200	{object}	responses.RegisterResponse
 // @Router		/register [post]
 func Register() gin.HandlerFunc {
@@ -77,16 +75,14 @@ type LoginInput struct {
 }
 
 // Login godoc
-//
-//	@Summary		Login
-//	@Description	login with username and password
-//	@Tags			authentication
-//	@Accept			json
-//	@Produce		json
-//	@Param   		json_in_ginContext     body    LoginInput     true  "put login input and pass to  gin.Context"
-//	@Success		200	{object}	responses.LoginResponse
-//
-//	@Router			/login [post]
+// @Summary Login
+// @Description	login with username and password
+// @Tags authentication
+// @Accept json
+// @Produce json
+// @Param json_in_ginContext body LoginInput true "put login input and pass to gin.Context"
+// @Success 200	{object} responses.LoginResponse
+// @Router /login [post]
 func Login() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input LoginInput

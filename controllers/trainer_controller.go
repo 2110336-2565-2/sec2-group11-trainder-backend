@@ -22,6 +22,16 @@ type GetTrainerInput struct {
 	Username string `json:"username" binding:"required"`
 }
 
+// GetTrainer retrieves the trainer profile of the user who made the request
+// @Summary	Retrieve trainer profile
+// @Description	Retrieves the trainer profile information of the user who made the request.
+// @Tags Trainer
+// @Accept  json
+// @Produce  json
+// @Param input body GetTrainerInput true "Put username input for retrieving the trainer profile"
+// @Success 200 {object} responses.GetProfileResponses "Successfully retrieved the trainer profile"
+// @Failure 400 {object} responses.GetTrainerResponses "Failed to retrieve the trainer profile"
+// @Router /protected/trainer [get]
 func GetTrainer() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input GetTrainerInput
@@ -47,6 +57,16 @@ func GetTrainer() gin.HandlerFunc {
 	}
 }
 
+// Update the trainer's profile information.
+// @Summary Update the trainer's profile information.
+// @Tags Trainer
+// @Accept  json
+// @Produce  json
+// @Param profile body TrainerInput true "Trainer's information to update"
+// @Success 200 {object} responses.ProfileResponses "Successfully update the trainer's profile"
+// @Failure 400 {object} responses.ProfileResponses "Bad Request, either invalid input or user is not a trainer"
+// @Failure 401 {object} responses.ProfileResponses "Unauthorized, the user is not logged in"
+// @Router /protected/update-trainer [post]
 func UpdateTrainer() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
