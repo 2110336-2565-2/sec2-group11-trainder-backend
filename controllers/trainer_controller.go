@@ -15,8 +15,8 @@ import (
 type FilterTrainerInput struct {
 	Speciality []string `json:"speciality"`
 	Limit      int      `json:"limit" binding:"required"`
-	// Rating     float32 `json:"Rating" binding:"required"`
-	// Fee        float32 `json:"Fee" binding:"required"`
+	// Rating     float64 `json:"Rating" binding:"required"`
+	// Fee        float64 `json:"Fee" binding:"required"`
 }
 type TrainerInput struct {
 	Speciality     []string `json:"speciality"`
@@ -45,7 +45,7 @@ func FilterTrainer() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input FilterTrainerInput
 		if err := c.ShouldBindJSON(&input); err != nil {
-			c.JSON(http.StatusBadRequest, responses.GetTrainerResponses{
+			c.JSON(http.StatusBadRequest, responses.FilterTrainerResponses{
 				Status:  http.StatusBadRequest,
 				Message: "input missing",
 			})
@@ -57,7 +57,7 @@ func FilterTrainer() gin.HandlerFunc {
 		// result, err := models.FindProfile(input.Username, "trainer")
 		if err != nil {
 			fmt.Println(err)
-			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+			c.JSON(http.StatusBadRequest, responses.FilterTrainerResponses{
 				Status:  http.StatusBadRequest,
 				Message: `filter trainer profile  unsuccessful`,
 			})
@@ -78,7 +78,7 @@ func FilterTrainer() gin.HandlerFunc {
 		// 	// result, err := models.FindProfile(input.Username, "trainer")
 		// 	if err != nil {
 		// 		fmt.Println(err)
-		// 		c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+		// 		c.JSON(http.StatusBadRequest, responses.FilterTrainerResponse{
 		// 			Status:  http.StatusBadRequest,
 		// 			Message: `filter trainer profile  unsuccessful`,
 		// 		})
@@ -117,13 +117,13 @@ func GetTrainer() gin.HandlerFunc {
 		}
 		result, err := models.FindProfile(input.Username, "Trainer")
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+			c.JSON(http.StatusBadRequest, responses.GetTrainerResponses{
 				Status:  http.StatusBadRequest,
-				Message: `trainer profile retrieval unsuccessful`,
+				Message: "Failed to retrieve the trainer profile",
 			})
 			return
 		}
-		c.JSON(http.StatusOK, responses.GetProfileResponses{
+		c.JSON(http.StatusOK, responses.GetTrainerResponses{
 			Status:  http.StatusOK,
 			Message: `Successfully retrieve trainer profile`,
 			User:    result,
@@ -148,7 +148,7 @@ func UpdateTrainer() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input TrainerInput
 		if err := c.ShouldBindJSON(&input); err != nil {
-			c.JSON(http.StatusBadRequest, responses.ProfileResponses{
+			c.JSON(http.StatusBadRequest, responses.GetTrainerResponses{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			})
@@ -156,7 +156,7 @@ func UpdateTrainer() gin.HandlerFunc {
 		}
 		username, err := tokens.ExtractTokenUsername(c)
 		if err != nil || !models.IsTrainer(username) {
-			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+			c.JSON(http.StatusBadRequest, responses.GetTrainerResponses{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			})
@@ -166,7 +166,7 @@ func UpdateTrainer() gin.HandlerFunc {
 			username, input.Speciality, input.Rating,
 			input.Fee, input.TraineeCount, input.CertificateUrl)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+			c.JSON(http.StatusBadRequest, responses.GetTrainerResponses{
 				Status:  http.StatusBadRequest,
 				Message: `update failed`,
 			})
@@ -174,7 +174,7 @@ func UpdateTrainer() gin.HandlerFunc {
 		}
 
 		c.JSON(http.StatusOK,
-			responses.ProfileResponses{
+			responses.GetTrainerResponses{
 				Status:  http.StatusOK,
 				Message: username + ` update success!`,
 			})
