@@ -69,7 +69,7 @@ func FilterTrainer() gin.HandlerFunc {
 		})
 
 		// if len(input.Speciality) == 0 {
-		// 	fmt.Println("kuay")
+		// 	fmt.Println("Etude")
 
 		// } else {
 		// 	result, err := models.FindFilteredTrainer(input.Speciality, input.Limit)

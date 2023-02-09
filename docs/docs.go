@@ -203,10 +203,13 @@ const docTemplate = `{
         "controllers.FilterTrainerInput": {
             "type": "object",
             "required": [
-                "Speciality"
+                "limit"
             ],
             "properties": {
-                "Speciality": {
+                "limit": {
+                    "type": "integer"
+                },
+                "speciality": {
                     "type": "array",
                     "items": {
                         "type": "string"

@@ -1,12 +1,14 @@
 definitions:
   controllers.FilterTrainerInput:
     properties:
-      Speciality:
+      limit:
+        type: integer
+      speciality:
         items:
           type: string
         type: array
     required:
-    - Speciality
+    - limit
     type: object
   controllers.LoginInput:
     properties:
