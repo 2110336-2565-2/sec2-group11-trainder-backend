@@ -36,7 +36,8 @@ type GetTrainerInput struct {
 //	@Tags			user
 //	@Accept			json
 //	@Produce		json
-//	@Success		200	{object}	responses.FilterTrainerResponses
+//	@Param			json_in_ginContext	body		FilterTrainerInput	true	"put FilterTrainerInput input json and pass to  gin.Context"
+//	@Success		200					{object}	responses.FilterTrainerResponses
 //
 //	@Router			/protected/filter-trainer [get]
 func FilterTrainer() gin.HandlerFunc {

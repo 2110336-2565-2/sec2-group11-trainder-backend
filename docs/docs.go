@@ -62,6 +62,17 @@ const docTemplate = `{
                     "user"
                 ],
                 "summary": "FilterTrainer base on filter input",
+                "parameters": [
+                    {
+                        "description": "put FilterTrainerInput input json and pass to  gin.Context",
+                        "name": "json_in_ginContext",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.FilterTrainerInput"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -189,6 +200,20 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "controllers.FilterTrainerInput": {
+            "type": "object",
+            "required": [
+                "Speciality"
+            ],
+            "properties": {
+                "Speciality": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "controllers.LoginInput": {
             "type": "object",
             "required": [

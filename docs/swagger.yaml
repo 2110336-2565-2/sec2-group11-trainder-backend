@@ -1,4 +1,13 @@
 definitions:
+  controllers.FilterTrainerInput:
+    properties:
+      Speciality:
+        items:
+          type: string
+        type: array
+    required:
+    - Speciality
+    type: object
   controllers.LoginInput:
     properties:
       password:
@@ -167,6 +176,13 @@ paths:
       consumes:
       - application/json
       description: FilterTrainer base on filter input
+      parameters:
+      - description: put FilterTrainerInput input json and pass to  gin.Context
+        in: body
+        name: json_in_ginContext
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.FilterTrainerInput'
       produces:
       - application/json
       responses:
