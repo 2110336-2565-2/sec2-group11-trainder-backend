@@ -70,7 +70,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "put FilterTrainerInput input json and pass to  gin.Context",
-                        "name": "json_in_ginContext",
+                        "name": "filter_input",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -147,13 +147,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Successfully retrieved the trainer profile",
                         "schema": {
-                            "$ref": "#/definitions/responses.GetTrainerResponses"
+                            "$ref": "#/definitions/responses.GetProfileResponses"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Failed to retrieve the trainer profile",
                         "schema": {
                             "$ref": "#/definitions/responses.GetTrainerResponses"
                         }
@@ -230,19 +230,19 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Successfully update the trainer's profile",
                         "schema": {
                             "$ref": "#/definitions/responses.ProfileResponses"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Bad Request, either invalid input or user is not a trainer",
                         "schema": {
                             "$ref": "#/definitions/responses.ProfileResponses"
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "Unauthorized, the user is not logged in",
                         "schema": {
                             "$ref": "#/definitions/responses.ProfileResponses"
                         }
@@ -253,6 +253,9 @@ const docTemplate = `{
         "/protected/user": {
             "get": {
                 "security": [
+                    {
+                        "BearerAuth": []
+                    },
                     {
                         "BearerAuth": []
                     }
@@ -294,7 +297,7 @@ const docTemplate = `{
                 "operationId": "register-user",
                 "parameters": [
                     {
-                        "description": "put register input and pass to gin.Context",
+                        "description": "put register input and pass to  gin.Context",
                         "name": "json_in_ginContext",
                         "in": "body",
                         "required": true,

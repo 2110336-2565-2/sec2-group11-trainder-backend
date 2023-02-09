@@ -213,7 +213,7 @@ paths:
       parameters:
       - description: put FilterTrainerInput input json and pass to  gin.Context
         in: body
-        name: json_in_ginContext
+        name: filter_input
         required: true
         schema:
           $ref: '#/definitions/controllers.FilterTrainerInput'
@@ -263,11 +263,11 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Successfully retrieved the trainer profile
           schema:
-            $ref: '#/definitions/responses.GetTrainerResponses'
+            $ref: '#/definitions/responses.GetProfileResponses'
         "400":
-          description: Bad Request
+          description: Failed to retrieve the trainer profile
           schema:
             $ref: '#/definitions/responses.GetTrainerResponses'
       security:
@@ -314,15 +314,15 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Successfully update the trainer's profile
           schema:
             $ref: '#/definitions/responses.ProfileResponses'
         "400":
-          description: Bad Request
+          description: Bad Request, either invalid input or user is not a trainer
           schema:
             $ref: '#/definitions/responses.ProfileResponses'
         "401":
-          description: Unauthorized
+          description: Unauthorized, the user is not logged in
           schema:
             $ref: '#/definitions/responses.ProfileResponses'
       security:
@@ -345,6 +345,7 @@ paths:
             $ref: '#/definitions/responses.CurrentUserResponse'
       security:
       - BearerAuth: []
+      - BearerAuth: []
       summary: get the current user's username
       tags:
       - user
@@ -357,7 +358,7 @@ paths:
         (len ==10),Address,SubAddress
       operationId: register-user
       parameters:
-      - description: put register input and pass to gin.Context
+      - description: put register input and pass to  gin.Context
         in: body
         name: json_in_ginContext
         required: true
