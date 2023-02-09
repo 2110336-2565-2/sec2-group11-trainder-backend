@@ -30,7 +30,6 @@ type ProfileInput struct {
 //	@Accept			json
 //	@Produce		json
 //	@Success		200	{object}	responses.CurrentUserResponse
-//
 //	@Router			/protected/user [get]
 func CurrentUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -104,15 +103,13 @@ func UpdateProfile() gin.HandlerFunc {
 }
 
 // getProfile godoc
-//
-//	@Summary		getProfile of the current user
-//	@Description	getProfile of the current user
-//	@Tags			user
-//	@Accept			json
-//	@Produce		json
-//	@Success		200	{object}	responses.GetProfileResponses
-//
-//	@Router			/protected/profile [get]
+// @Summary getProfile of the current user
+// @Description getProfile of the current user
+// @Tags user
+// @Accept json
+// @Produce	json
+// @Success	200	{object} responses.GetProfileResponses
+// @Router /protected/profile [get]
 func GetProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		username, err := tokens.ExtractTokenUsername(c)

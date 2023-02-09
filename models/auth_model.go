@@ -17,8 +17,8 @@ type TrainerInfo struct {
 	Speciality     []string `bson:"speciality" `
 	Fee            int      `bson:"fee" `
 	CertificateURL string   `bson:"certificateUrl" `
-	Rating         float64  `json:"rating"`
-	TraineeCount   int32    `json:"traineeCount" `
+	Rating         float64  `bson:"rating"`
+	TraineeCount   int32    `bson:"traineeCount" `
 }
 type User struct {
 	Username       string      `bson:"username"`
