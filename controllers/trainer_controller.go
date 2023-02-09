@@ -34,9 +34,10 @@ type GetTrainerInput struct {
 //
 //	@Summary		FilterTrainer base on filter input
 //	@Description	FilterTrainer base on filter input
-//	@Tags			user
+//	@Tags			Trainer
 //	@Accept			json
 //	@Produce		json
+//	@Security		BearerAuth
 //	@Param			json_in_ginContext	body		FilterTrainerInput	true	"put FilterTrainerInput input json and pass to  gin.Context"
 //	@Success		200					{object}	responses.FilterTrainerResponses
 //	@Router			/protected/filter-trainer [post]
@@ -44,7 +45,7 @@ func FilterTrainer() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input FilterTrainerInput
 		if err := c.ShouldBindJSON(&input); err != nil {
-			c.JSON(http.StatusBadRequest, responses.GetTrainerResponses{
+			c.JSON(http.StatusBadRequest, responses.FilterTrainerResponses{
 				Status:  http.StatusBadRequest,
 				Message: "input missing",
 			})
@@ -56,7 +57,7 @@ func FilterTrainer() gin.HandlerFunc {
 		// result, err := models.FindProfile(input.Username, "trainer")
 		if err != nil {
 			fmt.Println(err)
-			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+			c.JSON(http.StatusBadRequest, responses.FilterTrainerResponses{
 				Status:  http.StatusBadRequest,
 				Message: `filter trainer profile  unsuccessful`,
 			})
@@ -77,7 +78,7 @@ func FilterTrainer() gin.HandlerFunc {
 		// 	// result, err := models.FindProfile(input.Username, "trainer")
 		// 	if err != nil {
 		// 		fmt.Println(err)
-		// 		c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+		// 		c.JSON(http.StatusBadRequest, responses.FilterTrainerResponse{
 		// 			Status:  http.StatusBadRequest,
 		// 			Message: `filter trainer profile  unsuccessful`,
 		// 		})
@@ -97,8 +98,8 @@ func FilterTrainer() gin.HandlerFunc {
 // @Summary	Retrieve trainer profile
 // @Description	Retrieves the trainer profile information of the user who made the request.
 // @Tags Trainer
-// @Accept  json
-// @Produce  json
+// @Accept json
+// @Produce json
 // @Security BearerAuth
 // @Param input body GetTrainerInput true "Put username input for retrieving the trainer profile"
 // @Success 200 {object} responses.GetTrainerResponses
@@ -145,7 +146,7 @@ func UpdateTrainer() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input TrainerInput
 		if err := c.ShouldBindJSON(&input); err != nil {
-			c.JSON(http.StatusBadRequest, responses.ProfileResponses{
+			c.JSON(http.StatusBadRequest, responses.GetTrainerResponses{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			})

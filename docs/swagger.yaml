@@ -10,6 +10,13 @@ definitions:
     required:
     - limit
     type: object
+  controllers.GetTrainerInput:
+    properties:
+      username:
+        type: string
+    required:
+    - username
+    type: object
   controllers.LoginInput:
     properties:
       password:
@@ -89,6 +96,21 @@ definitions:
     - username
     - usertype
     type: object
+  controllers.TrainerInput:
+    properties:
+      certificateUrl:
+        type: string
+      fee:
+        type: number
+      rating:
+        type: number
+      speciality:
+        items:
+          type: string
+        type: array
+      traineeCount:
+        type: integer
+    type: object
   responses.CurrentUserResponse:
     properties:
       message:
@@ -111,6 +133,16 @@ definitions:
         type: integer
     type: object
   responses.GetProfileResponses:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+      user:
+        additionalProperties: true
+        type: object
+    type: object
+  responses.GetTrainerResponses:
     properties:
       message:
         type: string
@@ -174,7 +206,7 @@ paths:
       tags:
       - authentication
   /protected/filter-trainer:
-    get:
+    post:
       consumes:
       - application/json
       description: FilterTrainer base on filter input
@@ -192,9 +224,11 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.FilterTrainerResponses'
+      security:
+      - BearerAuth: []
       summary: FilterTrainer base on filter input
       tags:
-      - user
+      - Trainer
   /protected/profile:
     get:
       consumes:
@@ -280,17 +314,19 @@ paths:
       - application/json
       responses:
         "200":
-          description: Successfully update the trainer's profile
+          description: OK
           schema:
             $ref: '#/definitions/responses.ProfileResponses'
         "400":
-          description: Bad Request, either invalid input or user is not a trainer
+          description: Bad Request
           schema:
             $ref: '#/definitions/responses.ProfileResponses'
         "401":
-          description: Unauthorized, the user is not logged in
+          description: Unauthorized
           schema:
             $ref: '#/definitions/responses.ProfileResponses'
+      security:
+      - BearerAuth: []
       summary: Update the trainer's profile information.
       tags:
       - Trainer
@@ -321,7 +357,7 @@ paths:
         (len ==10),Address,SubAddress
       operationId: register-user
       parameters:
-      - description: put register input and pass to  gin.Context
+      - description: put register input and pass to gin.Context
         in: body
         name: json_in_ginContext
         required: true

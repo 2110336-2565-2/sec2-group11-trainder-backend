@@ -50,7 +50,12 @@ const docTemplate = `{
             }
         },
         "/protected/filter-trainer": {
-            "get": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "FilterTrainer base on filter input",
                 "consumes": [
                     "application/json"
@@ -59,7 +64,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "Trainer"
                 ],
                 "summary": "FilterTrainer base on filter input",
                 "parameters": [
@@ -289,7 +294,7 @@ const docTemplate = `{
                 "operationId": "register-user",
                 "parameters": [
                     {
-                        "description": "put register input and pass to  gin.Context",
+                        "description": "put register input and pass to gin.Context",
                         "name": "json_in_ginContext",
                         "in": "body",
                         "required": true,
@@ -324,6 +329,17 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
+                }
+            }
+        },
+        "controllers.GetTrainerInput": {
+            "type": "object",
+            "required": [
+                "username"
+            ],
+            "properties": {
+                "username": {
+                    "type": "string"
                 }
             }
         },
@@ -438,6 +454,29 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.TrainerInput": {
+            "type": "object",
+            "properties": {
+                "certificateUrl": {
+                    "type": "string"
+                },
+                "fee": {
+                    "type": "number"
+                },
+                "rating": {
+                    "type": "number"
+                },
+                "speciality": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "traineeCount": {
+                    "type": "integer"
+                }
+            }
+        },
         "responses.CurrentUserResponse": {
             "type": "object",
             "properties": {
@@ -471,6 +510,21 @@ const docTemplate = `{
             }
         },
         "responses.GetProfileResponses": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "user": {
+                    "type": "object",
+                    "additionalProperties": true
+                }
+            }
+        },
+        "responses.GetTrainerResponses": {
             "type": "object",
             "properties": {
                 "message": {
