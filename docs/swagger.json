@@ -109,7 +109,7 @@
             }
         },
         "/protected/trainer": {
-            "get": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -245,6 +245,9 @@
         "/protected/user": {
             "get": {
                 "security": [
+                    {
+                        "BearerAuth": []
+                    },
                     {
                         "BearerAuth": []
                     }
@@ -569,6 +572,13 @@
                     "type": "integer"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

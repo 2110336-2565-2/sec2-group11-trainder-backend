@@ -247,7 +247,7 @@ paths:
       tags:
       - user
   /protected/trainer:
-    get:
+    post:
       consumes:
       - application/json
       description: Retrieves the trainer profile information of the user who made
@@ -345,6 +345,7 @@ paths:
             $ref: '#/definitions/responses.CurrentUserResponse'
       security:
       - BearerAuth: []
+      - BearerAuth: []
       summary: get the current user's username
       tags:
       - user
@@ -373,4 +374,9 @@ paths:
       summary: Register user
       tags:
       - authentication
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

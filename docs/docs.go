@@ -117,7 +117,7 @@ const docTemplate = `{
             }
         },
         "/protected/trainer": {
-            "get": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -253,6 +253,9 @@ const docTemplate = `{
         "/protected/user": {
             "get": {
                 "security": [
+                    {
+                        "BearerAuth": []
+                    },
                     {
                         "BearerAuth": []
                     }
@@ -577,6 +580,13 @@ const docTemplate = `{
                     "type": "integer"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

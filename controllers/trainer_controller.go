@@ -105,7 +105,7 @@ func FilterTrainer() gin.HandlerFunc {
 //	@Success		200		{object}	responses.GetProfileResponses	"Successfully retrieved the trainer profile"
 //	@Failure		400		{object}	responses.GetTrainerResponses	"Failed to retrieve the trainer profile"
 //	@Security		BearerAuth
-//	@Router			/protected/trainer [get]
+//	@Router			/protected/trainer [post]
 func GetTrainer() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input GetTrainerInput
