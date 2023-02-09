@@ -13,6 +13,8 @@ definitions:
     properties:
       address:
         type: string
+      avatarUrl:
+        type: string
       birthdate:
         type: string
       citizenId:
@@ -40,6 +42,8 @@ definitions:
   controllers.RegisterInput:
     properties:
       address:
+        type: string
+      avatarUrl:
         type: string
       birthdate:
         type: string

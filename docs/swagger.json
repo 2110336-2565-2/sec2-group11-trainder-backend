@@ -189,6 +189,9 @@
                 "address": {
                     "type": "string"
                 },
+                "avatarUrl": {
+                    "type": "string"
+                },
                 "birthdate": {
                     "type": "string"
                 },
@@ -229,6 +232,9 @@
             ],
             "properties": {
                 "address": {
+                    "type": "string"
+                },
+                "avatarUrl": {
                     "type": "string"
                 },
                 "birthdate": {

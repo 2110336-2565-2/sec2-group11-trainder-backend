@@ -14,19 +14,19 @@ func UpdateTrainerProfile(username string, speciality []string, rating float64, 
 	defer cancel()
 	update := bson.M{}
 	if len(speciality) > 0 {
-		update["trainerInfo.speciality"] = speciality
+		update["speciality"] = speciality
 	}
 	if rating > 0 {
-		update["trainerInfo.rating"] = rating
+		update["rating"] = rating
 	}
 	if fee > 0 {
-		update["trainerInfo.fee"] = fee
+		update["fee"] = fee
 	}
 	if traineeCount > 0 {
-		update["trainerInfo.traineeCount"] = traineeCount
+		update["traineeCount"] = traineeCount
 	}
 	if certificateUrl != "" {
-		update["trainerInfo.certificateUrl"] = certificateUrl
+		update["certificateUrl"] = certificateUrl
 	}
 	result, err = userCollection.UpdateOne(
 		ctx,

@@ -11,11 +11,11 @@ import (
 )
 
 type TrainerInput struct {
-	Speciality     []string `json:"speciality" `
-	Rating         float64  `json:"raiting "`
-	Fee            float64  `json:"fee `
-	TraineeCount   int32    `json:"traineeCount `
-	CertificateUrl string   `json:"certificateUrl`
+	Speciality     []string `json:"speciality"`
+	Rating         float64  `json:"rating"`
+	Fee            float64  `json:"fee"`
+	TraineeCount   int32    `json:"traineeCount"`
+	CertificateUrl string   `json:"certificateUrl"`
 }
 
 type GetTrainerInput struct {

@@ -197,6 +197,9 @@ const docTemplate = `{
                 "address": {
                     "type": "string"
                 },
+                "avatarUrl": {
+                    "type": "string"
+                },
                 "birthdate": {
                     "type": "string"
                 },
@@ -237,6 +240,9 @@ const docTemplate = `{
             ],
             "properties": {
                 "address": {
+                    "type": "string"
+                },
+                "avatarUrl": {
                     "type": "string"
                 },
                 "birthdate": {
