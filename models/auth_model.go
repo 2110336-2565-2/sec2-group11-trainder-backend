@@ -13,21 +13,29 @@ import (
 
 var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
 
+type TrainerInfo struct {
+	Speciality     []string `bson:"speciality" `
+	Fee            int      `bson:"fee" `
+	CertificateURL string   `bson:"certificateUrl" `
+	Rating         float64  `json:"rating"`
+	TraineeCount   int32    `json:"traineeCount" `
+}
 type User struct {
-	Username       string    `bson:"username"`
-	HashedPassword string    `bson:"hashedPassword"`
-	UserType       string    `bson:"usertype"`
-	FirstName      string    `bson:"firstname" `
-	LastName       string    `bson:"lastname"`
-	BirthDate      time.Time `bson:"birthdate"`
-	CitizenId      string    `bson:"citizenId"`
-	Gender         string    `bson:"gender"`
-	PhoneNumber    string    `bson:"phoneNumber"`
-	Address        string    `bson:"address"`
-	SubAddress     string    `bson:"subAddress"`
-	CreatedAt      time.Time `bson:"createdAt"`
-	UpdatedAt      time.Time `bson:"updatedAt"`
-	AvatarUrl      string    `bson:"avatarUrl"`
+	Username       string      `bson:"username"`
+	HashedPassword string      `bson:"hashedPassword"`
+	UserType       string      `bson:"usertype"`
+	FirstName      string      `bson:"firstname" `
+	LastName       string      `bson:"lastname"`
+	BirthDate      time.Time   `bson:"birthdate"`
+	CitizenId      string      `bson:"citizenId"`
+	Gender         string      `bson:"gender"`
+	PhoneNumber    string      `bson:"phoneNumber"`
+	Address        string      `bson:"address"`
+	SubAddress     string      `bson:"subAddress"`
+	CreatedAt      time.Time   `bson:"createdAt"`
+	UpdatedAt      time.Time   `bson:"updatedAt"`
+	AvatarUrl      string      `bson:"avatarUrl"`
+	TrainerInfo    TrainerInfo //`bson:"trainerInfo" json:"trainerInfo"`
 }
 
 func FindUser(username string) (user User, err error) {

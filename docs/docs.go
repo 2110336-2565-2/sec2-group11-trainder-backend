@@ -49,6 +49,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/protected/filter-trainer": {
+            "get": {
+                "description": "FilterTrainer base on filter input",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "FilterTrainer base on filter input",
+                "parameters": [
+                    {
+                        "description": "put FilterTrainerInput input json and pass to  gin.Context",
+                        "name": "json_in_ginContext",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.FilterTrainerInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.FilterTrainerResponses"
+                        }
+                    }
+                }
+            }
+        },
         "/protected/profile": {
             "get": {
                 "description": "getProfile of the current user",
@@ -166,6 +200,23 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "controllers.FilterTrainerInput": {
+            "type": "object",
+            "required": [
+                "limit"
+            ],
+            "properties": {
+                "limit": {
+                    "type": "integer"
+                },
+                "speciality": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "controllers.LoginInput": {
             "type": "object",
             "required": [
@@ -195,6 +246,9 @@ const docTemplate = `{
             ],
             "properties": {
                 "address": {
+                    "type": "string"
+                },
+                "avatarUrl": {
                     "type": "string"
                 },
                 "birthdate": {
@@ -237,6 +291,9 @@ const docTemplate = `{
             ],
             "properties": {
                 "address": {
+                    "type": "string"
+                },
+                "avatarUrl": {
                     "type": "string"
                 },
                 "birthdate": {
@@ -282,6 +339,24 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "responses.FilterTrainerResponses": {
+            "type": "object",
+            "properties": {
+                "Trainers": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         },
