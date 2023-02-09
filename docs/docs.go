@@ -208,7 +208,6 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "address",
-                "avatarUrl",
                 "birthdate",
                 "citizenId",
                 "firstname",

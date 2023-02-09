@@ -31,7 +31,6 @@ definitions:
         type: string
     required:
     - address
-    - avatarUrl
     - birthdate
     - citizenId
     - firstname

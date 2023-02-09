@@ -19,10 +19,10 @@ type FilterTrainerInput struct {
 }
 type TrainerInput struct {
 	Speciality     []string `json:"speciality" `
-	Rating         float64  `json:"raiting "`
-	Fee            float64  `json:"fee `
-	TraineeCount   int32    `json:"traineeCount `
-	CertificateUrl string   `json:"certificateUrl`
+	Rating         float64  `json:"rating "`
+	Fee            float64  `json:"fee" `
+	TraineeCount   int32    `json:"traineeCount" `
+	CertificateUrl string   `json:"certificateUrl"`
 }
 
 type GetTrainerInput struct {
@@ -52,6 +52,7 @@ func FilterTrainer() gin.HandlerFunc {
 		fmt.Println(result)
 		// result, err := models.FindProfile(input.Username, "trainer")
 		if err != nil {
+			fmt.Println(err)
 			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
 				Status:  http.StatusBadRequest,
 				Message: `filter trainer profile  unsuccessful`,
