@@ -19,7 +19,11 @@ func FindProfile(username, userType string) (map[string]interface{}, error) {
 	if userType != "" {
 		filter = append(filter, bson.E{Key: "usertype", Value: userType})
 	}
-	opts := options.FindOne().SetProjection(bson.D{{"_id", 0}, {"hashedPassword", 0}, {"createdAt", 0}, {"updatedAt", 0}})
+	opts := options.FindOne().SetProjection(bson.D{
+		{Key: "_id", Value: 0},
+		{Key: "hashedPassword", Value: 0},
+		{Key: "createdAt", Value: 0},
+		{Key: "updatedAt", Value: 0}})
 	var user User
 	err := userCollection.FindOne(ctx, filter, opts).Decode(&user)
 	if err != nil {

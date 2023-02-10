@@ -14,17 +14,17 @@ import (
 var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
 
 type TrainerInfo struct {
-	Speciality     []string `json:"speciality" `
-	Fee            int      `json:"fee" `
-	CertificateURL string   `json:"certificateUrl" `
+	Speciality     []string `json:"speciality"`
+	Fee            int      `json:"fee"`
+	CertificateURL string   `json:"certificateUrl"`
 	Rating         float64  `json:"rating"`
-	TraineeCount   int32    `json:"traineeCount" `
+	TraineeCount   int32    `json:"traineeCount"`
 }
 type User struct {
 	Username       string      `bson:"username"`
 	HashedPassword string      `bson:"hashedPassword"`
 	UserType       string      `bson:"usertype"`
-	FirstName      string      `bson:"firstname" `
+	FirstName      string      `bson:"firstname"`
 	LastName       string      `bson:"lastname"`
 	BirthDate      time.Time   `bson:"birthdate"`
 	CitizenId      string      `bson:"citizenId"`
@@ -127,4 +127,15 @@ func (user *User) LoginCheck(password string) (token string, err error) {
 		return "", err
 	}
 	return token, err
+}
+
+func DeleteUser(username string) (err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	filter := bson.D{{Key: "username", Value: username}}
+	_, err = userCollection.DeleteOne(ctx, filter)
+	if err != nil {
+		return err
+	}
+	return nil
 }
