@@ -319,7 +319,7 @@
                 "limit": {
                     "type": "integer"
                 },
-                "speciality": {
+                "specialty": {
                     "type": "array",
                     "items": {
                         "type": "string"
@@ -461,7 +461,7 @@
                 "rating": {
                     "type": "number"
                 },
-                "speciality": {
+                "specialty": {
                     "type": "array",
                     "items": {
                         "type": "string"

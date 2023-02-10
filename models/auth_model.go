@@ -14,7 +14,7 @@ import (
 var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
 
 type TrainerInfo struct {
-	Speciality     []string `bson:"speciality,omitempty"`     //json:"speciality,omitempty"`
+	Specialty      []string `bson:"specialty,omitempty"`      //json:"specialty,omitempty"`
 	Fee            int      `bson:"fee,omitempty"`            //json:"fee,omitempty" `
 	CertificateURL string   `bson:"certificateUrl,omitempty"` //json:"certificateUrl,omitempty" `
 	Rating         float64  `bson:"rating,omitempty"`         //json:"rating,omitempty"`

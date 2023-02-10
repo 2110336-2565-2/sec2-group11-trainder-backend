@@ -3,7 +3,7 @@ definitions:
     properties:
       limit:
         type: integer
-      speciality:
+      specialty:
         items:
           type: string
         type: array
@@ -104,7 +104,7 @@ definitions:
         type: number
       rating:
         type: number
-      speciality:
+      specialty:
         items:
           type: string
         type: array

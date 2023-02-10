@@ -327,7 +327,7 @@ const docTemplate = `{
                 "limit": {
                     "type": "integer"
                 },
-                "speciality": {
+                "specialty": {
                     "type": "array",
                     "items": {
                         "type": "string"
@@ -469,7 +469,7 @@ const docTemplate = `{
                 "rating": {
                     "type": "number"
                 },
-                "speciality": {
+                "specialty": {
                     "type": "array",
                     "items": {
                         "type": "string"
