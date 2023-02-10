@@ -128,3 +128,14 @@ func (user *User) LoginCheck(password string) (token string, err error) {
 	}
 	return token, err
 }
+
+func DeleteUser(username string) (err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	filter := bson.D{{Key: "username", Value: username}}
+	_, err = userCollection.DeleteOne(ctx, filter)
+	if err != nil {
+		return err
+	}
+	return nil
+}
