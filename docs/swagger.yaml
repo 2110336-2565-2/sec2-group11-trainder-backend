@@ -213,7 +213,7 @@ paths:
       parameters:
       - description: put FilterTrainerInput input json and pass to  gin.Context
         in: body
-        name: json_in_ginContext
+        name: filter_input
         required: true
         schema:
           $ref: '#/definitions/controllers.FilterTrainerInput'
@@ -224,9 +224,11 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.FilterTrainerResponses'
+      security:
+      - BearerAuth: []
       summary: FilterTrainer base on filter input
       tags:
-      - user
+      - Trainer
   /protected/profile:
     get:
       consumes:
@@ -239,11 +241,13 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.GetProfileResponses'
+      security:
+      - BearerAuth: []
       summary: getProfile of the current user
       tags:
       - user
   /protected/trainer:
-    get:
+    post:
       consumes:
       - application/json
       description: Retrieves the trainer profile information of the user who made
@@ -266,6 +270,8 @@ paths:
           description: Failed to retrieve the trainer profile
           schema:
             $ref: '#/definitions/responses.GetTrainerResponses'
+      security:
+      - BearerAuth: []
       summary: Retrieve trainer profile
       tags:
       - Trainer
@@ -288,6 +294,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.ProfileResponses'
+      security:
+      - BearerAuth: []
       summary: updateProfile of the current user
       tags:
       - user
@@ -317,6 +325,8 @@ paths:
           description: Unauthorized, the user is not logged in
           schema:
             $ref: '#/definitions/responses.ProfileResponses'
+      security:
+      - BearerAuth: []
       summary: Update the trainer's profile information.
       tags:
       - Trainer
@@ -333,6 +343,9 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.CurrentUserResponse'
+      security:
+      - BearerAuth: []
+      - BearerAuth: []
       summary: get the current user's username
       tags:
       - user
@@ -361,4 +374,9 @@ paths:
       summary: Register user
       tags:
       - authentication
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

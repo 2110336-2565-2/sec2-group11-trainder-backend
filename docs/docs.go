@@ -51,6 +51,11 @@ const docTemplate = `{
         },
         "/protected/filter-trainer": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "FilterTrainer base on filter input",
                 "consumes": [
                     "application/json"
@@ -59,13 +64,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "Trainer"
                 ],
                 "summary": "FilterTrainer base on filter input",
                 "parameters": [
                     {
                         "description": "put FilterTrainerInput input json and pass to  gin.Context",
-                        "name": "json_in_ginContext",
+                        "name": "filter_input",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -85,6 +90,11 @@ const docTemplate = `{
         },
         "/protected/profile": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "getProfile of the current user",
                 "consumes": [
                     "application/json"
@@ -107,7 +117,12 @@ const docTemplate = `{
             }
         },
         "/protected/trainer": {
-            "get": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Retrieves the trainer profile information of the user who made the request.",
                 "consumes": [
                     "application/json"
@@ -148,6 +163,11 @@ const docTemplate = `{
         },
         "/protected/update-profile": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "updateProfile of the current user",
                 "consumes": [
                     "application/json"
@@ -182,6 +202,11 @@ const docTemplate = `{
         },
         "/protected/update-trainer": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -227,6 +252,14 @@ const docTemplate = `{
         },
         "/protected/user": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    },
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "get the current user's username.  After getting token replied from logging in, put token in ginContext's token field",
                 "consumes": [
                     "application/json"
@@ -547,6 +580,13 @@ const docTemplate = `{
                     "type": "integer"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`
