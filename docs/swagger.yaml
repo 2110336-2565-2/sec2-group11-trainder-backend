@@ -1,0 +1,382 @@
+definitions:
+  controllers.FilterTrainerInput:
+    properties:
+      limit:
+        type: integer
+      speciality:
+        items:
+          type: string
+        type: array
+    required:
+    - limit
+    type: object
+  controllers.GetTrainerInput:
+    properties:
+      username:
+        type: string
+    required:
+    - username
+    type: object
+  controllers.LoginInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  controllers.ProfileInput:
+    properties:
+      address:
+        type: string
+      avatarUrl:
+        type: string
+      birthdate:
+        type: string
+      citizenId:
+        type: string
+      firstname:
+        type: string
+      gender:
+        type: string
+      lastname:
+        type: string
+      phoneNumber:
+        type: string
+      subAddress:
+        type: string
+    required:
+    - address
+    - birthdate
+    - citizenId
+    - firstname
+    - gender
+    - lastname
+    - phoneNumber
+    - subAddress
+    type: object
+  controllers.RegisterInput:
+    properties:
+      address:
+        type: string
+      avatarUrl:
+        type: string
+      birthdate:
+        type: string
+      citizenId:
+        type: string
+      firstname:
+        type: string
+      gender:
+        type: string
+      lastname:
+        type: string
+      password:
+        type: string
+      phoneNumber:
+        type: string
+      subAddress:
+        type: string
+      username:
+        type: string
+      usertype:
+        type: string
+    required:
+    - address
+    - birthdate
+    - citizenId
+    - firstname
+    - gender
+    - lastname
+    - password
+    - phoneNumber
+    - subAddress
+    - username
+    - usertype
+    type: object
+  controllers.TrainerInput:
+    properties:
+      certificateUrl:
+        type: string
+      fee:
+        type: number
+      rating:
+        type: number
+      speciality:
+        items:
+          type: string
+        type: array
+      traineeCount:
+        type: integer
+    type: object
+  responses.CurrentUserResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+      username:
+        type: string
+    type: object
+  responses.FilterTrainerResponses:
+    properties:
+      Trainers:
+        items:
+          additionalProperties: true
+          type: object
+        type: array
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  responses.GetProfileResponses:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+      user:
+        additionalProperties: true
+        type: object
+    type: object
+  responses.GetTrainerResponses:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+      user:
+        additionalProperties: true
+        type: object
+    type: object
+  responses.LoginResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+      token:
+        type: string
+      username:
+        type: string
+    type: object
+  responses.ProfileResponses:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  responses.RegisterResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+info:
+  contact: {}
+  description: API for Trainder
+  title: Trainder API
+  version: "0.1"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: login with username and password
+      parameters:
+      - description: put login input and pass to  gin.Context
+        in: body
+        name: json_in_ginContext
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.LoginInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.LoginResponse'
+      summary: Login
+      tags:
+      - authentication
+  /protected/filter-trainer:
+    post:
+      consumes:
+      - application/json
+      description: FilterTrainer base on filter input
+      parameters:
+      - description: put FilterTrainerInput input json and pass to  gin.Context
+        in: body
+        name: filter_input
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.FilterTrainerInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.FilterTrainerResponses'
+      security:
+      - BearerAuth: []
+      summary: FilterTrainer base on filter input
+      tags:
+      - Trainer
+  /protected/profile:
+    get:
+      consumes:
+      - application/json
+      description: getProfile of the current user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.GetProfileResponses'
+      security:
+      - BearerAuth: []
+      summary: getProfile of the current user
+      tags:
+      - user
+  /protected/trainer:
+    post:
+      consumes:
+      - application/json
+      description: Retrieves the trainer profile information of the user who made
+        the request.
+      parameters:
+      - description: Put username input for retrieving the trainer profile
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.GetTrainerInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved the trainer profile
+          schema:
+            $ref: '#/definitions/responses.GetProfileResponses'
+        "400":
+          description: Failed to retrieve the trainer profile
+          schema:
+            $ref: '#/definitions/responses.GetTrainerResponses'
+      security:
+      - BearerAuth: []
+      summary: Retrieve trainer profile
+      tags:
+      - Trainer
+  /protected/update-profile:
+    post:
+      consumes:
+      - application/json
+      description: updateProfile of the current user
+      parameters:
+      - description: put profile input json and pass to  gin.Context
+        in: body
+        name: json_in_ginContext
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.ProfileInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ProfileResponses'
+      security:
+      - BearerAuth: []
+      summary: updateProfile of the current user
+      tags:
+      - user
+  /protected/update-trainer:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Trainer's information to update
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.TrainerInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully update the trainer's profile
+          schema:
+            $ref: '#/definitions/responses.ProfileResponses'
+        "400":
+          description: Bad Request, either invalid input or user is not a trainer
+          schema:
+            $ref: '#/definitions/responses.ProfileResponses'
+        "401":
+          description: Unauthorized, the user is not logged in
+          schema:
+            $ref: '#/definitions/responses.ProfileResponses'
+      security:
+      - BearerAuth: []
+      summary: Update the trainer's profile information.
+      tags:
+      - Trainer
+  /protected/user:
+    get:
+      consumes:
+      - application/json
+      description: get the current user's username.  After getting token replied from
+        logging in, put token in ginContext's token field
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.CurrentUserResponse'
+      security:
+      - BearerAuth: []
+      - BearerAuth: []
+      summary: get the current user's username
+      tags:
+      - user
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register with username,password,UserType ["trainer","trainee"],Firstname,Lastname,Birthdate
+        ("yyyy-mm-dd"),CitizenId (len == 13),Gender ["Male","Female","Other"],PhoneNumber
+        (len ==10),Address,SubAddress
+      operationId: register-user
+      parameters:
+      - description: put register input and pass to  gin.Context
+        in: body
+        name: json_in_ginContext
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.RegisterInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.RegisterResponse'
+      summary: Register user
+      tags:
+      - authentication
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

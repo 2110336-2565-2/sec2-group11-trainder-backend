@@ -13,20 +13,29 @@ import (
 
 var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
 
+type TrainerInfo struct {
+	Speciality     []string `json:"speciality"`
+	Fee            int      `json:"fee"`
+	CertificateURL string   `json:"certificateUrl"`
+	Rating         float64  `json:"rating"`
+	TraineeCount   int32    `json:"traineeCount"`
+}
 type User struct {
-	Username       string    `bson:"username"`
-	HashedPassword string    `bson:"hashedPassword"`
-	UserType       string    `bson:"usertype"`
-	FirstName      string    `bson:"firstname" `
-	LastName       string    `bson:"lastname"`
-	BirthDate      time.Time `bson:"birthdate"`
-	CitizenId      string    `bson:"citizenId"`
-	Gender         string    `bson:"gender"`
-	PhoneNumber    string    `bson:"phoneNumber"`
-	Address        string    `bson:"address"`
-	SubAddress     string    `bson:"subAddress"`
-	CreatedAt      time.Time `bson:"createdAt"`
-	UpdatedAt      time.Time `bson:"updatedAt"`
+	Username       string      `bson:"username"`
+	HashedPassword string      `bson:"hashedPassword"`
+	UserType       string      `bson:"usertype"`
+	FirstName      string      `bson:"firstname"`
+	LastName       string      `bson:"lastname"`
+	BirthDate      time.Time   `bson:"birthdate"`
+	CitizenId      string      `bson:"citizenId"`
+	Gender         string      `bson:"gender"`
+	PhoneNumber    string      `bson:"phoneNumber"`
+	Address        string      `bson:"address"`
+	SubAddress     string      `bson:"subAddress"`
+	CreatedAt      time.Time   `bson:"createdAt"`
+	UpdatedAt      time.Time   `bson:"updatedAt"`
+	AvatarUrl      string      `bson:"avatarUrl"`
+	TrainerInfo    TrainerInfo //`bson:"trainerInfo" json:"trainerInfo"`
 }
 
 func FindUser(username string) (user User, err error) {
@@ -58,7 +67,7 @@ func (e *UserAlreadyExist) Error() string {
 	return "error: user already existed"
 }
 
-func CreateUser(username string, password string, userType string, firstName string, lastName string, birthDate string, citizenID string, gender string, phoneNumber string, address string, subAddress string) (user User, err error) {
+func CreateUser(username string, password string, userType string, firstName string, lastName string, birthDate string, citizenID string, gender string, phoneNumber string, address string, subAddress string, avatarUrl string) (user User, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -97,6 +106,7 @@ func CreateUser(username string, password string, userType string, firstName str
 		SubAddress:     subAddress,
 		CreatedAt:      time.Now(),
 		UpdatedAt:      time.Now(),
+		AvatarUrl:      avatarUrl,
 	}
 
 	_, err = userCollection.InsertOne(ctx, user)

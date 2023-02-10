@@ -6,7 +6,8 @@ type RegisterResponse struct {
 }
 
 type LoginResponse struct {
-	Status  int    `json:"status"`
-	Message string `json:"message,omitempty"`
-	Token   string `json:"token,omitempty"`
+	Status   int    `json:"status"`
+	Message  string `json:"message,omitempty"`
+	Token    string `json:"token,omitempty"`
+	Username string `json:"username,omitempty"`
 }
