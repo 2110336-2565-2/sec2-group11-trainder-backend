@@ -283,7 +283,7 @@ paths:
       parameters:
       - description: put profile input json and pass to  gin.Context
         in: body
-        name: json_in_ginContext
+        name: profile_to_update
         required: true
         schema:
           $ref: '#/definitions/controllers.ProfileInput'

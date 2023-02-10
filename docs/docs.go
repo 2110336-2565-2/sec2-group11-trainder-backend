@@ -182,7 +182,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "put profile input json and pass to  gin.Context",
-                        "name": "json_in_ginContext",
+                        "name": "profile_to_update",
                         "in": "body",
                         "required": true,
                         "schema": {
