@@ -13,9 +13,9 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// @title			Trainder API
-// @version		0.1
-// @description	API for Trainder
+//	@title			Trainder API
+//	@version		0.1
+//	@description	API for Trainder
 func main() {
 	router := gin.Default()
 	config := cors.DefaultConfig()
