@@ -29,6 +29,7 @@ type ProfileInput struct {
 //	@Tags			user
 //	@Accept			json
 //	@Produce		json
+//	@Security		BearerAuth
 //	@Success		200	{object}	responses.CurrentUserResponse
 //
 //	@Security		BearerAuth
@@ -76,7 +77,7 @@ func UpdateProfile() gin.HandlerFunc {
 		}
 		username, err := tokens.ExtractTokenUsername(c)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+			c.JSON(http.StatusBadRequest, responses.ProfileResponses{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			})
@@ -84,7 +85,7 @@ func UpdateProfile() gin.HandlerFunc {
 		}
 		err = models.ProfileConditionCheck(input.FirstName, input.LastName, input.BirthDate, input.CitizenId, input.Gender, input.PhoneNumber)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+			c.JSON(http.StatusBadRequest, responses.ProfileResponses{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			})
@@ -92,7 +93,7 @@ func UpdateProfile() gin.HandlerFunc {
 		}
 		_, err = models.UpdateUserProfile(username, input.FirstName, input.LastName, input.BirthDate, input.CitizenId, input.Gender, input.PhoneNumber, input.Address, input.SubAddress, input.AvatarUrl)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+			c.JSON(http.StatusBadRequest, responses.ProfileResponses{
 				Status:  http.StatusBadRequest,
 				Message: `update failed`,
 			})

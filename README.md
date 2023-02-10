@@ -37,6 +37,12 @@ go install github.com/swaggo/swag/cmd/swag@latest
 3. Run `swag init` to generate the documentation.
 4. The documentation will be available at [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
 
+## Test
+For now, if you want to run tests, simply execute this command
+```sh
+go test .
+```
+
 ## Development using Docker
 
 With docker the development process can be easier. The database and the go environment will be automatically set up for you.

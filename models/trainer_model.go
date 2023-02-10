@@ -24,15 +24,26 @@ func FindFilteredTrainer(speciality []string, limit int) ([]map[string]interface
 		// fmt.Println("len speciality 0")
 		// filter := bson.D{{"trainerInfo.speciality", bson.D{{"$in", speciality}}}}
 		filter = bson.D{{Key: "usertype", Value: "Trainer"}}
-		opts = options.Find().SetLimit(int64(limit)).SetSort(bson.D{{"trainerInfo.rating", -1}, {"fee", 1}}).SetProjection(bson.D{{"_id", 0}, {"hashedPassword", 0}, {"createdAt", 0}, {"updatedAt", 0}})
+		// opts = options.Find().SetLimit(int64(limit)).SetSort(bson.D{{"trainerInfo.rating", -1}, {"fee", 1}}).SetProjection(bson.D{{"_id", 0}, {"hashedPassword", 0}, {"createdAt", 0}, {"updatedAt", 0}})
 
 	} else {
-		filter = bson.D{{"trainerInfo.speciality", bson.D{{"$in", speciality}}}}
+		filter = bson.D{{Key: "trainerInfo.speciality", Value: bson.D{{Key: "$in", Value: speciality}}}}
 		filter = append(filter, bson.E{Key: "usertype", Value: "Trainer"})
-		opts = options.Find().SetLimit(int64(limit)).SetSort(bson.D{{"trainerInfo.rating", -1}, {"fee", 1}}).SetProjection(bson.D{{"_id", 0}, {"hashedPassword", 0}, {"createdAt", 0}, {"updatedAt", 0}})
+		// opts = options.Find().SetLimit(int64(limit)).SetSort(bson.D{{"trainerInfo.rating", -1}, {"fee", 1}}).SetProjection(bson.D{{"_id", 0}, {"hashedPassword", 0}, {"createdAt", 0}, {"updatedAt", 0}})
 
 	}
-
+	opts = options.Find().SetLimit(int64(limit)).SetSort(bson.D{
+		{Key: "trainerInfo.rating", Value: -1},
+		{Key: "fee", Value: 1},
+	}).SetProjection(bson.D{
+		{Key: "_id", Value: 0},
+		{Key: "hashedPassword", Value: 0},
+		{Key: "createdAt", Value: 0},
+		{Key: "updatedAt", Value: 0},
+		{Key: "birthDate", Value: 0},
+		{Key: "citizenId", Value: 0},
+		{Key: "phoneNumber", Value: 0},
+		{Key: "userType", Value: 0}})
 	cur, err := userCollection.Find(ctx, filter, opts)
 
 	if err != nil {
@@ -51,13 +62,13 @@ func FindFilteredTrainer(speciality []string, limit int) ([]map[string]interface
 			return nil, err
 		}
 		result := map[string]interface{}{
-			"usertype":    user.UserType,
-			"firstname":   user.FirstName,
-			"lastname":    user.LastName,
-			"birthdate":   user.BirthDate,
-			"citizenId":   user.CitizenId,
-			"gender":      user.Gender,
-			"phoneNumber": user.PhoneNumber,
+			// "usertype":    user.UserType,
+			"firstname": user.FirstName,
+			"lastname":  user.LastName,
+			// "birthdate":   user.BirthDate,
+			// "citizenId":   user.CitizenId,
+			"gender": user.Gender,
+			// "phoneNumber": user.PhoneNumber,
 			"address":     user.Address,
 			"subAddress":  user.SubAddress,
 			"avatarUrl":   user.AvatarUrl,
