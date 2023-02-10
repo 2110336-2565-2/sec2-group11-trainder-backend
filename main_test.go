@@ -8,6 +8,7 @@ import (
 	"testing"
 	"trainder-api/controllers"
 	"trainder-api/responses"
+	"trainder-api/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -40,15 +41,16 @@ func SetUpRouter() *gin.Engine {
 func TestRegisterHandler(t *testing.T) {
 	r := SetUpRouter()
 	r.POST("/register", controllers.Register())
+	_ = models.DeleteUser("test01")
 	registerInput := RegisterInput{
 		Username:    "test01",
 		Password:    "password01",
-		UserType:    "trainer",
-		Firstname:   "firstname01",
-		Lastname:    "lastname01",
+		UserType:    "Trainer",
+		Firstname:   "firstname",
+		Lastname:    "lastname",
 		Birthdate:   "2022-01-12",
-		CitizenId:   "0000000000000",
-		Gender:      "male",
+		CitizenId:   "9261991922738",
+		Gender:      "Male",
 		PhoneNumber: "0881234567",
 		Address:     "address01",
 		SubAddress:  "subaddress01",
@@ -57,8 +59,7 @@ func TestRegisterHandler(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/register", bytes.NewBuffer(jsonValue))
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
-	// assert.Equal(t, http.StatusCreated, w.Code)
-
+	assert.Equal(t, http.StatusCreated, w.Code)
 }
 
 func TestLoginHandler(t *testing.T) {
