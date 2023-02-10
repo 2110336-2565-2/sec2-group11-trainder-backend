@@ -13,13 +13,13 @@ import (
 )
 
 type FilterTrainerInput struct {
-	Speciality []string `json:"speciality"`
-	Limit      int      `json:"limit" binding:"required"`
+	Specialty []string `json:"specialty"`
+	Limit     int      `json:"limit" binding:"required"`
 	// Rating     float64 `json:"Rating" binding:"required"`
 	// Fee        float64 `json:"Fee" binding:"required"`
 }
 type TrainerInput struct {
-	Speciality     []string `json:"speciality"`
+	Specialty      []string `json:"specialty"`
 	Rating         float64  `json:"rating"`
 	Fee            float64  `json:"fee"`
 	TraineeCount   int32    `json:"traineeCount"`
@@ -52,7 +52,7 @@ func FilterTrainer() gin.HandlerFunc {
 			return
 		}
 		fmt.Println("FilterTrainer input ", input)
-		result, err := models.FindFilteredTrainer(input.Speciality, input.Limit)
+		result, err := models.FindFilteredTrainer(input.Specialty, input.Limit)
 		fmt.Println(result)
 		// result, err := models.FindProfile(input.Username, "trainer")
 		if err != nil {
@@ -69,11 +69,11 @@ func FilterTrainer() gin.HandlerFunc {
 			Trainers: result,
 		})
 
-		// if len(input.Speciality) == 0 {
+		// if len(input.Specialty) == 0 {
 		// 	fmt.Println("Etude")
 
 		// } else {
-		// 	result, err := models.FindFilteredTrainer(input.Speciality, input.Limit)
+		// 	result, err := models.FindFilteredTrainer(input.Specialty, input.Limit)
 		// 	fmt.Println(result)
 		// 	// result, err := models.FindProfile(input.Username, "trainer")
 		// 	if err != nil {
@@ -163,7 +163,7 @@ func UpdateTrainer() gin.HandlerFunc {
 			return
 		}
 		_, err = models.UpdateTrainerProfile(
-			username, input.Speciality, input.Rating,
+			username, input.Specialty, input.Rating,
 			input.Fee, input.TraineeCount, input.CertificateUrl)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.GetTrainerResponses{

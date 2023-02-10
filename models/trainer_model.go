@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func FindFilteredTrainer(speciality []string, limit int) ([]map[string]interface{}, error) {
+func FindFilteredTrainer(specialty []string, limit int) ([]map[string]interface{}, error) {
 	// ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	ctx := context.TODO()
 	// count := 0
@@ -20,14 +20,14 @@ func FindFilteredTrainer(speciality []string, limit int) ([]map[string]interface
 	var opts *options.FindOptions
 	var filter bson.D
 
-	if len(speciality) == 0 {
-		// fmt.Println("len speciality 0")
-		// filter := bson.D{{"trainerInfo.speciality", bson.D{{"$in", speciality}}}}
+	if len(specialty) == 0 {
+		// fmt.Println("len specialty 0")
+		// filter := bson.D{{"trainerInfo.specialty", bson.D{{"$in", specialty}}}}
 		filter = bson.D{{Key: "usertype", Value: "Trainer"}}
 		// opts = options.Find().SetLimit(int64(limit)).SetSort(bson.D{{"trainerInfo.rating", -1}, {"fee", 1}}).SetProjection(bson.D{{"_id", 0}, {"hashedPassword", 0}, {"createdAt", 0}, {"updatedAt", 0}})
 
 	} else {
-		filter = bson.D{{Key: "trainerInfo.speciality", Value: bson.D{{Key: "$in", Value: speciality}}}}
+		filter = bson.D{{Key: "trainerInfo.specialty", Value: bson.D{{Key: "$in", Value: specialty}}}}
 		filter = append(filter, bson.E{Key: "usertype", Value: "Trainer"})
 		// opts = options.Find().SetLimit(int64(limit)).SetSort(bson.D{{"trainerInfo.rating", -1}, {"fee", 1}}).SetProjection(bson.D{{"_id", 0}, {"hashedPassword", 0}, {"createdAt", 0}, {"updatedAt", 0}})
 
@@ -87,13 +87,13 @@ func FindFilteredTrainer(speciality []string, limit int) ([]map[string]interface
 	return results, nil
 }
 
-func UpdateTrainerProfile(username string, speciality []string, rating float64, fee float64, traineeCount int32, certificateUrl string) (result *mongo.UpdateResult, err error) {
+func UpdateTrainerProfile(username string, specialty []string, rating float64, fee float64, traineeCount int32, certificateUrl string) (result *mongo.UpdateResult, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 
 	defer cancel()
 	update := bson.M{}
-	if len(speciality) > 0 {
-		update["speciality"] = speciality
+	if len(specialty) > 0 {
+		update["specialty"] = specialty
 	}
 	if rating > 0 {
 		update["rating"] = rating
