@@ -15,8 +15,8 @@ import (
 type FilterTrainerInput struct {
 	Specialty []string `json:"specialty"`
 	Limit     int      `json:"limit" binding:"required"`
-	Lower_Fee float64  `json:"Lower_Fee"`
-	Upper_Fee float64  `json:"Upper_Fee"`
+	FeeMin    float64  `json:"feeMin"`
+	FeeMax    float64  `json:"feeMax"`
 	// Rating     float64 `json:"Rating" binding:"required"`
 }
 type TrainerInput struct {
@@ -54,7 +54,7 @@ func FilterTrainer() gin.HandlerFunc {
 		}
 		fmt.Println("FilterTrainer input ", input)
 		//--------
-		result, err := models.FindFilteredTrainer(input.Specialty, input.Limit, input.Lower_Fee, input.Upper_Fee)
+		result, err := models.FindFilteredTrainer(input.Specialty, input.Limit, input.FeeMin, input.FeeMax)
 		fmt.Println(result)
 		// result, err := models.FindProfile(input.Username, "trainer")
 		if err != nil {
