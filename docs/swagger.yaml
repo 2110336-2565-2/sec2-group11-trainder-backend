@@ -117,22 +117,17 @@ definitions:
     type: object
   models.TrainerInfo:
     properties:
-      certificateURL:
-        description: json:"certificateUrl,omitempty" `
+      certificateUrl:
         type: string
       fee:
-        description: json:"fee,omitempty" `
         type: integer
       rating:
-        description: json:"rating,omitempty"`
         type: number
       specialty:
-        description: json:"specialty,omitempty"`
         items:
           type: string
         type: array
       traineeCount:
-        description: json:"traineeCount,omitempty" `
         type: integer
     type: object
   models.UserProfile:
@@ -141,23 +136,23 @@ definitions:
         type: string
       avatarUrl:
         type: string
-      birthDate:
+      birthdate:
         type: string
       citizenId:
         type: string
-      firstName:
+      firstname:
         type: string
       gender:
         type: string
-      lastName:
+      lastname:
         type: string
       phoneNumber:
         type: string
       subAddress:
         type: string
-      userType:
-        type: string
       username:
+        type: string
+      usertype:
         type: string
     type: object
   responses.CurrentUserResponse:

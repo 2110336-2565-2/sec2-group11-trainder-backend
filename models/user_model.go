@@ -13,17 +13,17 @@ import (
 )
 
 type UserProfile struct {
-	Username    string
-	UserType    string
-	FirstName   string
-	LastName    string
-	BirthDate   string
-	CitizenId   string
-	Gender      string
-	PhoneNumber string
-	Address     string
-	SubAddress  string
-	AvatarUrl   string
+	Username    string `json:"username"`
+	UserType    string `json:"usertype"`
+	FirstName   string `json:"firstname"`
+	LastName    string `json:"lastname"`
+	BirthDate   string `json:"birthdate"`
+	CitizenId   string `json:"citizenId"`
+	Gender      string `json:"gender"`
+	PhoneNumber string `json:"phoneNumber"`
+	Address     string `json:"address"`
+	SubAddress  string `json:"subAddress"`
+	AvatarUrl   string `json:"avatarUrl"`
 }
 
 func FindProfile(username, userType string) (result UserProfile, err error) {
