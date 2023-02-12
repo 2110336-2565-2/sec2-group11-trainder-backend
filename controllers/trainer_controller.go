@@ -25,18 +25,17 @@ type UpdateTrainerInput struct {
 	CertificateUrl string   `json:"certificateUrl"`
 }
 
-// GetTrainerProfile retrieves the trainer profile of any trainer
+// CurrentTrainerUserProfile retrieves the trainer profile of the current user for the user that is a trainer
 //
-//	@Summary		Retrieve trainer profile
-//	@Description	Retrieves the trainer profile information.
+//	@Summary		Retrieve trainer profile of current user
+//	@Description	Retrieves the trainer profile information of the current user.
 //	@Tags			Trainer
 //	@Accept			json
 //	@Produce		json
-//	@Param			input	body		GetTrainerInput						true	"Put username input for retrieving the trainer profile"
-//	@Success		200		{object}	responses.TrainerProfileResponse	"Successfully retrieved the trainer profile"
-//	@Failure		400		{object}	responses.TrainerProfileResponse	"Failed to retrieve the trainer profile"
+//	@Success		200	{object}	responses.TrainerProfileResponse	"Successfully retrieved the trainer profile"
+//	@Failure		400	{object}	responses.TrainerProfileResponse	"Failed to retrieve the trainer profile"
 //	@Security		BearerAuth
-//	@Router			/protected/trainer [post]
+//	@Router			/protected/trainer-profile [get]
 func CurrentTrainerUserProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		username, err := tokens.ExtractTokenUsername(c)
