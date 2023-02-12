@@ -48,7 +48,7 @@ func FindProfile(username, userType string) (result UserProfile, err error) {
 		UserType:    user.UserType,
 		FirstName:   user.FirstName,
 		LastName:    user.LastName,
-		BirthDate:   user.BirthDate.Format("2000-01-01"),
+		BirthDate:   user.BirthDate.Format("2006-01-02"),
 		CitizenId:   user.CitizenId,
 		Gender:      user.Gender,
 		PhoneNumber: user.PhoneNumber,
