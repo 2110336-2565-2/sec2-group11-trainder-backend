@@ -167,6 +167,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/protected/trainer-profile": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieves the trainer profile information of the current user.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Trainer"
+                ],
+                "summary": "Retrieve trainer profile of current user",
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved the trainer profile",
+                        "schema": {
+                            "$ref": "#/definitions/responses.TrainerProfileResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to retrieve the trainer profile",
+                        "schema": {
+                            "$ref": "#/definitions/responses.TrainerProfileResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/protected/update-profile": {
             "post": {
                 "security": [
@@ -200,7 +234,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/responses.ProfileResponses"
+                            "$ref": "#/definitions/responses.ProfileResponse"
                         }
                     }
                 }
@@ -230,7 +264,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.TrainerInput"
+                            "$ref": "#/definitions/controllers.UpdateTrainerInput"
                         }
                     }
                 ],
@@ -238,19 +272,19 @@ const docTemplate = `{
                     "200": {
                         "description": "Successfully update the trainer's profile",
                         "schema": {
-                            "$ref": "#/definitions/responses.TrainerProfileResponse"
+                            "$ref": "#/definitions/responses.ProfileResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request, either invalid input or user is not a trainer",
                         "schema": {
-                            "$ref": "#/definitions/responses.TrainerProfileResponse"
+                            "$ref": "#/definitions/responses.ProfileResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized, the user is not logged in",
                         "schema": {
-                            "$ref": "#/definitions/responses.TrainerProfileResponse"
+                            "$ref": "#/definitions/responses.ProfileResponse"
                         }
                     }
                 }
@@ -330,10 +364,10 @@ const docTemplate = `{
                 "limit"
             ],
             "properties": {
-                "Lower_Fee": {
+                "feeMax": {
                     "type": "number"
                 },
-                "Upper_Fee": {
+                "feeMin": {
                     "type": "number"
                 },
                 "limit": {
@@ -469,7 +503,7 @@ const docTemplate = `{
                 }
             }
         },
-        "controllers.TrainerInput": {
+        "controllers.UpdateTrainerInput": {
             "type": "object",
             "properties": {
                 "certificateUrl": {
@@ -607,7 +641,7 @@ const docTemplate = `{
                 }
             }
         },
-        "responses.ProfileResponses": {
+        "responses.ProfileResponse": {
             "type": "object",
             "properties": {
                 "message": {

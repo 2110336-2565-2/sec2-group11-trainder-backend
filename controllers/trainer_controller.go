@@ -113,7 +113,7 @@ func GetTrainerProfile() gin.HandlerFunc {
 //	@Tags		Trainer
 //	@Accept		json
 //	@Produce	json
-//	@Param		profile	body		TrainerInput				true	"Trainer's information to update"
+//	@Param		profile	body		UpdateTrainerInput				true	"Trainer's information to update"
 //	@Success	200		{object}	responses.ProfileResponse	"Successfully update the trainer's profile"
 //	@Failure	400		{object}	responses.ProfileResponse	"Bad Request, either invalid input or user is not a trainer"
 //	@Failure	401		{object}	responses.ProfileResponse	"Unauthorized, the user is not logged in"
