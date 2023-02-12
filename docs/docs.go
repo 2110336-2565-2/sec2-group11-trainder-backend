@@ -324,6 +324,12 @@ const docTemplate = `{
                 "limit"
             ],
             "properties": {
+                "Lower_Fee": {
+                    "type": "number"
+                },
+                "Upper_Fee": {
+                    "type": "number"
+                },
                 "limit": {
                     "type": "integer"
                 },
