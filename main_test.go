@@ -213,7 +213,7 @@ func TestFilter(t *testing.T) {
 	}
 	update := FilterTrainer{
 		Specialty: []string{"yoga"},
-		Limit: 1,
+		Limit:     1,
 	}
 	jsonValue, _ := json.Marshal(user)
 	loginReq, _ := http.NewRequest("POST", "/login", bytes.NewBuffer(jsonValue))

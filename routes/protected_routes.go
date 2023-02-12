@@ -10,10 +10,20 @@ import (
 func ProtectedRoute(router *gin.Engine) {
 	protected := router.Group("/protected")
 	protected.Use(middlewares.JwtAuthMiddleware())
+
+	// Current user information
 	protected.GET("/user", controllers.CurrentUser())
-	protected.POST("/update-profile", controllers.UpdateProfile())
 	protected.GET("/profile", controllers.GetProfile())
-	protected.POST("/trainer", controllers.GetTrainer())
+
+	// Own Trainer Information
+	protected.GET("/trainer-profile", controllers.CurrentTrainerUserProfile())
+
+	// Update data
+	protected.POST("/update-profile", controllers.UpdateProfile())
+	protected.POST("/update-trainer", controllers.UpdateTrainerProfile())
+
+	// Get Others Trainer information
+	protected.POST("/trainer", controllers.GetTrainerProfile())
 	protected.POST("/filter-trainer", controllers.FilterTrainer())
-	protected.POST("/update-trainer", controllers.UpdateTrainer())
+
 }
