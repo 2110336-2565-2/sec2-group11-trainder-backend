@@ -60,7 +60,7 @@ func CurrentUser() gin.HandlerFunc {
 //	@Accept			json
 //	@Produce		json
 //	@Param			ProfileToUpdate	body		ProfileInput	true	"put profile input json and pass to  gin.Context"
-//	@Success		200				{object}	responses.ProfileResponses
+//	@Success		200				{object}	responses.ProfileResponse
 //
 //	@Security		BearerAuth
 //

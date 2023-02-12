@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"trainder-api/models"
@@ -14,8 +15,9 @@ import (
 type FilterTrainerInput struct {
 	Specialty []string `json:"specialty"`
 	Limit     int      `json:"limit" binding:"required"`
+	FeeMin    float64  `json:"feeMin"`
+	FeeMax    float64  `json:"feeMax"`
 	// Rating     float64 `json:"Rating" binding:"required"`
-	// Fee        float64 `json:"Fee" binding:"required"`
 }
 type UpdateTrainerInput struct {
 	Specialty      []string `json:"specialty"`
@@ -111,7 +113,7 @@ func GetTrainerProfile() gin.HandlerFunc {
 //	@Tags		Trainer
 //	@Accept		json
 //	@Produce	json
-//	@Param		profile	body		TrainerInput				true	"Trainer's information to update"
+//	@Param		profile	body		UpdateTrainerInput				true	"Trainer's information to update"
 //	@Success	200		{object}	responses.ProfileResponse	"Successfully update the trainer's profile"
 //	@Failure	400		{object}	responses.ProfileResponse	"Bad Request, either invalid input or user is not a trainer"
 //	@Failure	401		{object}	responses.ProfileResponse	"Unauthorized, the user is not logged in"
@@ -175,7 +177,10 @@ func FilterTrainer() gin.HandlerFunc {
 			})
 			return
 		}
-		result, err := models.FindFilteredTrainer(input.Specialty, input.Limit)
+		fmt.Println("FilterTrainer input ", input)
+		//--------
+		result, err := models.FindFilteredTrainer(input.Specialty, input.Limit, input.FeeMin, input.FeeMax)
+		fmt.Println(result)
 		// result, err := models.FindProfile(input.Username, "trainer")
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.FilterTrainerResponses{
@@ -189,6 +194,7 @@ func FilterTrainer() gin.HandlerFunc {
 			Message:  `Successfully retrieve filtered trainer`,
 			Trainers: result,
 		})
+		//-------------
 
 		// if len(input.Specialty) == 0 {
 		// 	fmt.Println("Etude")

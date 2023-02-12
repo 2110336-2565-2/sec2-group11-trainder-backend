@@ -1,6 +1,10 @@
 definitions:
   controllers.FilterTrainerInput:
     properties:
+      feeMax:
+        type: number
+      feeMin:
+        type: number
       limit:
         type: integer
       specialty:
@@ -96,7 +100,7 @@ definitions:
     - username
     - usertype
     type: object
-  controllers.TrainerInput:
+  controllers.UpdateTrainerInput:
     properties:
       certificateUrl:
         type: string
@@ -188,7 +192,7 @@ definitions:
       username:
         type: string
     type: object
-  responses.ProfileResponses:
+  responses.ProfileResponse:
     properties:
       message:
         type: string
@@ -323,6 +327,27 @@ paths:
       summary: Retrieve trainer profile
       tags:
       - Trainer
+  /protected/trainer-profile:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves the trainer profile information of the current user.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved the trainer profile
+          schema:
+            $ref: '#/definitions/responses.TrainerProfileResponse'
+        "400":
+          description: Failed to retrieve the trainer profile
+          schema:
+            $ref: '#/definitions/responses.TrainerProfileResponse'
+      security:
+      - BearerAuth: []
+      summary: Retrieve trainer profile of current user
+      tags:
+      - Trainer
   /protected/update-profile:
     post:
       consumes:
@@ -341,7 +366,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/responses.ProfileResponses'
+            $ref: '#/definitions/responses.ProfileResponse'
       security:
       - BearerAuth: []
       summary: updateProfile of the current user
@@ -357,22 +382,22 @@ paths:
         name: profile
         required: true
         schema:
-          $ref: '#/definitions/controllers.TrainerInput'
+          $ref: '#/definitions/controllers.UpdateTrainerInput'
       produces:
       - application/json
       responses:
         "200":
           description: Successfully update the trainer's profile
           schema:
-            $ref: '#/definitions/responses.TrainerProfileResponse'
+            $ref: '#/definitions/responses.ProfileResponse'
         "400":
           description: Bad Request, either invalid input or user is not a trainer
           schema:
-            $ref: '#/definitions/responses.TrainerProfileResponse'
+            $ref: '#/definitions/responses.ProfileResponse'
         "401":
           description: Unauthorized, the user is not logged in
           schema:
-            $ref: '#/definitions/responses.TrainerProfileResponse'
+            $ref: '#/definitions/responses.ProfileResponse'
       security:
       - BearerAuth: []
       summary: Update the trainer's profile information.
