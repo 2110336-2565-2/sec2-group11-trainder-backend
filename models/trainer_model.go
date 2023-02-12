@@ -34,7 +34,6 @@ func FindTrainerProfile(username string) (userProfile UserProfile, trainerInfo T
 		Gender:      user.Gender,
 		PhoneNumber: user.PhoneNumber,
 		Address:     user.Address,
-		SubAddress:  user.SubAddress,
 		AvatarUrl:   user.AvatarUrl,
 	}
 	return userProfile, user.TrainerInfo, nil
