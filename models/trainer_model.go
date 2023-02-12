@@ -30,7 +30,7 @@ func FindTrainerProfile(username string) (userProfile UserProfile, trainerInfo T
 		UserType:    user.UserType,
 		FirstName:   user.FirstName,
 		LastName:    user.LastName,
-		BirthDate:   user.BirthDate.Format("2000-01-01"),
+		BirthDate:   user.BirthDate.Format("2006-01-02"),
 		Gender:      user.Gender,
 		PhoneNumber: user.PhoneNumber,
 		Address:     user.Address,
