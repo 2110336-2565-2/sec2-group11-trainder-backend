@@ -30,7 +30,6 @@ type RegisterInput struct {
 	Gender      string `json:"gender" binding:"required"`
 	PhoneNumber string `json:"phoneNumber" binding:"required"`
 	Address     string `json:"address" binding:"required"`
-	SubAddress  string `json:"subAddress" binding:"required"`
 }
 
 type UpdateUser struct {
@@ -42,7 +41,6 @@ type UpdateUser struct {
 	Gender      string `json:"gender" binding:"required"`
 	PhoneNumber string `json:"phoneNumber" binding:"required"`
 	Address     string `json:"address" binding:"required"`
-	SubAddress  string `json:"subAddress" binding:"required"`
 }
 
 type UpdateTrainer struct {
@@ -79,7 +77,6 @@ func TestRegisterHandler(t *testing.T) {
 		Gender:      "Male",
 		PhoneNumber: "0881234567",
 		Address:     "address01",
-		SubAddress:  "subaddress01",
 	}
 	jsonValue, _ := json.Marshal(registerInput)
 	req, _ := http.NewRequest("POST", "/register", bytes.NewBuffer(jsonValue))
@@ -147,7 +144,6 @@ func TestUpdateHanlder(t *testing.T) {
 		Gender:      "Male",
 		PhoneNumber: "0881234567",
 		Address:     "address01",
-		SubAddress:  "subaddress01",
 	}
 	jsonValue, _ := json.Marshal(user)
 	loginReq, _ := http.NewRequest("POST", "/login", bytes.NewBuffer(jsonValue))

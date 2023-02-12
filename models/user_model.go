@@ -22,7 +22,6 @@ type UserProfile struct {
 	Gender      string `json:"gender"`
 	PhoneNumber string `json:"phoneNumber"`
 	Address     string `json:"address"`
-	SubAddress  string `json:"subAddress"`
 	AvatarUrl   string `json:"avatarUrl"`
 }
 
@@ -53,7 +52,6 @@ func FindProfile(username, userType string) (result UserProfile, err error) {
 		Gender:      user.Gender,
 		PhoneNumber: user.PhoneNumber,
 		Address:     user.Address,
-		SubAddress:  user.SubAddress,
 		AvatarUrl:   user.AvatarUrl,
 	}
 	return result, nil

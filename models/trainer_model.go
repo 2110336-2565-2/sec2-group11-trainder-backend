@@ -45,7 +45,6 @@ func FindFilteredTrainer(specialty []string, limit int, lower_fee float64, upper
 
 	// count := 0
 	var results []map[string]interface{}
-	var users []User
 	// var err error
 	// var cur *mongo.Cursor
 	var opts *options.FindOptions
@@ -122,13 +121,11 @@ func FindFilteredTrainer(specialty []string, limit int, lower_fee float64, upper
 			"gender": user.Gender,
 			// "phoneNumber": user.PhoneNumber,
 			"address":     user.Address,
-			"subAddress":  user.SubAddress,
 			"avatarUrl":   user.AvatarUrl,
 			"username":    user.Username,
 			"trainerInfo": user.TrainerInfo,
 		}
 		// count += 1
-		users = append(users, user)
 		results = append(results, result)
 	}
 	if err := cur.Err(); err != nil {

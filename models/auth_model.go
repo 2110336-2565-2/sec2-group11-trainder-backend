@@ -31,7 +31,6 @@ type User struct {
 	Gender         string      `bson:"gender"`
 	PhoneNumber    string      `bson:"phoneNumber"`
 	Address        string      `bson:"address"`
-	SubAddress     string      `bson:"subAddress"`
 	CreatedAt      time.Time   `bson:"createdAt"`
 	UpdatedAt      time.Time   `bson:"updatedAt"`
 	AvatarUrl      string      `bson:"avatarUrl"`
@@ -67,7 +66,7 @@ func (e *UserAlreadyExist) Error() string {
 	return "error: user already existed"
 }
 
-func CreateUser(username string, password string, userType string, firstName string, lastName string, birthDate string, citizenID string, gender string, phoneNumber string, address string, subAddress string, avatarUrl string) (user User, err error) {
+func CreateUser(username string, password string, userType string, firstName string, lastName string, birthDate string, citizenID string, gender string, phoneNumber string, address string, avatarUrl string) (user User, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -103,7 +102,6 @@ func CreateUser(username string, password string, userType string, firstName str
 		Gender:         gender,
 		PhoneNumber:    phoneNumber,
 		Address:        address,
-		SubAddress:     subAddress,
 		CreatedAt:      time.Now(),
 		UpdatedAt:      time.Now(),
 		AvatarUrl:      avatarUrl,
