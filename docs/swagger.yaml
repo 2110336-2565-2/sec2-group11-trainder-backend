@@ -111,6 +111,51 @@ definitions:
       traineeCount:
         type: integer
     type: object
+  models.TrainerInfo:
+    properties:
+      certificateURL:
+        description: json:"certificateUrl,omitempty" `
+        type: string
+      fee:
+        description: json:"fee,omitempty" `
+        type: integer
+      rating:
+        description: json:"rating,omitempty"`
+        type: number
+      specialty:
+        description: json:"specialty,omitempty"`
+        items:
+          type: string
+        type: array
+      traineeCount:
+        description: json:"traineeCount,omitempty" `
+        type: integer
+    type: object
+  models.UserProfile:
+    properties:
+      address:
+        type: string
+      avatarUrl:
+        type: string
+      birthDate:
+        type: string
+      citizenId:
+        type: string
+      firstName:
+        type: string
+      gender:
+        type: string
+      lastName:
+        type: string
+      phoneNumber:
+        type: string
+      subAddress:
+        type: string
+      userType:
+        type: string
+      username:
+        type: string
+    type: object
   responses.CurrentUserResponse:
     properties:
       message:
@@ -131,26 +176,6 @@ definitions:
         type: string
       status:
         type: integer
-    type: object
-  responses.GetProfileResponses:
-    properties:
-      message:
-        type: string
-      status:
-        type: integer
-      user:
-        additionalProperties: true
-        type: object
-    type: object
-  responses.GetTrainerResponses:
-    properties:
-      message:
-        type: string
-      status:
-        type: integer
-      user:
-        additionalProperties: true
-        type: object
     type: object
   responses.LoginResponse:
     properties:
@@ -176,6 +201,26 @@ definitions:
         type: string
       status:
         type: integer
+    type: object
+  responses.TrainerProfileResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+      trainerInfo:
+        $ref: '#/definitions/models.TrainerInfo'
+      user:
+        $ref: '#/definitions/models.UserProfile'
+    type: object
+  responses.UserProfileResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+      user:
+        $ref: '#/definitions/models.UserProfile'
     type: object
 info:
   contact: {}
@@ -240,7 +285,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/responses.GetProfileResponses'
+            $ref: '#/definitions/responses.UserProfileResponse'
+        "401":
+          description: Unauthorized, the user is not logged in
+          schema:
+            $ref: '#/definitions/responses.UserProfileResponse'
       security:
       - BearerAuth: []
       summary: getProfile of the current user
@@ -250,8 +299,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Retrieves the trainer profile information of the user who made
-        the request.
+      description: Retrieves the trainer profile information.
       parameters:
       - description: Put username input for retrieving the trainer profile
         in: body
@@ -265,11 +313,11 @@ paths:
         "200":
           description: Successfully retrieved the trainer profile
           schema:
-            $ref: '#/definitions/responses.GetProfileResponses'
+            $ref: '#/definitions/responses.TrainerProfileResponse'
         "400":
           description: Failed to retrieve the trainer profile
           schema:
-            $ref: '#/definitions/responses.GetTrainerResponses'
+            $ref: '#/definitions/responses.TrainerProfileResponse'
       security:
       - BearerAuth: []
       summary: Retrieve trainer profile
@@ -283,7 +331,7 @@ paths:
       parameters:
       - description: put profile input json and pass to  gin.Context
         in: body
-        name: profile_to_update
+        name: ProfileToUpdate
         required: true
         schema:
           $ref: '#/definitions/controllers.ProfileInput'
@@ -316,15 +364,15 @@ paths:
         "200":
           description: Successfully update the trainer's profile
           schema:
-            $ref: '#/definitions/responses.ProfileResponses'
+            $ref: '#/definitions/responses.TrainerProfileResponse'
         "400":
           description: Bad Request, either invalid input or user is not a trainer
           schema:
-            $ref: '#/definitions/responses.ProfileResponses'
+            $ref: '#/definitions/responses.TrainerProfileResponse'
         "401":
           description: Unauthorized, the user is not logged in
           schema:
-            $ref: '#/definitions/responses.ProfileResponses'
+            $ref: '#/definitions/responses.TrainerProfileResponse'
       security:
       - BearerAuth: []
       summary: Update the trainer's profile information.

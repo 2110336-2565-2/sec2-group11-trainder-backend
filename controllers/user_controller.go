@@ -59,8 +59,8 @@ func CurrentUser() gin.HandlerFunc {
 //	@Tags			user
 //	@Accept			json
 //	@Produce		json
-//	@Param			profile_to_update	body		ProfileInput	true	"put profile input json and pass to  gin.Context"
-//	@Success		200					{object}	responses.ProfileResponses
+//	@Param			ProfileToUpdate	body		ProfileInput	true	"put profile input json and pass to  gin.Context"
+//	@Success		200				{object}	responses.ProfileResponses
 //
 //	@Security		BearerAuth
 //
@@ -69,7 +69,7 @@ func UpdateProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input ProfileInput
 		if err := c.ShouldBindJSON(&input); err != nil {
-			c.JSON(http.StatusBadRequest, responses.ProfileResponses{
+			c.JSON(http.StatusBadRequest, responses.ProfileResponse{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			})
@@ -77,7 +77,7 @@ func UpdateProfile() gin.HandlerFunc {
 		}
 		username, err := tokens.ExtractTokenUsername(c)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.ProfileResponses{
+			c.JSON(http.StatusBadRequest, responses.ProfileResponse{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			})
@@ -85,7 +85,7 @@ func UpdateProfile() gin.HandlerFunc {
 		}
 		err = models.ProfileConditionCheck(input.FirstName, input.LastName, input.BirthDate, input.CitizenId, input.Gender, input.PhoneNumber)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.ProfileResponses{
+			c.JSON(http.StatusBadRequest, responses.ProfileResponse{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			})
@@ -93,7 +93,7 @@ func UpdateProfile() gin.HandlerFunc {
 		}
 		_, err = models.UpdateUserProfile(username, input.FirstName, input.LastName, input.BirthDate, input.CitizenId, input.Gender, input.PhoneNumber, input.Address, input.SubAddress, input.AvatarUrl)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.ProfileResponses{
+			c.JSON(http.StatusBadRequest, responses.ProfileResponse{
 				Status:  http.StatusBadRequest,
 				Message: `update failed`,
 			})
@@ -101,7 +101,7 @@ func UpdateProfile() gin.HandlerFunc {
 		}
 
 		c.JSON(http.StatusOK,
-			responses.ProfileResponses{
+			responses.ProfileResponse{
 				Status:  http.StatusOK,
 				Message: username + ` update success!`,
 			})
@@ -115,14 +115,15 @@ func UpdateProfile() gin.HandlerFunc {
 //	@Tags			user
 //	@Accept			json
 //	@Produce		json
-//	@Success		200	{object}	responses.GetProfileResponses
+//	@Success		200	{object}	responses.UserProfileResponse
+//	@Failure		401	{object}	responses.UserProfileResponse	"Unauthorized, the user is not logged in"
 //	@Security		BearerAuth
 //	@Router			/protected/profile [get]
 func GetProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		username, err := tokens.ExtractTokenUsername(c)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+			c.JSON(http.StatusBadRequest, responses.UserProfileResponse{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			})
@@ -131,14 +132,14 @@ func GetProfile() gin.HandlerFunc {
 
 		result, err := models.FindProfile(username, "")
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.CurrentUserResponse{
+			c.JSON(http.StatusBadRequest, responses.UserProfileResponse{
 				Status:  http.StatusBadRequest,
 				Message: `User profile retrieval unsuccessful`,
 			})
 			return
 		}
 
-		c.JSON(http.StatusOK, responses.GetProfileResponses{
+		c.JSON(http.StatusOK, responses.UserProfileResponse{
 			Status:  http.StatusOK,
 			Message: `Successfully retrieve user profile`,
 			User:    result,

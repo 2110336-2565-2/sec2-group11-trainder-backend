@@ -1,26 +1,31 @@
 package responses
 
+import (
+	"trainder-api/models"
+)
+
 type CurrentUserResponse struct {
 	Status   int    `json:"status"`
 	Message  string `json:"message,omitempty"`
 	Username string `json:"username,omitempty"`
 }
 
-type ProfileResponses struct {
+type ProfileResponse struct {
 	Status  int    `json:"status"`
 	Message string `json:"message,omitempty"`
 }
 
-type GetProfileResponses struct {
-	Status  int                    `json:"status"`
-	Message string                 `json:"message,omitempty"`
-	User    map[string]interface{} `json:"user,omitempty"`
+type UserProfileResponse struct {
+	Status  int                `json:"status"`
+	Message string             `json:"message,omitempty"`
+	User    models.UserProfile `json:"user,omitempty"`
 }
 
-type GetTrainerResponses struct {
-	Status  int                    `json:"status"`
-	Message string                 `json:"message,omitempty"`
-	User    map[string]interface{} `json:"user,omitempty"`
+type TrainerProfileResponse struct {
+	Status      int                `json:"status"`
+	Message     string             `json:"message,omitempty"`
+	User        models.UserProfile `json:"user,omitempty"`
+	TrainerInfo models.TrainerInfo `json:"trainerInfo,omitempty"`
 }
 
 type FilterTrainerResponses struct {

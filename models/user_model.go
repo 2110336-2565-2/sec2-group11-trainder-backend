@@ -12,7 +12,21 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func FindProfile(username, userType string) (map[string]interface{}, error) {
+type UserProfile struct {
+	Username    string
+	UserType    string
+	FirstName   string
+	LastName    string
+	BirthDate   string
+	CitizenId   string
+	Gender      string
+	PhoneNumber string
+	Address     string
+	SubAddress  string
+	AvatarUrl   string
+}
+
+func FindProfile(username, userType string) (result UserProfile, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	filter := bson.D{{Key: "username", Value: username}}
@@ -25,21 +39,22 @@ func FindProfile(username, userType string) (map[string]interface{}, error) {
 		{Key: "createdAt", Value: 0},
 		{Key: "updatedAt", Value: 0}})
 	var user User
-	err := userCollection.FindOne(ctx, filter, opts).Decode(&user)
+	err = userCollection.FindOne(ctx, filter, opts).Decode(&user)
 	if err != nil {
-		return nil, err
+		return result, err
 	}
-	result := map[string]interface{}{
-		"usertype":    user.UserType,
-		"firstname":   user.FirstName,
-		"lastname":    user.LastName,
-		"birthdate":   user.BirthDate,
-		"citizenId":   user.CitizenId,
-		"gender":      user.Gender,
-		"phoneNumber": user.PhoneNumber,
-		"address":     user.Address,
-		"subAddress":  user.SubAddress,
-		"avatarUrl":   user.AvatarUrl,
+	result = UserProfile{
+		Username:    user.Username,
+		UserType:    user.UserType,
+		FirstName:   user.FirstName,
+		LastName:    user.LastName,
+		BirthDate:   user.BirthDate.Format("2000-01-01"),
+		CitizenId:   user.CitizenId,
+		Gender:      user.Gender,
+		PhoneNumber: user.PhoneNumber,
+		Address:     user.Address,
+		SubAddress:  user.SubAddress,
+		AvatarUrl:   user.AvatarUrl,
 	}
 	return result, nil
 }
