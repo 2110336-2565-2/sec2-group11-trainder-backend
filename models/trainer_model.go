@@ -10,6 +10,36 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// Use for only finding the profile of a trainer, which will have normal user profile and trainer info
+func FindTrainerProfile(username string) (userProfile UserProfile, trainerInfo TrainerInfo, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	filter := bson.D{{Key: "username", Value: username}, {Key: "usertype", Value: "Trainer"}}
+	opts := options.FindOne().SetProjection(bson.D{
+		{Key: "_id", Value: 0},
+		{Key: "hashedPassword", Value: 0},
+		{Key: "createdAt", Value: 0},
+		{Key: "updatedAt", Value: 0}})
+	var user User
+	err = userCollection.FindOne(ctx, filter, opts).Decode(&user)
+	if err != nil {
+		return userProfile, trainerInfo, err
+	}
+	userProfile = UserProfile{
+		Username:    user.Username,
+		UserType:    user.UserType,
+		FirstName:   user.FirstName,
+		LastName:    user.LastName,
+		BirthDate:   user.BirthDate.Format("2000-01-01"),
+		Gender:      user.Gender,
+		PhoneNumber: user.PhoneNumber,
+		Address:     user.Address,
+		SubAddress:  user.SubAddress,
+		AvatarUrl:   user.AvatarUrl,
+	}
+	return userProfile, user.TrainerInfo, nil
+}
+
 func FindFilteredTrainer(specialty []string, limit int, lower_fee float64, upper_fee float64) ([]map[string]interface{}, error) {
 	// ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	ctx := context.TODO()
