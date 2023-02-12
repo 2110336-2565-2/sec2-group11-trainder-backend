@@ -529,27 +529,22 @@ const docTemplate = `{
         "models.TrainerInfo": {
             "type": "object",
             "properties": {
-                "certificateURL": {
-                    "description": "json:\"certificateUrl,omitempty\" ` + "`" + `",
+                "certificateUrl": {
                     "type": "string"
                 },
                 "fee": {
-                    "description": "json:\"fee,omitempty\" ` + "`" + `",
                     "type": "integer"
                 },
                 "rating": {
-                    "description": "json:\"rating,omitempty\"` + "`" + `",
                     "type": "number"
                 },
                 "specialty": {
-                    "description": "json:\"specialty,omitempty\"` + "`" + `",
                     "type": "array",
                     "items": {
                         "type": "string"
                     }
                 },
                 "traineeCount": {
-                    "description": "json:\"traineeCount,omitempty\" ` + "`" + `",
                     "type": "integer"
                 }
             }
@@ -563,19 +558,19 @@ const docTemplate = `{
                 "avatarUrl": {
                     "type": "string"
                 },
-                "birthDate": {
+                "birthdate": {
                     "type": "string"
                 },
                 "citizenId": {
                     "type": "string"
                 },
-                "firstName": {
+                "firstname": {
                     "type": "string"
                 },
                 "gender": {
                     "type": "string"
                 },
-                "lastName": {
+                "lastname": {
                     "type": "string"
                 },
                 "phoneNumber": {
@@ -584,10 +579,10 @@ const docTemplate = `{
                 "subAddress": {
                     "type": "string"
                 },
-                "userType": {
+                "username": {
                     "type": "string"
                 },
-                "username": {
+                "usertype": {
                     "type": "string"
                 }
             }
