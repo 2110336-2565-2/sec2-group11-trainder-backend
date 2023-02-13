@@ -22,7 +22,6 @@ type UserProfile struct {
 	Gender      string `json:"gender"`
 	PhoneNumber string `json:"phoneNumber"`
 	Address     string `json:"address"`
-	SubAddress  string `json:"subAddress"`
 	AvatarUrl   string `json:"avatarUrl"`
 }
 
@@ -53,13 +52,12 @@ func FindProfile(username, userType string) (result UserProfile, err error) {
 		Gender:      user.Gender,
 		PhoneNumber: user.PhoneNumber,
 		Address:     user.Address,
-		SubAddress:  user.SubAddress,
 		AvatarUrl:   user.AvatarUrl,
 	}
 	return result, nil
 }
 
-func UpdateUserProfile(username string, firstName string, lastName string, birthDate string, citizenID string, gender string, phoneNumber string, address string, subAddress string, avatarUrl string) (result *mongo.UpdateResult, err error) {
+func UpdateUserProfile(username string, firstName string, lastName string, birthDate string, citizenID string, gender string, phoneNumber string, address string,  avatarUrl string) (result *mongo.UpdateResult, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -80,7 +78,6 @@ func UpdateUserProfile(username string, firstName string, lastName string, birth
 		"gender":      gender,
 		"phoneNumber": phoneNumber,
 		"address":     address,
-		"subAddress":  subAddress,
 		"updatedAt":   time.Now(),
 	}
 	if avatarUrl != "" {
