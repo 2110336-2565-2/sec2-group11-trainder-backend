@@ -173,7 +173,7 @@ definitions:
       username:
         type: string
     type: object
-  responses.FilterTrainerResponses:
+  responses.FilterTrainerResponse:
     properties:
       message:
         type: string
@@ -275,7 +275,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/responses.FilterTrainerResponses'
+            $ref: '#/definitions/responses.FilterTrainerResponse'
       security:
       - BearerAuth: []
       summary: FilterTrainer base on filter input

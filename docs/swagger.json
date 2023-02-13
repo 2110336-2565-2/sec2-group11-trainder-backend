@@ -74,7 +74,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/responses.FilterTrainerResponses"
+                            "$ref": "#/definitions/responses.FilterTrainerResponse"
                         }
                     }
                 }
@@ -608,7 +608,7 @@
                 }
             }
         },
-        "responses.FilterTrainerResponses": {
+        "responses.FilterTrainerResponse": {
             "type": "object",
             "properties": {
                 "message": {

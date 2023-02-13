@@ -82,7 +82,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/responses.FilterTrainerResponses"
+                            "$ref": "#/definitions/responses.FilterTrainerResponse"
                         }
                     }
                 }
@@ -616,7 +616,7 @@ const docTemplate = `{
                 }
             }
         },
-        "responses.FilterTrainerResponses": {
+        "responses.FilterTrainerResponse": {
             "type": "object",
             "properties": {
                 "message": {

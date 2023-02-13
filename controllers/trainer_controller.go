@@ -164,14 +164,14 @@ func UpdateTrainerProfile() gin.HandlerFunc {
 //	@Accept			json
 //	@Produce		json
 //	@Param			FilterTrainer	body		FilterTrainerInput	true	"Parameters for filtering trainers"
-//	@Success		200				{object}	responses.FilterTrainerResponses
+//	@Success		200				{object}	responses.FilterTrainerResponse
 //	@Security		BearerAuth
 //	@Router			/protected/filter-trainer [post]
 func FilterTrainer() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input FilterTrainerInput
 		if err := c.ShouldBindJSON(&input); err != nil {
-			c.JSON(http.StatusBadRequest, responses.FilterTrainerResponses{
+			c.JSON(http.StatusBadRequest, responses.FilterTrainerResponse{
 				Status:  http.StatusBadRequest,
 				Message: "input missing",
 			})
@@ -183,13 +183,13 @@ func FilterTrainer() gin.HandlerFunc {
 		fmt.Println(result)
 		// result, err := models.FindProfile(input.Username, "trainer")
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.FilterTrainerResponses{
+			c.JSON(http.StatusBadRequest, responses.FilterTrainerResponse{
 				Status:  http.StatusBadRequest,
 				Message: `filter trainer profile unsuccessful`,
 			})
 			return
 		}
-		c.JSON(http.StatusOK, responses.FilterTrainerResponses{
+		c.JSON(http.StatusOK, responses.FilterTrainerResponse{
 			Status:   http.StatusOK,
 			Message:  `Successfully retrieve filtered trainer`,
 			Trainers: result,

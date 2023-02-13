@@ -13,12 +13,12 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// @title						Trainder API
-// @version					0.1
-// @description				API for Trainder
-// @securityDefinitions.apikey	BearerAuth
-// @in							header
-// @name						Authorization
+//	@title						Trainder API
+//	@version					0.1
+//	@description				API for Trainder
+//	@securityDefinitions.apikey	BearerAuth
+//	@in							header
+//	@name						Authorization
 func main() {
 	router := gin.Default()
 	config := cors.DefaultConfig()
