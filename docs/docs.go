@@ -69,8 +69,8 @@ const docTemplate = `{
                 "summary": "FilterTrainer base on filter input",
                 "parameters": [
                     {
-                        "description": "put FilterTrainerInput input json and pass to  gin.Context",
-                        "name": "filter_input",
+                        "description": "Parameters for filtering trainers",
+                        "name": "FilterTrainer",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -416,8 +416,7 @@ const docTemplate = `{
                 "firstname",
                 "gender",
                 "lastname",
-                "phoneNumber",
-                "subAddress"
+                "phoneNumber"
             ],
             "properties": {
                 "address": {
@@ -443,9 +442,6 @@ const docTemplate = `{
                 },
                 "phoneNumber": {
                     "type": "string"
-                },
-                "subAddress": {
-                    "type": "string"
                 }
             }
         },
@@ -460,7 +456,6 @@ const docTemplate = `{
                 "lastname",
                 "password",
                 "phoneNumber",
-                "subAddress",
                 "username",
                 "usertype"
             ],
@@ -492,9 +487,6 @@ const docTemplate = `{
                 "phoneNumber": {
                     "type": "string"
                 },
-                "subAddress": {
-                    "type": "string"
-                },
                 "username": {
                     "type": "string"
                 },
@@ -523,6 +515,32 @@ const docTemplate = `{
                 },
                 "traineeCount": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.FilteredTrainerInfo": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "avatarUrl": {
+                    "type": "string"
+                },
+                "firstname": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "trainerInfo": {
+                    "$ref": "#/definitions/models.TrainerInfo"
+                },
+                "username": {
+                    "type": "string"
                 }
             }
         },
@@ -576,9 +594,6 @@ const docTemplate = `{
                 "phoneNumber": {
                     "type": "string"
                 },
-                "subAddress": {
-                    "type": "string"
-                },
                 "username": {
                     "type": "string"
                 },
@@ -604,18 +619,17 @@ const docTemplate = `{
         "responses.FilterTrainerResponses": {
             "type": "object",
             "properties": {
-                "Trainers": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "additionalProperties": true
-                    }
-                },
                 "message": {
                     "type": "string"
                 },
                 "status": {
                     "type": "integer"
+                },
+                "trainers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.FilteredTrainerInfo"
+                    }
                 }
             }
         },

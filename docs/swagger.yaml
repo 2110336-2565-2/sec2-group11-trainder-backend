@@ -49,8 +49,6 @@ definitions:
         type: string
       phoneNumber:
         type: string
-      subAddress:
-        type: string
     required:
     - address
     - birthdate
@@ -59,7 +57,6 @@ definitions:
     - gender
     - lastname
     - phoneNumber
-    - subAddress
     type: object
   controllers.RegisterInput:
     properties:
@@ -81,8 +78,6 @@ definitions:
         type: string
       phoneNumber:
         type: string
-      subAddress:
-        type: string
       username:
         type: string
       usertype:
@@ -96,7 +91,6 @@ definitions:
     - lastname
     - password
     - phoneNumber
-    - subAddress
     - username
     - usertype
     type: object
@@ -114,6 +108,23 @@ definitions:
         type: array
       traineeCount:
         type: integer
+    type: object
+  models.FilteredTrainerInfo:
+    properties:
+      address:
+        type: string
+      avatarUrl:
+        type: string
+      firstname:
+        type: string
+      gender:
+        type: string
+      lastname:
+        type: string
+      trainerInfo:
+        $ref: '#/definitions/models.TrainerInfo'
+      username:
+        type: string
     type: object
   models.TrainerInfo:
     properties:
@@ -148,8 +159,6 @@ definitions:
         type: string
       phoneNumber:
         type: string
-      subAddress:
-        type: string
       username:
         type: string
       usertype:
@@ -166,15 +175,14 @@ definitions:
     type: object
   responses.FilterTrainerResponses:
     properties:
-      Trainers:
-        items:
-          additionalProperties: true
-          type: object
-        type: array
       message:
         type: string
       status:
         type: integer
+      trainers:
+        items:
+          $ref: '#/definitions/models.FilteredTrainerInfo'
+        type: array
     type: object
   responses.LoginResponse:
     properties:
@@ -255,9 +263,9 @@ paths:
       - application/json
       description: FilterTrainer base on filter input
       parameters:
-      - description: put FilterTrainerInput input json and pass to  gin.Context
+      - description: Parameters for filtering trainers
         in: body
-        name: filter_input
+        name: FilterTrainer
         required: true
         schema:
           $ref: '#/definitions/controllers.FilterTrainerInput'
