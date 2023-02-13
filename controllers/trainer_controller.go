@@ -163,7 +163,7 @@ func UpdateTrainerProfile() gin.HandlerFunc {
 //	@Tags			Trainer
 //	@Accept			json
 //	@Produce		json
-//	@Param			filter_input	body		FilterTrainerInput	true	"put FilterTrainerInput input json and pass to  gin.Context"
+//	@Param			FilterTrainer	body		FilterTrainerInput	true	"Parameters for filtering trainers"
 //	@Success		200				{object}	responses.FilterTrainerResponses
 //	@Security		BearerAuth
 //	@Router			/protected/filter-trainer [post]
@@ -185,7 +185,7 @@ func FilterTrainer() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.FilterTrainerResponses{
 				Status:  http.StatusBadRequest,
-				Message: `filter trainer profile  unsuccessful`,
+				Message: `filter trainer profile unsuccessful`,
 			})
 			return
 		}

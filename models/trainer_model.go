@@ -39,19 +39,25 @@ func FindTrainerProfile(username string) (userProfile UserProfile, trainerInfo T
 	return userProfile, user.TrainerInfo, nil
 }
 
-func FindFilteredTrainer(specialty []string, limit int, lower_fee float64, upper_fee float64) ([]map[string]interface{}, error) {
+type FilteredTrainerInfo struct {
+	Username    string      `json:"username"`
+	FirstName   string      `json:"firstname"`
+	LastName    string      `json:"lastname"`
+	Gender      string      `json:"gender"`
+	Address     string      `json:"address"`
+	AvatarUrl   string      `json:"avatarUrl"`
+	TrainerInfo TrainerInfo `json:"trainerInfo"`
+}
+
+func FindFilteredTrainer(specialty []string, limit int, feeLowerBound float64, feeUpperBound float64) ([]FilteredTrainerInfo, error) {
 	// ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	ctx := context.TODO()
 
-	// count := 0
-	var results []map[string]interface{}
-	// var err error
-	// var cur *mongo.Cursor
+	var results []FilteredTrainerInfo
 	var opts *options.FindOptions
 	var filterArr []bson.D
 
 	if len(specialty) == 0 {
-		// fmt.Println("len specialty 0")
 		// filter := bson.D{{"trainerInfo.specialty", bson.D{{"$in", specialty}}}}
 		filterArr = append(filterArr, bson.D{{Key: "usertype", Value: "Trainer"}})
 		// opts = options.Find().SetLimit(int64(limit)).SetSort(bson.D{{"trainerInfo.rating", -1}, {"fee", 1}}).SetProjection(bson.D{{"_id", 0}, {"hashedPassword", 0}, {"createdAt", 0}, {"updatedAt", 0}})
@@ -62,16 +68,17 @@ func FindFilteredTrainer(specialty []string, limit int, lower_fee float64, upper
 		// opts = options.Find().SetLimit(int64(limit)).SetSort(bson.D{{"trainerInfo.rating", -1}, {"fee", 1}}).SetProjection(bson.D{{"_id", 0}, {"hashedPassword", 0}, {"createdAt", 0}, {"updatedAt", 0}})
 
 	}
+
 	// ------------------------filter by fee----------------------------
-	if lower_fee == 0 && upper_fee == 0 {
-		upper_fee = 1000000000 //intmax
+	if feeLowerBound == 0 && feeUpperBound == 0 {
+		feeUpperBound = 1000000000 //intmax
 	}
 	filter2 := bson.D{
 		{
 			Key: "trainerInfo.fee",
 			Value: bson.M{
-				"$gte": lower_fee,
-				"$lte": upper_fee,
+				"$gte": feeLowerBound,
+				"$lte": feeUpperBound,
 			},
 		},
 	}
@@ -97,41 +104,29 @@ func FindFilteredTrainer(specialty []string, limit int, lower_fee float64, upper
 	cur, err := userCollection.Find(ctx, filter, opts)
 
 	if err != nil {
-		// fmt.Println("error 1")
 		return nil, err
 	}
 
 	defer cur.Close(ctx)
 	for cur.Next(ctx) {
-		// if count >= limit {
-		// 	break
-		// }
 		var user User
 		if err := cur.Decode(&user); err != nil {
-			// fmt.Println("error 2")
 			return nil, err
 		}
-		// fmt.Println("Trainer info", user.TrainerInfo)
-		result := map[string]interface{}{
-			// "usertype":    user.UserType,
-			"firstname": user.FirstName,
-			"lastname":  user.LastName,
-			// "birthdate":   user.BirthDate,
-			// "citizenId":   user.CitizenId,
-			"gender": user.Gender,
-			// "phoneNumber": user.PhoneNumber,
-			"address":     user.Address,
-			"avatarUrl":   user.AvatarUrl,
-			"username":    user.Username,
-			"trainerInfo": user.TrainerInfo,
+		result := FilteredTrainerInfo{
+			FirstName:   user.FirstName,
+			LastName:    user.LastName,
+			Gender:      user.Gender,
+			Address:     user.Address,
+			AvatarUrl:   user.AvatarUrl,
+			Username:    user.Username,
+			TrainerInfo: user.TrainerInfo,
 		}
-		// count += 1
 		results = append(results, result)
 	}
 	if err := cur.Err(); err != nil {
 		return nil, err
 	}
-	// fmt.Println("print filter trainer", users)
 
 	return results, nil
 }
