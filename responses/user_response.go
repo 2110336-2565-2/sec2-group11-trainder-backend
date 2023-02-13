@@ -28,8 +28,8 @@ type TrainerProfileResponse struct {
 	TrainerInfo models.TrainerInfo `json:"trainerInfo,omitempty"`
 }
 
-type FilterTrainerResponses struct {
-	Status   int                      `json:"status"`
-	Message  string                   `json:"message,omitempty"`
-	Trainers []map[string]interface{} `json:"Trainers,omitempty"`
+type FilterTrainerResponse struct {
+	Status   int                          `json:"status"`
+	Message  string                       `json:"message,omitempty"`
+	Trainers []models.FilteredTrainerInfo `json:"trainers,omitempty"`
 }
