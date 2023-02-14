@@ -14,11 +14,11 @@ import (
 var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
 
 type TrainerInfo struct {
-	Specialty      []string `bson:"specialty,omitempty"      json:"specialty,omitempty"`
-	Fee            int      `bson:"fee,omitempty"            json:"fee,omitempty"`
-	CertificateURL string   `bson:"certificateUrl,omitempty" json:"certificateUrl,omitempty"`
-	Rating         float64  `bson:"rating,omitempty"         json:"rating,omitempty"`
-	TraineeCount   int32    `bson:"traineeCount,omitempty"   json:"traineeCount,omitempty"`
+	Specialty      []string `bson:"specialty,omitempty"      json:"specialty"`
+	Fee            int      `bson:"fee,omitempty"            json:"fee"`
+	CertificateURL string   `bson:"certificateUrl,omitempty" json:"certificateUrl"`
+	Rating         float64  `bson:"rating,omitempty"         json:"rating"`
+	TraineeCount   int32    `bson:"traineeCount,omitempty"   json:"traineeCount"`
 }
 type User struct {
 	Username       string      `bson:"username"`
@@ -35,6 +35,14 @@ type User struct {
 	UpdatedAt      time.Time   `bson:"updatedAt"`
 	AvatarUrl      string      `bson:"avatarUrl"`
 	TrainerInfo    TrainerInfo `bson:"trainerInfo,omitempty"`
+}
+
+func (tr TrainerInfo) Init() TrainerInfo {
+	tr.Fee = 200
+	tr.CertificateURL = "certificateURLString"
+	tr.Rating = 3
+	tr.TraineeCount = 0
+	return tr
 }
 
 func FindUser(username string) (user User, err error) {
@@ -90,21 +98,42 @@ func CreateUser(username string, password string, userType string, firstName str
 	if error != nil {
 		return user, err
 	}
+	var initTrainer TrainerInfo
+	if userType == "Trainer" {
+		initTrainer = new(TrainerInfo).Init()
+		user = User{
+			Username:       username,
+			HashedPassword: string(hashedPassword),
+			UserType:       userType,
+			FirstName:      firstName,
+			LastName:       lastName,
+			BirthDate:      date,
+			CitizenId:      citizenID,
+			Gender:         gender,
+			PhoneNumber:    phoneNumber,
+			Address:        address,
+			CreatedAt:      time.Now(),
+			UpdatedAt:      time.Now(),
+			AvatarUrl:      avatarUrl,
+			TrainerInfo:    initTrainer,
+		}
 
-	user = User{
-		Username:       username,
-		HashedPassword: string(hashedPassword),
-		UserType:       userType,
-		FirstName:      firstName,
-		LastName:       lastName,
-		BirthDate:      date,
-		CitizenId:      citizenID,
-		Gender:         gender,
-		PhoneNumber:    phoneNumber,
-		Address:        address,
-		CreatedAt:      time.Now(),
-		UpdatedAt:      time.Now(),
-		AvatarUrl:      avatarUrl,
+	} else {
+		user = User{
+			Username:       username,
+			HashedPassword: string(hashedPassword),
+			UserType:       userType,
+			FirstName:      firstName,
+			LastName:       lastName,
+			BirthDate:      date,
+			CitizenId:      citizenID,
+			Gender:         gender,
+			PhoneNumber:    phoneNumber,
+			Address:        address,
+			CreatedAt:      time.Now(),
+			UpdatedAt:      time.Now(),
+			AvatarUrl:      avatarUrl,
+		}
 	}
 
 	_, err = userCollection.InsertOne(ctx, user)

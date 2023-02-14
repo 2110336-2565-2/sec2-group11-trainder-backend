@@ -3,6 +3,8 @@ package models
 import (
 	"context"
 	// "fmt"
+
+	// "fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -135,30 +137,87 @@ func UpdateTrainerProfile(username string, specialty []string, rating float64, f
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 
 	defer cancel()
-	update := bson.M{}
+	// update := bson.M{}
 	if len(specialty) > 0 {
-		update["specialty"] = specialty
+		// update["specialty"] = specialty
+		update := bson.M{
+			"$set": bson.M{
+				"trainerInfo.specialty": specialty,
+				"updatedAt":             time.Now(),
+			},
+		}
+		result, err = userCollection.UpdateOne(
+			ctx,
+			bson.M{"username": username},
+			update,
+		)
 	}
 	if rating > 0 {
-		update["rating"] = rating
+		// update["rating"] = rating
+		update := bson.M{
+			"$set": bson.M{
+				"trainerInfo.rating": rating,
+				"updatedAt":          time.Now(),
+			},
+		}
+		result, err = userCollection.UpdateOne(
+			ctx,
+			bson.M{"username": username},
+			update,
+		)
 	}
 	if fee > 0 {
-		update["fee"] = fee
+		// update["fee"] = fee
+		update := bson.M{
+			"$set": bson.M{
+				"trainerInfo.fee": fee,
+				"updatedAt":       time.Now(),
+			},
+		}
+		result, err = userCollection.UpdateOne(
+			ctx,
+			bson.M{"username": username},
+			update,
+		)
 	}
 	if traineeCount > 0 {
-		update["traineeCount"] = traineeCount
+		// update["traineeCount"] = traineeCount
+		update := bson.M{
+			"$set": bson.M{
+				"trainerInfo.traineeCount": traineeCount,
+				"updatedAt":                time.Now(),
+			},
+		}
+		result, err = userCollection.UpdateOne(
+			ctx,
+			bson.M{"username": username},
+			update,
+		)
 	}
 	if certificateUrl != "" {
-		update["certificateUrl"] = certificateUrl
+		// update["certificateUrl"] = certificateUrl
+		update := bson.M{
+			"$set": bson.M{
+				"trainerInfo.certificateUrl": certificateUrl,
+				"updatedAt":                  time.Now(),
+			},
+		}
+		result, err = userCollection.UpdateOne(
+			ctx,
+			bson.M{"username": username},
+			update,
+		)
 	}
-	result, err = userCollection.UpdateOne(
-		ctx,
-		bson.M{"username": username},
-		bson.M{"$set": bson.M{
-			"trainerInfo": update,
-			"updatedAt":   time.Now(),
-		}},
-	)
+	// fmt.Println("update", update)
+	// result, err = userCollection.UpdateOne(
+	// 	ctx,
+	// 	bson.M{"username": username},
+	// 	bson.M{"$set": bson.M{
+	// 		"trainerInfo": update,
+	// 		"updatedAt":   time.Now(),
+	// 	}},
+	// )
+
 	return
 }
 
