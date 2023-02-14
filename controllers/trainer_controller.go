@@ -122,6 +122,7 @@ func GetTrainerProfile() gin.HandlerFunc {
 func UpdateTrainerProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input UpdateTrainerInput
+		fmt.Println("Print debug  ", input)
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, responses.ProfileResponse{
 				Status:  http.StatusBadRequest,
@@ -137,6 +138,7 @@ func UpdateTrainerProfile() gin.HandlerFunc {
 			})
 			return
 		}
+		fmt.Println("Print debug updateTrainerProfile: ", input, input.Specialty, "xxx:", len(input.CertificateUrl), input.TraineeCount, input.Fee, input.Rating)
 		_, err = models.UpdateTrainerProfile(
 			username, input.Specialty, input.Rating,
 			input.Fee, input.TraineeCount, input.CertificateUrl)
@@ -177,10 +179,10 @@ func FilterTrainer() gin.HandlerFunc {
 			})
 			return
 		}
-		fmt.Println("FilterTrainer input ", input)
+		// fmt.Println("FilterTrainer input ")
 		//--------
 		result, err := models.FindFilteredTrainer(input.Specialty, input.Limit, input.FeeMin, input.FeeMax)
-		fmt.Println(result)
+		// fmt.Println(result)
 		// result, err := models.FindProfile(input.Username, "trainer")
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.FilterTrainerResponse{
