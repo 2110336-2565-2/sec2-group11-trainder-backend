@@ -28,10 +28,10 @@ func EnvMongoDBName() string {
 	return os.Getenv("MONGO_DATABASE_NAME")
 }
 
-func EnvTokenLifeSpan() (token_lifespan int, err error) {
+func EnvTokenLifeSpan() (tokenLifespan int, err error) {
 	loadDotEnv()
-	token_lifespan, err = strconv.Atoi(os.Getenv("TOKEN_HOUR_LIFESPAN"))
-	return token_lifespan, err
+	tokenLifespan, err = strconv.Atoi(os.Getenv("TOKEN_HOUR_LIFESPAN"))
+	return tokenLifespan, err
 }
 
 func EnvApiSecret() string {
@@ -40,4 +40,16 @@ func EnvApiSecret() string {
 		log.Fatal("Error loading .env file")
 	}
 	return os.Getenv("API_SECRET")
+}
+
+func EnvInitRootPassword() string {
+	loadDotEnv()
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	env := os.Getenv("INIT_ROOT_PASSWORD")
+	if env == "" {
+		log.Fatal("Root password cannot be empty")
+	}
+	return env
 }
