@@ -1,7 +1,8 @@
 package controllers
 
 import (
-	"fmt"
+	// "fmt"
+
 	"net/http"
 
 	"trainder-api/models"
@@ -122,7 +123,7 @@ func GetTrainerProfile() gin.HandlerFunc {
 func UpdateTrainerProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input UpdateTrainerInput
-		fmt.Println("Print debug  ", input)
+		// fmt.Println("Print debug  ", input)
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, responses.ProfileResponse{
 				Status:  http.StatusBadRequest,
@@ -138,7 +139,7 @@ func UpdateTrainerProfile() gin.HandlerFunc {
 			})
 			return
 		}
-		fmt.Println("Print debug updateTrainerProfile: ", input, input.Specialty, "xxx:", len(input.CertificateUrl), input.TraineeCount, input.Fee, input.Rating)
+		// fmt.Println("Print debug updateTrainerProfile: ", input, input.Specialty, "xxx:", len(input.CertificateUrl), input.TraineeCount, input.Fee, input.Rating)
 		_, err = models.UpdateTrainerProfile(
 			username, input.Specialty, input.Rating,
 			input.Fee, input.TraineeCount, input.CertificateUrl)
