@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"runtime"
 	"trainder-api/routes"
+	"trainder-api/utils/inits"
 
 	_ "trainder-api/docs"
 
@@ -20,6 +21,7 @@ import (
 // @in							header
 // @name						Authorization
 func main() {
+	inits.InitializeDatabase()
 	router := gin.Default()
 	config := cors.DefaultConfig()
 	config.AllowAllOrigins = true

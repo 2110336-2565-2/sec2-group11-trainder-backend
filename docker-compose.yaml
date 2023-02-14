@@ -11,6 +11,7 @@ services:
       MONGO_DATABASE_NAME: trainder
       TOKEN_HOUR_LIFESPAN: 1
       API_SECRET: YOUR_API_SECRET
+      INIT_ROOT_PASSWORD: YOUR_ROOT_PASSWORD
 
   database:
     image: mongo:6.0.4-jammy
