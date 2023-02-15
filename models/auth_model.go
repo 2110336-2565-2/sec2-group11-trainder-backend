@@ -14,7 +14,7 @@ import (
 var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
 
 type TrainerInfo struct {
-	Specialty      []string `bson:"specialty,omitempty"      json:"specialty"`
+	Specialty      []string `bson:"specialty"      json:"specialty"`
 	Fee            int      `bson:"fee,omitempty"            json:"fee"`
 	CertificateURL string   `bson:"certificateUrl,omitempty" json:"certificateUrl"`
 	Rating         float64  `bson:"rating,omitempty"         json:"rating"`
@@ -42,6 +42,7 @@ func (tr TrainerInfo) Init() TrainerInfo {
 	tr.CertificateURL = "certificateURLString"
 	tr.Rating = 3
 	tr.TraineeCount = 0
+	tr.Specialty = []string{}
 	return tr
 }
 
