@@ -137,77 +137,93 @@ func UpdateTrainerProfile(username string, specialty []string, rating float64, f
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 
 	defer cancel()
-	// update := bson.M{}
-	if len(specialty) > 0 {
-		// update["specialty"] = specialty
-		update := bson.M{
-			"$set": bson.M{
-				"trainerInfo.specialty": specialty,
-				"updatedAt":             time.Now(),
-			},
-		}
-		result, err = userCollection.UpdateOne(
-			ctx,
-			bson.M{"username": username},
-			update,
-		)
+	update := bson.M{
+		"$set": bson.M{
+			"trainerInfo.specialty":      specialty,
+			"updatedAt":                  time.Now(),
+			"trainerInfo.rating":         rating,
+			"trainerInfo.fee":            fee,
+			"trainerInfo.traineeCount":   traineeCount,
+			"trainerInfo.certificateUrl": certificateUrl,
+		},
 	}
-	if rating > 0 {
-		// update["rating"] = rating
-		update := bson.M{
-			"$set": bson.M{
-				"trainerInfo.rating": rating,
-				"updatedAt":          time.Now(),
-			},
-		}
-		result, err = userCollection.UpdateOne(
-			ctx,
-			bson.M{"username": username},
-			update,
-		)
-	}
-	if fee > 0 {
-		// update["fee"] = fee
-		update := bson.M{
-			"$set": bson.M{
-				"trainerInfo.fee": fee,
-				"updatedAt":       time.Now(),
-			},
-		}
-		result, err = userCollection.UpdateOne(
-			ctx,
-			bson.M{"username": username},
-			update,
-		)
-	}
-	if traineeCount > 0 {
-		// update["traineeCount"] = traineeCount
-		update := bson.M{
-			"$set": bson.M{
-				"trainerInfo.traineeCount": traineeCount,
-				"updatedAt":                time.Now(),
-			},
-		}
-		result, err = userCollection.UpdateOne(
-			ctx,
-			bson.M{"username": username},
-			update,
-		)
-	}
-	if certificateUrl != "" {
-		// update["certificateUrl"] = certificateUrl
-		update := bson.M{
-			"$set": bson.M{
-				"trainerInfo.certificateUrl": certificateUrl,
-				"updatedAt":                  time.Now(),
-			},
-		}
-		result, err = userCollection.UpdateOne(
-			ctx,
-			bson.M{"username": username},
-			update,
-		)
-	}
+	result, err = userCollection.UpdateOne(
+		ctx,
+		bson.M{"username": username},
+		update,
+	)
+
+	// if len(specialty) > 0 {
+	// 	// update["specialty"] = specialty
+	// 	update := bson.M{
+	// 		"$set": bson.M{
+	// 			"trainerInfo.specialty": specialty,
+	// 			"updatedAt":             time.Now(),
+	// 		},
+	// 	}
+	// 	result, err = userCollection.UpdateOne(
+	// 		ctx,
+	// 		bson.M{"username": username},
+	// 		update,
+	// 	)
+	// }
+	// if rating > 0 {
+	// 	// update["rating"] = rating
+	// 	update := bson.M{
+	// 		"$set": bson.M{
+	// 			"trainerInfo.rating": rating,
+	// 			"updatedAt":          time.Now(),
+	// 		},
+	// 	}
+	// 	result, err = userCollection.UpdateOne(
+	// 		ctx,
+	// 		bson.M{"username": username},
+	// 		update,
+	// 	)
+	// }
+	// if fee > 0 {
+	// 	// update["fee"] = fee
+	// 	update := bson.M{
+	// 		"$set": bson.M{
+	// 			"trainerInfo.fee": fee,
+	// 			"updatedAt":       time.Now(),
+	// 		},
+	// 	}
+	// 	result, err = userCollection.UpdateOne(
+	// 		ctx,
+	// 		bson.M{"username": username},
+	// 		update,
+	// 	)
+	// }
+	// if traineeCount > 0 {
+	// 	// update["traineeCount"] = traineeCount
+	// 	update := bson.M{
+	// 		"$set": bson.M{
+	// 			"trainerInfo.traineeCount": traineeCount,
+	// 			"updatedAt":                time.Now(),
+	// 		},
+	// 	}
+	// 	result, err = userCollection.UpdateOne(
+	// 		ctx,
+	// 		bson.M{"username": username},
+	// 		update,
+	// 	)
+	// }
+	// if certificateUrl != "" {
+	// 	// update["certificateUrl"] = certificateUrl
+	// 	update := bson.M{
+	// 		"$set": bson.M{
+	// 			"trainerInfo.certificateUrl": certificateUrl,
+	// 			"updatedAt":                  time.Now(),
+	// 		},
+	// 	}
+	// 	result, err = userCollection.UpdateOne(
+	// 		ctx,
+	// 		bson.M{"username": username},
+	// 		update,
+	// 	)
+	// }
+	//---------------ta------------------
 	// fmt.Println("update", update)
 	// result, err = userCollection.UpdateOne(
 	// 	ctx,
