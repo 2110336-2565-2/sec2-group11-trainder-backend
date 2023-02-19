@@ -21,8 +21,8 @@ type RegisterInput struct {
 	PhoneNumber string  `json:"phoneNumber" binding:"required"`
 	Address     string  `json:"address" binding:"required"`
 	AvatarUrl   string  `json:"avatarUrl"`
-	lat         float64 `json:"lat"`
-	lng         float64 `json:"lng"`
+	lat         float32 `json:"lat" binding:"required"`
+	lng         float32 `json:"lng" binding:"required"`
 }
 
 // @Summary		Register user

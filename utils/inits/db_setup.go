@@ -43,8 +43,8 @@ type RootUserInfo struct {
 	Gender      string
 	PhoneNumber string
 	Address     string
-	Lat         float64
-	Lng         float64
+	Lat         float32
+	Lng         float32
 	AvatarUrl   string
 }
 
