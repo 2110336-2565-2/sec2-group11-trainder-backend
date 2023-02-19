@@ -43,6 +43,8 @@ type RootUserInfo struct {
 	Gender      string
 	PhoneNumber string
 	Address     string
+	Lat         float64
+	Lng         float64
 	AvatarUrl   string
 }
 
@@ -60,6 +62,8 @@ func CreateRootUser() {
 		Gender:      "Other",
 		PhoneNumber: "0000000000",
 		Address:     "-",
+		Lat:         0,
+		Lng:         0,
 		AvatarUrl:   "",
 	}
 
@@ -69,8 +73,7 @@ func CreateRootUser() {
 		return
 	}
 
-	_, err := models.CreateUser(rootUserInfo.Username, rootUserInfo.Password, rootUserInfo.UserType, rootUserInfo.Firstname, rootUserInfo.Lastname, rootUserInfo.Birthdate, rootUserInfo.CitizenId, rootUserInfo.Gender, rootUserInfo.PhoneNumber, rootUserInfo.Address, rootUserInfo.AvatarUrl)
-
+	_, err := models.CreateUser(rootUserInfo.Username, rootUserInfo.Password, rootUserInfo.UserType, rootUserInfo.Firstname, rootUserInfo.Lastname, rootUserInfo.Birthdate, rootUserInfo.CitizenId, rootUserInfo.Gender, rootUserInfo.PhoneNumber, rootUserInfo.Address, rootUserInfo.AvatarUrl, rootUserInfo.Lat, rootUserInfo.Lng)
 	if err != nil {
 		log.Fatal(err.Error())
 		return
