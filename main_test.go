@@ -20,16 +20,18 @@ type User struct {
 }
 
 type RegisterInput struct {
-	Username    string `json:"username" binding:"required"`
-	Password    string `json:"password" binding:"required"`
-	UserType    string `json:"usertype" binding:"required"`
-	Firstname   string `json:"firstname" binding:"required"`
-	Lastname    string `json:"lastname" binding:"required"`
-	Birthdate   string `json:"birthdate" binding:"required"`
-	CitizenId   string `json:"citizenId" binding:"required"`
-	Gender      string `json:"gender" binding:"required"`
-	PhoneNumber string `json:"phoneNumber" binding:"required"`
-	Address     string `json:"address" binding:"required"`
+	Username    string  `json:"username" binding:"required"`
+	Password    string  `json:"password" binding:"required"`
+	UserType    string  `json:"usertype" binding:"required"`
+	Firstname   string  `json:"firstname" binding:"required"`
+	Lastname    string  `json:"lastname" binding:"required"`
+	Birthdate   string  `json:"birthdate" binding:"required"`
+	CitizenId   string  `json:"citizenId" binding:"required"`
+	Gender      string  `json:"gender" binding:"required"`
+	PhoneNumber string  `json:"phoneNumber" binding:"required"`
+	Address     string  `json:"address" binding:"required"`
+	Lat         float64 `json:"lat" binding:"required"`
+	Lng         float64 `json:"lng" binding:"required"`
 }
 
 type UpdateUser struct {
@@ -77,6 +79,8 @@ func TestRegisterHandler(t *testing.T) {
 		Gender:      "Male",
 		PhoneNumber: "0881234567",
 		Address:     "address01",
+		Lat:         0,
+		Lng:         0,
 	}
 	jsonValue, _ := json.Marshal(registerInput)
 	req, _ := http.NewRequest("POST", "/register", bytes.NewBuffer(jsonValue))
