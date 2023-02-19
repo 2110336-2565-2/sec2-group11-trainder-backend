@@ -18,7 +18,7 @@ type TrainerInfo struct {
 	Fee            int      `bson:"fee,omitempty"            json:"fee"`
 	CertificateURL string   `bson:"certificateUrl,omitempty" json:"certificateUrl"`
 	Rating         float64  `bson:"rating,omitempty"         json:"rating"`
-	TraineeCount   int32    `bson:"traineeCount,omitempty"   json:"traineeCount"`
+	TraineeCount   int64    `bson:"traineeCount,omitempty"   json:"traineeCount"`
 }
 type User struct {
 	Username       string      `bson:"username"`
@@ -34,6 +34,8 @@ type User struct {
 	CreatedAt      time.Time   `bson:"createdAt"`
 	UpdatedAt      time.Time   `bson:"updatedAt"`
 	AvatarUrl      string      `bson:"avatarUrl"`
+	Lat            float64     `bson:"lat"`
+	Lng            float64     `bson:"lng"`
 	TrainerInfo    TrainerInfo `bson:"trainerInfo,omitempty"`
 }
 
@@ -75,7 +77,7 @@ func (e *UserAlreadyExist) Error() string {
 	return "error: user already existed"
 }
 
-func CreateUser(username string, password string, userType string, firstName string, lastName string, birthDate string, citizenID string, gender string, phoneNumber string, address string, avatarUrl string) (user User, err error) {
+func CreateUser(username string, password string, userType string, firstName string, lastName string, birthDate string, citizenID string, gender string, phoneNumber string, address string, avatarUrl string, lat float64, lng float64) (user User, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -116,6 +118,8 @@ func CreateUser(username string, password string, userType string, firstName str
 			CreatedAt:      time.Now(),
 			UpdatedAt:      time.Now(),
 			AvatarUrl:      avatarUrl,
+			Lat:            lat,
+			Lng:            lng,
 			TrainerInfo:    initTrainer,
 		}
 
@@ -133,6 +137,8 @@ func CreateUser(username string, password string, userType string, firstName str
 			Address:        address,
 			CreatedAt:      time.Now(),
 			UpdatedAt:      time.Now(),
+			Lat:            lat,
+			Lng:            lng,
 			AvatarUrl:      avatarUrl,
 		}
 	}

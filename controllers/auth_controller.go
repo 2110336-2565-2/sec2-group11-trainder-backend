@@ -10,30 +10,32 @@ import (
 )
 
 type RegisterInput struct {
-	Username    string `json:"username" binding:"required"`
-	Password    string `json:"password" binding:"required"`
-	UserType    string `json:"usertype" binding:"required"`
-	Firstname   string `json:"firstname" binding:"required"`
-	Lastname    string `json:"lastname" binding:"required"`
-	Birthdate   string `json:"birthdate" binding:"required"`
-	CitizenId   string `json:"citizenId" binding:"required"`
-	Gender      string `json:"gender" binding:"required"`
-	PhoneNumber string `json:"phoneNumber" binding:"required"`
-	Address     string `json:"address" binding:"required"`
-	AvatarUrl   string `json:"avatarUrl"`
+	Username    string  `json:"username" binding:"required"`
+	Password    string  `json:"password" binding:"required"`
+	UserType    string  `json:"usertype" binding:"required"`
+	Firstname   string  `json:"firstname" binding:"required"`
+	Lastname    string  `json:"lastname" binding:"required"`
+	Birthdate   string  `json:"birthdate" binding:"required"`
+	CitizenId   string  `json:"citizenId" binding:"required"`
+	Gender      string  `json:"gender" binding:"required"`
+	PhoneNumber string  `json:"phoneNumber" binding:"required"`
+	Address     string  `json:"address" binding:"required"`
+	AvatarUrl   string  `json:"avatarUrl"`
+	Lat         float64 `json:"lat" binding:"required"`
+	Lng         float64 `json:"lng" binding:"required"`
 }
 
-//	@Summary		Register user
-//	@Description	Register with username,password,UserType ["trainer","trainee"],Firstname,Lastname,Birthdate ("yyyy-mm-dd"),CitizenId (len == 13),Gender ["Male","Female","Other"],PhoneNumber (len ==10),Address,SubAddress
-//	@Tags			authentication
-//	@ID				register-user
-//	@Accept			json
-//	@Produce		json
+// @Summary		Register user
+// @Description	Register with username,password,UserType ["trainer","trainee"],Firstname,Lastname,Birthdate ("yyyy-mm-dd"),CitizenId (len == 13),Gender ["Male","Female","Other"],PhoneNumber (len ==10),Address,SubAddress
+// @Tags			authentication
+// @ID				register-user
+// @Accept			json
+// @Produce		json
 //
-//	@Param			json_in_ginContext	body		RegisterInput	true	"put register input and pass to  gin.Context"
+// @Param			json_in_ginContext	body		RegisterInput	true	"put register input and pass to  gin.Context"
 //
-//	@Success		200					{object}	responses.RegisterResponse
-//	@Router			/register [post]
+// @Success		200					{object}	responses.RegisterResponse
+// @Router			/register [post]
 func Register() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
@@ -43,7 +45,6 @@ func Register() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, responses.RegisterResponse{Status: http.StatusBadRequest, Message: "input missing"})
 			return
 		}
-
 		profileErr := models.ProfileConditionCheck(input.Firstname, input.Lastname, input.Birthdate, input.CitizenId, input.Gender, input.PhoneNumber)
 		if profileErr != nil {
 			c.JSON(http.StatusBadRequest, responses.RegisterResponse{
@@ -60,9 +61,7 @@ func Register() gin.HandlerFunc {
 			})
 			return
 		}
-
-		_, err := models.CreateUser(input.Username, input.Password, input.UserType, input.Firstname, input.Lastname, input.Birthdate, input.CitizenId, input.Gender, input.PhoneNumber, input.Address, input.AvatarUrl)
-
+		_, err := models.CreateUser(input.Username, input.Password, input.UserType, input.Firstname, input.Lastname, input.Birthdate, input.CitizenId, input.Gender, input.PhoneNumber, input.Address, input.AvatarUrl, input.Lat, input.Lng)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, responses.RegisterResponse{Status: http.StatusInternalServerError, Message: err.Error()})
 			return
