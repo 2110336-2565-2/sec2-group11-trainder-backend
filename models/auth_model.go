@@ -142,6 +142,7 @@ func CreateUser(username string, password string, userType string, firstName str
 			Lat:            lat,
 			Lng:            lng,
 			AvatarUrl:      avatarUrl,
+			Reviews:        []Review{},
 		}
 	}
 
