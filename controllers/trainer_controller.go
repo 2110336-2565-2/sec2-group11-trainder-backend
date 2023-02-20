@@ -28,14 +28,10 @@ type GetTrainerInput struct {
 	Username string `json:"username" binding:"required"`
 }
 
-type Review struct {
-	Username string  `json:"username" binding:"required"`
-	Rating   float64 `json:"rating" binding:"required"`
-	Comment  string  `json:"comment" binding:"required"`
-}
 type ReviewRequest struct {
-	TrainerUsername string `json:"trainerUsername" binding:"required"`
-	Review          Review `json:"review" binding:"required"`
+	TrainerUsername string  `json:"trainerUsername" binding:"required"`
+	Rating          float64 `json:"rating" binding:"required"`
+	Comment         string  `json:"comment" binding:"required"`
 }
 
 // CurrentTrainerUserProfile retrieves the trainer profile of the current user for the user that is a trainer
@@ -232,7 +228,7 @@ func AddTrainerReview() gin.HandlerFunc {
 			})
 			return
 		}
-		_, err := tokens.ExtractTokenUsername(c)
+		username, err := tokens.ExtractTokenUsername(c)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.ReviewResponse{
 				Status:  http.StatusBadRequest,
@@ -240,7 +236,7 @@ func AddTrainerReview() gin.HandlerFunc {
 			})
 			return
 		}
-		err = models.AddReview(input.TrainerUsername, input.Review.Username, input.Review.Rating, input.Review.Comment)
+		err = models.AddReview(input.TrainerUsername, username, input.Rating, input.Comment)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.ReviewResponse{
 				Status:  http.StatusBadRequest,
