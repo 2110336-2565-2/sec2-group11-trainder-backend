@@ -5,7 +5,6 @@ import (
 
 	"trainder-api/models"
 	"trainder-api/responses"
-
 	"trainder-api/utils/tokens"
 
 	"github.com/gin-gonic/gin"
@@ -24,6 +23,19 @@ type UpdateTrainerInput struct {
 	Fee            float64  `json:"fee"`
 	TraineeCount   int32    `json:"traineeCount"`
 	CertificateUrl string   `json:"certificateUrl"`
+}
+type GetTrainerInput struct {
+	Username string `json:"username" binding:"required"`
+}
+
+type Review struct {
+	Username string  `json:"username" binding:"required"`
+	Rating   float64 `json:"rating" binding:"required"`
+	Comment  string  `json:"comment" binding:"required"`
+}
+type ReviewRequest struct {
+	TrainerUsername string `json:"trainerUsername" binding:"required"`
+	Review          Review `json:"review" binding:"required"`
 }
 
 // CurrentTrainerUserProfile retrieves the trainer profile of the current user for the user that is a trainer
@@ -62,10 +74,6 @@ func CurrentTrainerUserProfile() gin.HandlerFunc {
 			TrainerInfo: trainerProfile,
 		})
 	}
-}
-
-type GetTrainerInput struct {
-	Username string `json:"username" binding:"required"`
 }
 
 // GetTrainerProfile retrieves the trainer profile of any trainer
@@ -211,5 +219,40 @@ func FilterTrainer() gin.HandlerFunc {
 		// 	})
 		// }
 
+	}
+}
+
+func AddTrainerReview() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var input ReviewRequest
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(http.StatusBadRequest, responses.ReviewResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
+		_, err := tokens.ExtractTokenUsername(c)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.ReviewResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
+		err = models.AddReview(input.TrainerUsername, input.Review.Username, input.Review.Rating, input.Review.Comment)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.ReviewResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK,
+			responses.RegisterResponse{
+				Status:  http.StatusOK,
+				Message: input.TrainerUsername + ` update success!`,
+			})
 	}
 }

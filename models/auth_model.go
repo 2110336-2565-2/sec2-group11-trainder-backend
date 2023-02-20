@@ -37,6 +37,7 @@ type User struct {
 	Lat            float64     `bson:"lat"`
 	Lng            float64     `bson:"lng"`
 	TrainerInfo    TrainerInfo `bson:"trainerInfo,omitempty"`
+	Reviews        []Review    `bson:"reviews"`
 }
 
 func (tr TrainerInfo) Init() TrainerInfo {
@@ -121,6 +122,7 @@ func CreateUser(username string, password string, userType string, firstName str
 			Lat:            lat,
 			Lng:            lng,
 			TrainerInfo:    initTrainer,
+			Reviews:        []Review{},
 		}
 
 	} else {
