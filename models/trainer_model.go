@@ -70,6 +70,28 @@ func userExists(username string) (bool, error) {
 	return count > 0, nil
 }
 
+func updateRatingByUsername(username string) error {
+	projection := bson.M{
+		"reviews": 1,
+		"_id":     0,
+	}
+	var user User
+	err := userCollection.FindOne(context.Background(), bson.M{"username": username}, options.FindOne().SetProjection(projection)).Decode(&user)
+	if err != nil {
+		return err
+	}
+	var sum float64
+	for _, review := range user.Reviews {
+		sum += review.Rating
+	}
+	avgRating := math.Round(sum/float64(len(user.Reviews))*100) / 100
+	_, err = userCollection.UpdateOne(context.Background(), bson.M{"username": username}, bson.M{"$set": bson.M{"trainerInfo.rating": avgRating}})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func AddReview(trainerUsername string, username string, rating float64, comment string) error {
 	isExist, err := userExists(trainerUsername)
 	if err != nil {
@@ -90,7 +112,13 @@ func AddReview(trainerUsername string, username string, rating float64, comment 
 	if err != nil {
 		return err
 	}
+	err = updateRatingByUsername(trainerUsername)
+	if err != nil {
+		return err
+	}
+
 	return nil
+
 }
 
 func FindFilteredTrainer(specialty []string, limit int, feeLowerBound float64, feeUpperBound float64) ([]FilteredTrainerInfo, error) {

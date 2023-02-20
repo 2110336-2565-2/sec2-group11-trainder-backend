@@ -41,9 +41,9 @@ type User struct {
 }
 
 func (tr TrainerInfo) Init() TrainerInfo {
-	tr.Fee = 200
+	tr.Fee = 0
 	tr.CertificateURL = "certificateURLString"
-	tr.Rating = 3
+	tr.Rating = 0
 	tr.TraineeCount = 0
 	tr.Specialty = []string{}
 	return tr
