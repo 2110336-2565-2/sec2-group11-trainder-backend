@@ -79,8 +79,8 @@ func TestRegisterHandler(t *testing.T) {
 		Gender:      "Male",
 		PhoneNumber: "0881234567",
 		Address:     "address01",
-		Lat:         0,
-		Lng:         0,
+		Lat:         1.0,
+		Lng:         1.0,
 	}
 	jsonValue, _ := json.Marshal(registerInput)
 	req, _ := http.NewRequest("POST", "/register", bytes.NewBuffer(jsonValue))

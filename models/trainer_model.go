@@ -35,6 +35,8 @@ func FindTrainerProfile(username string) (userProfile UserProfile, trainerInfo T
 		PhoneNumber: user.PhoneNumber,
 		Address:     user.Address,
 		AvatarUrl:   user.AvatarUrl,
+		Lat:         user.Lat,
+		Lng:         user.Lng,
 	}
 	return userProfile, user.TrainerInfo, nil
 }
@@ -71,7 +73,7 @@ func FindFilteredTrainer(specialty []string, limit int, feeLowerBound float64, f
 
 	// filter by fee
 	if feeLowerBound == 0 && feeUpperBound == 0 {
-		feeUpperBound = 1000000000 //intmax
+		feeUpperBound = 1000000000
 	}
 	filter2 := bson.D{
 		{
