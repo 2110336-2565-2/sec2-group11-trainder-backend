@@ -74,6 +74,10 @@ definitions:
         type: string
       lastname:
         type: string
+      lat:
+        type: number
+      lng:
+        type: number
       password:
         type: string
       phoneNumber:
@@ -89,10 +93,25 @@ definitions:
     - firstname
     - gender
     - lastname
+    - lat
+    - lng
     - password
     - phoneNumber
     - username
     - usertype
+    type: object
+  controllers.ReviewRequest:
+    properties:
+      comment:
+        type: string
+      rating:
+        type: number
+      trainerUsername:
+        type: string
+    required:
+    - comment
+    - rating
+    - trainerUsername
     type: object
   controllers.UpdateTrainerInput:
     properties:
@@ -157,12 +176,23 @@ definitions:
         type: string
       lastname:
         type: string
+      lat:
+        type: number
+      lng:
+        type: number
       phoneNumber:
         type: string
       username:
         type: string
       usertype:
         type: string
+    type: object
+  responses.AddReviewResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
     type: object
   responses.CurrentUserResponse:
     properties:
@@ -257,6 +287,30 @@ paths:
       summary: Login
       tags:
       - authentication
+  /protected/add-review:
+    post:
+      consumes:
+      - application/json
+      description: Add review on trainer to database
+      parameters:
+      - description: Parameters for trainer review
+        in: body
+        name: ReviewRequest
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.ReviewRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.AddReviewResponse'
+      security:
+      - BearerAuth: []
+      summary: Add trainer review
+      tags:
+      - Trainer
   /protected/filter-trainer:
     post:
       consumes:
@@ -434,7 +488,7 @@ paths:
         (len ==10),Address,SubAddress
       operationId: register-user
       parameters:
-      - description: put register input and pass to  gin.Context
+      - description: put register input and pass to gin.Context
         in: body
         name: json_in_ginContext
         required: true

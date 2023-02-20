@@ -27,5 +27,5 @@ func ProtectedRoute(router *gin.Engine) {
 	protected.POST("/filter-trainer", controllers.FilterTrainer())
 
 	// Add review
-	protected.POST("/review", controllers.AddTrainerReview())
+	protected.POST("/add-review", controllers.AddTrainerReview())
 }

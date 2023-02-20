@@ -218,11 +218,20 @@ func FilterTrainer() gin.HandlerFunc {
 	}
 }
 
+// @Summary		Add trainer review
+// @Description	Add review on trainer to database
+// @Tags		Trainer
+// @Accept		json
+// @Produce		json
+// @Param		ReviewRequest	body		ReviewRequest	true	"Parameters for trainer review"
+// @Success		200				{object}	responses.AddReviewResponse
+// @Security	BearerAuth
+// @Router		/protected/add-review [post]
 func AddTrainerReview() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input ReviewRequest
 		if err := c.ShouldBindJSON(&input); err != nil {
-			c.JSON(http.StatusBadRequest, responses.ReviewResponse{
+			c.JSON(http.StatusBadRequest, responses.AddReviewResponse{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			})
@@ -230,7 +239,7 @@ func AddTrainerReview() gin.HandlerFunc {
 		}
 		username, err := tokens.ExtractTokenUsername(c)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.ReviewResponse{
+			c.JSON(http.StatusBadRequest, responses.AddReviewResponse{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			})
@@ -238,7 +247,7 @@ func AddTrainerReview() gin.HandlerFunc {
 		}
 		err = models.AddReview(input.TrainerUsername, username, input.Rating, input.Comment)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.ReviewResponse{
+			c.JSON(http.StatusBadRequest, responses.AddReviewResponse{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			})
