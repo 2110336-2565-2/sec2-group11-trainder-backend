@@ -51,6 +51,76 @@ type FilteredTrainerInfo struct {
 	AvatarUrl   string      `json:"avatarUrl"`
 	TrainerInfo TrainerInfo `json:"trainerInfo"`
 }
+type Review struct {
+	Username string  `json:"username"`
+	Rating   float64 `json:"rating"`
+	Comment  string  `json:"comment"`
+}
+type UserNotExist struct{}
+
+func (e *UserNotExist) Error() string {
+	return "error: user not existed"
+}
+
+func userExists(username string) (bool, error) {
+	filter := bson.M{"username": username}
+	count, err := userCollection.CountDocuments(context.Background(), filter, nil)
+	if err != nil {
+		return false, err
+	}
+	return count > 0, nil
+}
+
+func updateRatingByUsername(username string) error {
+	projection := bson.M{
+		"reviews": 1,
+		"_id":     0,
+	}
+	var user User
+	err := userCollection.FindOne(context.Background(), bson.M{"username": username}, options.FindOne().SetProjection(projection)).Decode(&user)
+	if err != nil {
+		return err
+	}
+	var sum float64
+	for _, review := range user.Reviews {
+		sum += review.Rating
+	}
+	avgRating := math.Round(sum/float64(len(user.Reviews))*100) / 100
+	_, err = userCollection.UpdateOne(context.Background(), bson.M{"username": username}, bson.M{"$set": bson.M{"trainerInfo.rating": avgRating}})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func AddReview(trainerUsername string, username string, rating float64, comment string) error {
+	isExist, err := userExists(trainerUsername)
+	if err != nil {
+		return err
+	}
+	if !isExist {
+		err = &UserNotExist{}
+		return err
+	}
+	review := Review{
+		Username: username,
+		Rating:   rating,
+		Comment:  comment,
+	}
+	filter := bson.M{"username": trainerUsername}
+	update := bson.M{"$push": bson.M{"reviews": review}}
+	_, err = userCollection.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		return err
+	}
+	err = updateRatingByUsername(trainerUsername)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
 
 // type ReviewInfo struct {
 // 	Username string  `json:"username"`

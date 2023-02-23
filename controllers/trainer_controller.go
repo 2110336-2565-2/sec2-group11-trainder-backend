@@ -5,7 +5,6 @@ import (
 
 	"trainder-api/models"
 	"trainder-api/responses"
-
 	"trainder-api/utils/tokens"
 
 	"github.com/gin-gonic/gin"
@@ -24,6 +23,15 @@ type UpdateTrainerInput struct {
 	Fee            float64  `json:"fee"`
 	TraineeCount   int32    `json:"traineeCount"`
 	CertificateUrl string   `json:"certificateUrl"`
+}
+type GetTrainerInput struct {
+	Username string `json:"username" binding:"required"`
+}
+
+type ReviewRequest struct {
+	TrainerUsername string  `json:"trainerUsername" binding:"required"`
+	Rating          float64 `json:"rating" binding:"required"`
+	Comment         string  `json:"comment" binding:"required"`
 }
 
 type GetReviewsInput struct {
@@ -67,10 +75,6 @@ func CurrentTrainerUserProfile() gin.HandlerFunc {
 			TrainerInfo: trainerProfile,
 		})
 	}
-}
-
-type GetTrainerInput struct {
-	Username string `json:"username" binding:"required"`
 }
 
 // GetTrainerProfile retrieves the trainer profile of any trainer
@@ -244,6 +248,49 @@ func GetReviews() gin.HandlerFunc {
 			Message: `Successfully retrieve reviews of this trainer`,
 			Reviews: result,
 		})
+	}
+}
 
+// @Summary		Add trainer review
+// @Description	Add review on trainer to database
+// @Tags		Trainer
+// @Accept		json
+// @Produce		json
+// @Param		ReviewRequest	body		ReviewRequest	true	"Parameters for trainer review"
+// @Success		200				{object}	responses.AddReviewResponse
+// @Security	BearerAuth
+// @Router		/protected/add-review [post]
+func AddTrainerReview() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var input ReviewRequest
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(http.StatusBadRequest, responses.AddReviewResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
+		username, err := tokens.ExtractTokenUsername(c)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.AddReviewResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
+		err = models.AddReview(input.TrainerUsername, username, input.Rating, input.Comment)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.AddReviewResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK,
+			responses.RegisterResponse{
+				Status:  http.StatusOK,
+				Message: input.TrainerUsername + ` update success!`,
+			})
 	}
 }

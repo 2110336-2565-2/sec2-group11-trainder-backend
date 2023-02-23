@@ -37,12 +37,13 @@ type User struct {
 	Lat            float64     `bson:"lat"`
 	Lng            float64     `bson:"lng"`
 	TrainerInfo    TrainerInfo `bson:"trainerInfo,omitempty"`
+	Reviews        []Review    `bson:"reviews"`
 }
 
 func (tr TrainerInfo) Init() TrainerInfo {
-	tr.Fee = 200
+	tr.Fee = 0
 	tr.CertificateURL = "certificateURLString"
-	tr.Rating = 3
+	tr.Rating = 0
 	tr.TraineeCount = 0
 	tr.Specialty = []string{}
 	return tr
@@ -121,6 +122,7 @@ func CreateUser(username string, password string, userType string, firstName str
 			Lat:            lat,
 			Lng:            lng,
 			TrainerInfo:    initTrainer,
+			Reviews:        []Review{},
 		}
 
 	} else {
@@ -140,6 +142,7 @@ func CreateUser(username string, password string, userType string, firstName str
 			Lat:            lat,
 			Lng:            lng,
 			AvatarUrl:      avatarUrl,
+			Reviews:        []Review{},
 		}
 	}
 

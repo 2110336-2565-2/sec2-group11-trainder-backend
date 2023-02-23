@@ -23,6 +23,10 @@ type RegisterInput struct {
 	Lat         float64 `json:"lat" binding:"required"`
 	Lng         float64 `json:"lng" binding:"required"`
 }
+type LoginInput struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
 
 // @Summary		Register user
 // @Description	Register with username,password,UserType ["trainer","trainee"],Firstname,Lastname,Birthdate ("yyyy-mm-dd"),CitizenId (len == 13),Gender ["Male","Female","Other"],PhoneNumber (len ==10),Address,SubAddress
@@ -65,11 +69,6 @@ func Register() gin.HandlerFunc {
 
 		c.JSON(http.StatusCreated, responses.RegisterResponse{Status: http.StatusCreated, Message: "registration success!"})
 	}
-}
-
-type LoginInput struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
 }
 
 // Login godoc

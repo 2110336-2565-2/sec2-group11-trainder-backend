@@ -146,7 +146,7 @@ func ProfileConditionCheck(firstName string, lastName string, birthDate string, 
 	if !isValidGender {
 		return errors.New(" gender is not valid, valid gender in ['Male', 'Female', 'Other'] ")
 	}
-	// ---------------check phoneNumber
+	// check phoneNumber
 	if len(phoneNumber) != 10 {
 		return errors.New("phoneNumber is not valid, must have length 10")
 	}

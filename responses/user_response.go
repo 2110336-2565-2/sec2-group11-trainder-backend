@@ -39,3 +39,7 @@ type TrainerReviewsResponse struct {
 	Message string          `json:"message,omitempty"`
 	Reviews []models.Review `json:"reviews,omitempty"`
 }
+type AddReviewResponse struct {
+	Status  int    `json:"status"`
+	Message string `json:"message,omitempty"`
+}
