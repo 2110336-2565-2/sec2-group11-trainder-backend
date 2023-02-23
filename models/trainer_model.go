@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"fmt"
 	"math"
 	"time"
 
@@ -49,6 +50,19 @@ type FilteredTrainerInfo struct {
 	Address     string      `json:"address"`
 	AvatarUrl   string      `json:"avatarUrl"`
 	TrainerInfo TrainerInfo `json:"trainerInfo"`
+}
+
+// type ReviewInfo struct {
+// 	Username string  `json:"username"`
+// 	Rating   float64 `json:"raing"`
+// 	Comment  string  `json:"comment"`
+// }
+
+type Review struct {
+	Username        string    `json:"username"`
+	Rating          float64   `json:"rating"`
+	Comment         string    `json:"comment"`
+	ReviewCreatedAt time.Time `bson:"reviewCreatedAt"`
 }
 
 func FindFilteredTrainer(specialty []string, limit int, feeLowerBound float64, feeUpperBound float64) ([]FilteredTrainerInfo, error) {
@@ -153,87 +167,6 @@ func UpdateTrainerProfile(username string, specialty []string, rating float64, f
 		update,
 	)
 
-	// if len(specialty) > 0 {
-	// 	// update["specialty"] = specialty
-	// 	update := bson.M{
-	// 		"$set": bson.M{
-	// 			"trainerInfo.specialty": specialty,
-	// 			"updatedAt":             time.Now(),
-	// 		},
-	// 	}
-	// 	result, err = userCollection.UpdateOne(
-	// 		ctx,
-	// 		bson.M{"username": username},
-	// 		update,
-	// 	)
-	// }
-	// if rating > 0 {
-	// 	// update["rating"] = rating
-	// 	update := bson.M{
-	// 		"$set": bson.M{
-	// 			"trainerInfo.rating": rating,
-	// 			"updatedAt":          time.Now(),
-	// 		},
-	// 	}
-	// 	result, err = userCollection.UpdateOne(
-	// 		ctx,
-	// 		bson.M{"username": username},
-	// 		update,
-	// 	)
-	// }
-	// if fee > 0 {
-	// 	// update["fee"] = fee
-	// 	update := bson.M{
-	// 		"$set": bson.M{
-	// 			"trainerInfo.fee": fee,
-	// 			"updatedAt":       time.Now(),
-	// 		},
-	// 	}
-	// 	result, err = userCollection.UpdateOne(
-	// 		ctx,
-	// 		bson.M{"username": username},
-	// 		update,
-	// 	)
-	// }
-	// if traineeCount > 0 {
-	// 	// update["traineeCount"] = traineeCount
-	// 	update := bson.M{
-	// 		"$set": bson.M{
-	// 			"trainerInfo.traineeCount": traineeCount,
-	// 			"updatedAt":                time.Now(),
-	// 		},
-	// 	}
-	// 	result, err = userCollection.UpdateOne(
-	// 		ctx,
-	// 		bson.M{"username": username},
-	// 		update,
-	// 	)
-	// }
-	// if certificateUrl != "" {
-	// 	// update["certificateUrl"] = certificateUrl
-	// 	update := bson.M{
-	// 		"$set": bson.M{
-	// 			"trainerInfo.certificateUrl": certificateUrl,
-	// 			"updatedAt":                  time.Now(),
-	// 		},
-	// 	}
-	// 	result, err = userCollection.UpdateOne(
-	// 		ctx,
-	// 		bson.M{"username": username},
-	// 		update,
-	// 	)
-	// }
-	//---------------ta------------------
-	// fmt.Println("update", update)
-	// result, err = userCollection.UpdateOne(
-	// 	ctx,
-	// 	bson.M{"username": username},
-	// 	bson.M{"$set": bson.M{
-	// 		"trainerInfo": update,
-	// 		"updatedAt":   time.Now(),
-	// 	}},
-	// )
-
 	return
 }
 
@@ -262,4 +195,153 @@ func GetDistance(lat1 float64, lng1 float64, lat2 float64, lng2 float64) float64
 	dist = math.Acos(dist)
 
 	return dist * 180 / PI * 1.609344 * 60 * 1.1515
+}
+
+func GetReviews_work(username string, limit int) ([]Review, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	// var result bson.M
+	filter := bson.M{
+		"username":       username,
+		"reviews.rating": bson.M{"$gt": 3},
+	}
+	projection := bson.M{"reviews": 1, "_id": 0}
+
+	options := options.FindOne()
+	options.SetProjection(projection)
+	options.SetSort(bson.M{"reviews.rating": -1})
+	// options.SetLimit(limit)
+
+	var result struct {
+		MySlice []Review `bson:"reviews"`
+	}
+
+	// cursor, err := userCollection.Find(context.Background(), filter, options)
+	err := userCollection.FindOne(ctx, filter, options).Decode(&result)
+	if err != nil {
+		fmt.Println("error", err)
+	}
+	fmt.Println("result.MySlice", result.MySlice)
+	var reviews []Review
+	for _, r := range result.MySlice {
+		fmt.Println(r.Username)
+		fmt.Println(r.Rating)
+		review := Review{
+			Username:        r.Username,
+			Rating:          r.Rating,
+			Comment:         r.Comment,
+			ReviewCreatedAt: r.ReviewCreatedAt,
+		}
+		reviews = append(reviews, review)
+	}
+	return reviews, nil
+
+}
+
+func GetReviews2(username string, limit int) ([]Review, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	// var result bson.M
+	// filter := bson.M{
+	// 	"username":       username,
+	// 	"reviews.rating": bson.M{"$gt": 3},
+	// }
+	// projection := bson.M{"reviews": 1, "_id": 0}
+
+	// options := options.FindOne()
+	// options.SetProjection(projection)
+	// options.SetSort(bson.M{"reviews": 1, "_id": 0})
+	cond := make([]bson.M, 0)
+	cond = append(cond, bson.M{"$match": bson.M{"username": username}})
+	// cond = append(cond, bson.M{"$unwind": "$reviews"})
+	// cond = append(cond, bson.M{"$limit": limit})
+	// cond = append(cond, bson.M{"$sort": bson.M{"reviews.rating": -1}})
+
+	var result struct {
+		MySlice []Review `bson:"reviews"`
+	}
+
+	// cursor, err := userCollection.Find(context.Background(), filter, options)
+	cur, err := userCollection.Aggregate(ctx, cond)
+	if err != nil {
+		fmt.Println("error1", err)
+	}
+	if err := cur.Decode(&result); err != nil {
+		fmt.Println("error2", err)
+	}
+	y := []bson.M{}
+	x := cur.Decode(&y)
+	fmt.Println("x", x)
+
+	fmt.Println("result.MySlice", result.MySlice)
+	var reviews []Review
+	for _, r := range result.MySlice {
+		fmt.Println(r.Username)
+		fmt.Println(r.Rating)
+		review := Review{
+			Username:        r.Username,
+			Rating:          r.Rating,
+			Comment:         r.Comment,
+			ReviewCreatedAt: r.ReviewCreatedAt,
+		}
+		reviews = append(reviews, review)
+	}
+	return reviews, nil
+}
+func GetReviews(username string, limit int) ([]Review, error) {
+	_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	pipeline := bson.A{
+		bson.M{"$match": bson.M{"username": username}},
+		bson.M{"$unwind": "$reviews"},
+		bson.M{"$sort": bson.M{"reviews.reviewCreatedAt": -1, "reviews.rating": -1}},
+		bson.M{"$limit": limit},
+		bson.M{"$group": bson.M{
+			"_id":      "$_id",
+			"username": bson.M{"$first": "$username"},
+			"reviews":  bson.M{"$push": "$reviews"},
+		}},
+		bson.M{"$project": bson.M{
+			"_id":      0,
+			"username": 1,
+			"reviews":  1,
+		}},
+	}
+	limitOptions := options.Aggregate().SetMaxTime(2 * time.Second)
+
+	var result struct {
+		ReviewSlice []Review `bson:"reviews"`
+	}
+	// var reviews []Review
+	cursor, err := userCollection.Aggregate(context.Background(), pipeline, limitOptions)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer cursor.Close(context.Background())
+	// var reviews []Review
+	reviews := make([]Review, 0)
+	// Iterate through the results
+	for cursor.Next(context.Background()) {
+		// var result bson.M
+		err := cursor.Decode(&result)
+		if err != nil {
+			fmt.Println(err)
+		}
+		// fmt.Println("result.MySlice", result.MySlice)
+
+		for _, r := range result.ReviewSlice {
+			// fmt.Println(r.Username)
+			review := Review{
+				Username:        r.Username,
+				Rating:          r.Rating,
+				Comment:         r.Comment,
+				ReviewCreatedAt: r.ReviewCreatedAt,
+			}
+			reviews = append(reviews, review)
+		}
+
+	}
+
+	return reviews, nil
+
 }

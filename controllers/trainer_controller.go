@@ -26,6 +26,11 @@ type UpdateTrainerInput struct {
 	CertificateUrl string   `json:"certificateUrl"`
 }
 
+type GetReviewsInput struct {
+	Username string `json:"username" binding:"required"`
+	Limit    int    `json:"limit" binding:"required"`
+}
+
 // CurrentTrainerUserProfile retrieves the trainer profile of the current user for the user that is a trainer
 //
 //	@Summary		Retrieve trainer profile of current user
@@ -210,6 +215,35 @@ func FilterTrainer() gin.HandlerFunc {
 		// 		Trainers: result,
 		// 	})
 		// }
+
+	}
+}
+
+func GetReviews() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var input GetReviewsInput
+
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(http.StatusBadRequest, responses.TrainerReviewsResponse{
+				Status:  http.StatusBadRequest,
+				Message: "input missing",
+			})
+			return
+		}
+		// fmt.Println("input", input)
+		result, err := models.GetReviews(input.Username, input.Limit)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.TrainerReviewsResponse{
+				Status:  http.StatusBadRequest,
+				Message: `retrieve reviews unsuccessful`,
+			})
+			return
+		}
+		c.JSON(http.StatusOK, responses.TrainerReviewsResponse{
+			Status:  http.StatusOK,
+			Message: `Successfully retrieve reviews of this trainer`,
+			Reviews: result,
+		})
 
 	}
 }
