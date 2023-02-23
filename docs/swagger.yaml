@@ -14,6 +14,16 @@ definitions:
     required:
     - limit
     type: object
+  controllers.GetReviewsInput:
+    properties:
+      limit:
+        type: integer
+      trainerUsername:
+        type: string
+    required:
+    - limit
+    - trainerUsername
+    type: object
   controllers.GetTrainerInput:
     properties:
       username:
@@ -145,6 +155,17 @@ definitions:
       username:
         type: string
     type: object
+  models.Review:
+    properties:
+      comment:
+        type: string
+      rating:
+        type: number
+      reviewCreatedAt:
+        type: string
+      username:
+        type: string
+    type: object
   models.TrainerInfo:
     properties:
       certificateUrl:
@@ -250,6 +271,17 @@ definitions:
       user:
         $ref: '#/definitions/models.UserProfile'
     type: object
+  responses.TrainerReviewsResponse:
+    properties:
+      message:
+        type: string
+      reviews:
+        items:
+          $ref: '#/definitions/models.Review'
+        type: array
+      status:
+        type: integer
+    type: object
   responses.UserProfileResponse:
     properties:
       message:
@@ -333,6 +365,31 @@ paths:
       security:
       - BearerAuth: []
       summary: FilterTrainer base on filter input
+      tags:
+      - Trainer
+  /protected/get-reviews:
+    post:
+      consumes:
+      - application/json
+      description: Get reviews of specific trainer username from database sort by
+        recent date then rating desc, limit number of output by limit
+      parameters:
+      - description: Parameters for querying trainer reviews
+        in: body
+        name: GetReviewsInput
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.GetReviewsInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.TrainerReviewsResponse'
+      security:
+      - BearerAuth: []
+      summary: Get reviews of specific trainer
       tags:
       - Trainer
   /protected/profile:

@@ -52,9 +52,10 @@ type FilteredTrainerInfo struct {
 	TrainerInfo TrainerInfo `json:"trainerInfo"`
 }
 type Review struct {
-	Username string  `json:"username"`
-	Rating   float64 `json:"rating"`
-	Comment  string  `json:"comment"`
+	Username        string    `json:"username"`
+	Rating          float64   `json:"rating"`
+	Comment         string    `json:"comment"`
+	ReviewCreatedAt time.Time `bson:"reviewCreatedAt"`
 }
 type UserNotExist struct{}
 
@@ -103,9 +104,10 @@ func AddReview(trainerUsername string, username string, rating float64, comment 
 		return err
 	}
 	review := Review{
-		Username: username,
-		Rating:   rating,
-		Comment:  comment,
+		Username:        username,
+		Rating:          rating,
+		Comment:         comment,
+		ReviewCreatedAt: time.Now(),
 	}
 	filter := bson.M{"username": trainerUsername}
 	update := bson.M{"$push": bson.M{"reviews": review}}
@@ -128,12 +130,12 @@ func AddReview(trainerUsername string, username string, rating float64, comment 
 // 	Comment  string  `json:"comment"`
 // }
 
-type Review struct {
-	Username        string    `json:"username"`
-	Rating          float64   `json:"rating"`
-	Comment         string    `json:"comment"`
-	ReviewCreatedAt time.Time `bson:"reviewCreatedAt"`
-}
+// type Review struct {
+// 	Username        string    `json:"username"`
+// 	Rating          float64   `json:"rating"`
+// 	Comment         string    `json:"comment"`
+// 	ReviewCreatedAt time.Time `bson:"reviewCreatedAt"`
+// }
 
 func FindFilteredTrainer(specialty []string, limit int, feeLowerBound float64, feeUpperBound float64) ([]FilteredTrainerInfo, error) {
 	// ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -268,6 +270,14 @@ func GetDistance(lat1 float64, lng1 float64, lat2 float64, lng2 float64) float64
 }
 
 func GetReviews(username string, limit int) ([]Review, error) {
+	isExist, err := userExists(username)
+	if err != nil {
+		return nil, err
+	}
+	if !isExist {
+		err = &UserNotExist{}
+		return nil, err
+	}
 	_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	pipeline := bson.A{

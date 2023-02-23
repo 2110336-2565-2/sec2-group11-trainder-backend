@@ -127,6 +127,45 @@ const docTemplate = `{
                 }
             }
         },
+        "/protected/get-reviews": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get reviews of specific trainer username from database sort by recent date then rating desc, limit number of output by limit",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Trainer"
+                ],
+                "summary": "Get reviews of specific trainer",
+                "parameters": [
+                    {
+                        "description": "Parameters for querying trainer reviews",
+                        "name": "GetReviewsInput",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.GetReviewsInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.TrainerReviewsResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/protected/profile": {
             "get": {
                 "security": [
@@ -420,6 +459,21 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.GetReviewsInput": {
+            "type": "object",
+            "required": [
+                "limit",
+                "trainerUsername"
+            ],
+            "properties": {
+                "limit": {
+                    "type": "integer"
+                },
+                "trainerUsername": {
+                    "type": "string"
+                }
+            }
+        },
         "controllers.GetTrainerInput": {
             "type": "object",
             "required": [
@@ -610,6 +664,23 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Review": {
+            "type": "object",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "number"
+                },
+                "reviewCreatedAt": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "models.TrainerInfo": {
             "type": "object",
             "properties": {
@@ -769,6 +840,23 @@ const docTemplate = `{
                 },
                 "user": {
                     "$ref": "#/definitions/models.UserProfile"
+                }
+            }
+        },
+        "responses.TrainerReviewsResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "reviews": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Review"
+                    }
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         },

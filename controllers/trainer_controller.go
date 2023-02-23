@@ -35,8 +35,8 @@ type ReviewRequest struct {
 }
 
 type GetReviewsInput struct {
-	Username string `json:"username" binding:"required"`
-	Limit    int    `json:"limit" binding:"required"`
+	TrainerUsername string `json:"trainerUsername" binding:"required"`
+	Limit           int    `json:"limit" binding:"required"`
 }
 
 // CurrentTrainerUserProfile retrieves the trainer profile of the current user for the user that is a trainer
@@ -223,6 +223,15 @@ func FilterTrainer() gin.HandlerFunc {
 	}
 }
 
+// @Summary		Get reviews of specific trainer
+// @Description	Get reviews of specific trainer username from database sort by recent date then rating desc, limit number of output by limit
+// @Tags		Trainer
+// @Accept		json
+// @Produce		json
+// @Param		GetReviewsInput	body		GetReviewsInput 	true	"Parameters for querying trainer reviews"
+// @Success		200				{object}	responses.TrainerReviewsResponse
+// @Security	BearerAuth
+// @Router		/protected/get-reviews [post]
 func GetReviews() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input GetReviewsInput
@@ -235,17 +244,17 @@ func GetReviews() gin.HandlerFunc {
 			return
 		}
 		// fmt.Println("input", input)
-		result, err := models.GetReviews(input.Username, input.Limit)
+		result, err := models.GetReviews(input.TrainerUsername, input.Limit)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.TrainerReviewsResponse{
 				Status:  http.StatusBadRequest,
-				Message: `retrieve reviews unsuccessful`,
+				Message: err.Error(),
 			})
 			return
 		}
 		c.JSON(http.StatusOK, responses.TrainerReviewsResponse{
 			Status:  http.StatusOK,
-			Message: `Successfully retrieve reviews of this trainer`,
+			Message: `Successfully retrieve reviews of trainer` + input.TrainerUsername,
 			Reviews: result,
 		})
 	}
