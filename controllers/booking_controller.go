@@ -80,7 +80,7 @@ func Book() gin.HandlerFunc {
 // @Security BearerAuth
 // @Success 200 {object} responses.GetBookingsResponse
 // @Failure 400 {object} responses.GetBookingsResponse
-// @Router /protected/get-bookings [POST]
+// @Router /protected/bookings [GET]
 func GetBookings() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		username, err := tokens.ExtractTokenUsername(c)

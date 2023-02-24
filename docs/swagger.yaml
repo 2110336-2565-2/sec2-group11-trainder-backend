@@ -423,6 +423,28 @@ paths:
       summary: Add trainer review
       tags:
       - Trainer
+  /protected/bookings:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of upcoming bookings for the trainer who is currently
+        logged in
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.GetBookingsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.GetBookingsResponse'
+      security:
+      - BearerAuth: []
+      summary: Get bookings for the logged in trainer
+      tags:
+      - bookings
   /protected/create-booking:
     post:
       consumes:
@@ -512,28 +534,6 @@ paths:
       summary: FilterTrainer base on filter input
       tags:
       - Trainer
-  /protected/get-bookings:
-    post:
-      consumes:
-      - application/json
-      description: Retrieve a list of upcoming bookings for the trainer who is currently
-        logged in
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/responses.GetBookingsResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/responses.GetBookingsResponse'
-      security:
-      - BearerAuth: []
-      summary: Get bookings for the logged in trainer
-      tags:
-      - bookings
   /protected/get-reviews:
     post:
       consumes:

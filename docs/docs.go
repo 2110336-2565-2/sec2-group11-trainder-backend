@@ -94,6 +94,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/protected/bookings": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve a list of upcoming bookings for the trainer who is currently logged in",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bookings"
+                ],
+                "summary": "Get bookings for the logged in trainer",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.GetBookingsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.GetBookingsResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/protected/create-booking": {
             "post": {
                 "security": [
@@ -230,40 +264,6 @@ const docTemplate = `{
                         "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.FilterTrainerResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/protected/get-bookings": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Retrieve a list of upcoming bookings for the trainer who is currently logged in",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "bookings"
-                ],
-                "summary": "Get bookings for the logged in trainer",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/responses.GetBookingsResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/responses.GetBookingsResponse"
                         }
                     }
                 }
