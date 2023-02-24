@@ -7,6 +7,7 @@ import (
 	"trainder-api/configs"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -59,6 +60,40 @@ func CreateBooking(trainee string, trainer string, date string, startTime string
 	_, err = bookingsCollection.InsertOne(ctx, booking)
 	if err != nil {
 		return fmt.Errorf("failed to create booking: %v", err)
+	}
+
+	return nil
+}
+
+func UpdateBooking(bookingObjectId string, status string, paymentStatus string) error {
+	objectID, err := primitive.ObjectIDFromHex(bookingObjectId)
+	if err != nil {
+		return fmt.Errorf("failed to parse bookingObjId: %v", err)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	updateArr := bson.M{}
+
+	if len(status) != 0 {
+		updateArr["status"] = status
+
+	}
+	if len(paymentStatus) != 0 {
+		updateArr["payment.status"] = paymentStatus
+	}
+
+	res, err := bookingsCollection.UpdateOne(
+		ctx,
+		bson.M{"_id": objectID},
+		bson.M{"$set": updateArr},
+	)
+	if err != nil {
+		return fmt.Errorf("failed to bookingsCollection.UpdateOne: %v", err)
+	}
+	// fmt.Println("res", res, res.MatchedCount)
+	if res.MatchedCount == 0 {
+		return fmt.Errorf("the bookingObjectId could not be found")
 	}
 
 	return nil

@@ -16,6 +16,12 @@ type BookingForm struct {
 	EndTime   string `json:"endTime"`
 }
 
+type UpdateBookingForm struct {
+	BookingId     string `json:"bookingId" binding:"required"`
+	Status        string `json:"status"`
+	PaymentStatus string `json:"paymentStatus"`
+}
+
 // @Summary Create a new booking
 // @Description Creates a new booking with the specified trainer, trainee, date, start time, and end time
 // @Tags bookings
@@ -58,6 +64,45 @@ func Book() gin.HandlerFunc {
 			responses.CreateBookingResponse{
 				Status:  http.StatusOK,
 				Message: `success!`,
+			})
+	}
+}
+
+// @Summary Update a booking
+// @Description Update a booking with the specified update input consist of bookingId, status(pending/confirm/complete) and paymentStatus(pending/paid)
+// @Tags bookings
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param json_in_ginContext body UpdateBookingForm true "put updateBookingForm details and pass to gin.Context"
+//
+//	@Success	200		{object}	responses.UpdateBookingResponse	"Successfully update booking"
+//	@Failure	400		{object}	responses.UpdateBookingResponse	"Bad Request, missing filed of objectId or cannot found bookingObjectId"
+//
+// @Router /protected/update-booking [post]
+func UpdateBooking() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var input UpdateBookingForm
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(http.StatusBadRequest, responses.UpdateBookingResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
+		err := models.UpdateBooking(input.BookingId, input.Status, input.PaymentStatus)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.UpdateBookingResponse{
+				Status:  http.StatusBadRequest,
+				Message: `update failed ` + err.Error(),
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK,
+			responses.UpdateBookingResponse{
+				Status:  http.StatusOK,
+				Message: `update booking success!`,
 			})
 	}
 }

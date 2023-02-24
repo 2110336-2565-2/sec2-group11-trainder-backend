@@ -255,7 +255,7 @@ func GetReviews() gin.HandlerFunc {
 		}
 		c.JSON(http.StatusOK, responses.TrainerReviewsResponse{
 			Status:  http.StatusOK,
-			Message: `Successfully retrieve reviews of trainer` + input.TrainerUsername,
+			Message: `Successfully retrieve reviews of trainer ` + input.TrainerUsername,
 			Reviews: result,
 		})
 	}

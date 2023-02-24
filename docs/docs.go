@@ -88,7 +88,7 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/responses.FilterTrainerResponse"
+                            "$ref": "#/definitions/responses.AddReviewResponse"
                         }
                     }
                 }
@@ -96,6 +96,11 @@ const docTemplate = `{
         },
         "/protected/create-booking": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Creates a new booking with the specified trainer, trainee, date, start time, and end time",
                 "consumes": [
                     "application/json"
@@ -224,7 +229,7 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/responses.FilterTrainerResponse"
+                            "$ref": "#/definitions/responses.TrainerReviewsResponse"
                         }
                     }
                 }
@@ -343,6 +348,51 @@ const docTemplate = `{
                 }
             }
         },
+        "/protected/update-booking": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update a booking with the specified update input consist of bookingId, status(pending/confirm/complete) and paymentStatus(pending/paid)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bookings"
+                ],
+                "summary": "Update a booking",
+                "parameters": [
+                    {
+                        "description": "put updateBookingForm details and pass to gin.Context",
+                        "name": "json_in_ginContext",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.UpdateBookingForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully update booking",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UpdateBookingResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, missing filed of objectId or cannot found bookingObjectId",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UpdateBookingResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/protected/update-profile": {
             "post": {
                 "security": [
@@ -375,6 +425,12 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ProfileResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.ProfileResponse"
                         }
@@ -456,6 +512,12 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.CurrentUserResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.CurrentUserResponse"
                         }
@@ -692,6 +754,23 @@ const docTemplate = `{
                     "type": "number"
                 },
                 "trainerUsername": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.UpdateBookingForm": {
+            "type": "object",
+            "required": [
+                "bookingId"
+            ],
+            "properties": {
+                "bookingId": {
+                    "type": "string"
+                },
+                "paymentStatus": {
+                    "type": "string"
+                },
+                "status": {
                     "type": "string"
                 }
             }
@@ -935,6 +1014,17 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.Review"
                     }
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.UpdateBookingResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
                 },
                 "status": {
                     "type": "integer"
