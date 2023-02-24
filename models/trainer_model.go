@@ -124,19 +124,6 @@ func AddReview(trainerUsername string, username string, rating float64, comment 
 
 }
 
-// type ReviewInfo struct {
-// 	Username string  `json:"username"`
-// 	Rating   float64 `json:"raing"`
-// 	Comment  string  `json:"comment"`
-// }
-
-// type Review struct {
-// 	Username        string    `json:"username"`
-// 	Rating          float64   `json:"rating"`
-// 	Comment         string    `json:"comment"`
-// 	ReviewCreatedAt time.Time `bson:"reviewCreatedAt"`
-// }
-
 func FindFilteredTrainer(specialty []string, limit int, feeLowerBound float64, feeUpperBound float64) ([]FilteredTrainerInfo, error) {
 	// ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	ctx := context.TODO()
