@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"trainder-api/models"
 	"trainder-api/responses"
@@ -59,5 +60,34 @@ func Book() gin.HandlerFunc {
 				Status:  http.StatusOK,
 				Message: `success!`,
 			})
+	}
+}
+
+func GetBookings() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		username, err := tokens.ExtractTokenUsername(c)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.GetBookingsResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
+		fmt.Println(username)
+		result, err := models.GetUpcomingBookingsForTrainer(username)
+		_ = result
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.GetBookingsResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
+		c.JSON(http.StatusOK, responses.GetBookingsResponse{
+			Status:   http.StatusOK,
+			Message:  `success!`,
+			Bookings: result,
+		})
+
 	}
 }

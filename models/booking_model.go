@@ -7,11 +7,25 @@ import (
 	"trainder-api/configs"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var bookingsCollection *mongo.Collection = configs.GetCollection(configs.DB, "bookings")
+
+type Booking struct {
+	ID            primitive.ObjectID `bson:"_id" json:"_id"`
+	Trainer       string             `bson:"trainer" json:"trainer"`
+	Trainee       string             `bson:"trainee" json:"trainee"`
+	StartDateTime time.Time          `bson:"startDateTime" json:"startDateTime"`
+	EndDateTime   time.Time          `bson:"endDateTime" json:"endDateTime"`
+	Status        string             `bson:"status" json:"status"`
+	Payment       struct {
+		TotalCost float64 `bson:"totalCost" json:"totalCost"`
+		Status    string  `bson:"status" json:"status"`
+	} `bson:"payment" json:"payment"`
+}
 
 func CreateBooking(trainee string, trainer string, date string, startTime string, endTime string) error {
 	fmt.Println(trainer)
@@ -44,11 +58,11 @@ func CreateBooking(trainee string, trainer string, date string, startTime string
 
 	// Create booking object
 	booking := bson.M{
-		"trainer":   trainer,
-		"trainee":   trainee,
-		"startDate": startDateTime,
-		"endDate":   endDateTime,
-		"status":    "pending",
+		"trainer":       trainer,
+		"trainee":       trainee,
+		"startDateTime": startDateTime,
+		"endDateTime":   endDateTime,
+		"status":        "pending",
 		"payment": bson.M{
 			"totalCost": totalCost,
 			"status":    "pending",
@@ -62,4 +76,34 @@ func CreateBooking(trainee string, trainer string, date string, startTime string
 	}
 
 	return nil
+}
+
+func GetUpcomingBookingsForTrainer(trainerUsername string) ([]Booking, error) {
+	now := time.Now()
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	filter := bson.M{
+		"trainer": trainerUsername,
+		"startDateTime": bson.M{
+			"$gt": now,
+		},
+	}
+	cursor, err := bookingsCollection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(cursor)
+	var bookings []Booking
+	for cursor.Next(ctx) {
+		var booking Booking
+		err := cursor.Decode(&booking)
+		if err != nil {
+			return nil, err
+		}
+		fmt.Println(booking)
+		bookings = append(bookings, booking)
+	}
+
+	return bookings, nil
+
 }
