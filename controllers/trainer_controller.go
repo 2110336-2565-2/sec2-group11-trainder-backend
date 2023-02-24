@@ -10,30 +10,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type FilterTrainerInput struct {
+type FilterTrainerForm struct {
 	Specialty []string `json:"specialty"`
 	Limit     int      `json:"limit" binding:"required"`
 	FeeMin    float64  `json:"feeMin"`
 	FeeMax    float64  `json:"feeMax"`
 }
-type UpdateTrainerInput struct {
+type UpdateTrainerDetails struct {
 	Specialty      []string `json:"specialty"`
 	Rating         float64  `json:"rating"`
 	Fee            float64  `json:"fee"`
 	TraineeCount   int32    `json:"traineeCount"`
 	CertificateUrl string   `json:"certificateUrl"`
 }
-type GetTrainerInput struct {
+type GetTrainerForm struct {
 	Username string `json:"username" binding:"required"`
 }
 
-type ReviewRequest struct {
+type ReviewDetails struct {
 	TrainerUsername string  `json:"trainerUsername" binding:"required"`
 	Rating          float64 `json:"rating" binding:"required"`
 	Comment         string  `json:"comment" binding:"required"`
 }
 
-type GetReviewsInput struct {
+type GetReviewsForm struct {
 	TrainerUsername string `json:"trainerUsername" binding:"required"`
 	Limit           int    `json:"limit" binding:"required"`
 }
@@ -90,7 +90,7 @@ func CurrentTrainerUserProfile() gin.HandlerFunc {
 //	@Router			/protected/trainer [post]
 func GetTrainerProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var input GetTrainerInput
+		var input GetTrainerForm
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, responses.TrainerProfileResponse{
 				Status:  http.StatusBadRequest,
@@ -128,7 +128,7 @@ func GetTrainerProfile() gin.HandlerFunc {
 //	@Router		/protected/update-trainer [post]
 func UpdateTrainerProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var input UpdateTrainerInput
+		var input UpdateTrainerDetails
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, responses.ProfileResponse{
 				Status:  http.StatusBadRequest,
@@ -176,7 +176,7 @@ func UpdateTrainerProfile() gin.HandlerFunc {
 //	@Router			/protected/filter-trainer [post]
 func FilterTrainer() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var input FilterTrainerInput
+		var input FilterTrainerForm
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, responses.FilterTrainerResponse{
 				Status:  http.StatusBadRequest,
@@ -233,7 +233,7 @@ func FilterTrainer() gin.HandlerFunc {
 // @Router		/protected/get-reviews [post]
 func GetReviews() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var input GetReviewsInput
+		var input GetReviewsForm
 
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, responses.TrainerReviewsResponse{
@@ -270,7 +270,7 @@ func GetReviews() gin.HandlerFunc {
 // @Router		/protected/add-review [post]
 func AddTrainerReview() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var input ReviewRequest
+		var input ReviewDetails
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, responses.AddReviewResponse{
 				Status:  http.StatusBadRequest,
