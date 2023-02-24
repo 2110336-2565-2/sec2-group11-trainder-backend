@@ -78,9 +78,9 @@ func Book() gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Success 200 {object} GetBookingsResponse
-// @Failure 400 {object} GetBookingsResponse
-// @Router /protected/bookings [POST]
+// @Success 200 {object} responses.GetBookingsResponse
+// @Failure 400 {object} responses.GetBookingsResponse
+// @Router /protected/get-bookings [POST]
 func GetBookings() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		username, err := tokens.ExtractTokenUsername(c)
@@ -144,8 +144,8 @@ func UpdateBooking() gin.HandlerFunc {
 	}
 }
 
-// @Summary delete a booking
-// @Description delete a booking with the specified bookingId
+// @Summary Delete a booking
+// @Description Delete a booking with the specified bookingId
 // @Tags bookings
 // @Accept json
 // @Produce json

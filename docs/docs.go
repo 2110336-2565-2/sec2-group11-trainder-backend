@@ -152,7 +152,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "delete a booking with the specified bookingId",
+                "description": "Delete a booking with the specified bookingId",
                 "consumes": [
                     "application/json"
                 ],
@@ -162,7 +162,7 @@ const docTemplate = `{
                 "tags": [
                     "bookings"
                 ],
-                "summary": "delete a booking",
+                "summary": "Delete a booking",
                 "parameters": [
                     {
                         "description": "put DeleteBookingForm details and pass to gin.Context",
@@ -230,6 +230,40 @@ const docTemplate = `{
                         "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.FilterTrainerResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/get-bookings": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve a list of upcoming bookings for the trainer who is currently logged in",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bookings"
+                ],
+                "summary": "Get bookings for the logged in trainer",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.GetBookingsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.GetBookingsResponse"
                         }
                     }
                 }
@@ -854,6 +888,40 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Booking": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "endDateTime": {
+                    "type": "string"
+                },
+                "payment": {
+                    "type": "object",
+                    "properties": {
+                        "status": {
+                            "type": "string"
+                        },
+                        "totalCost": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "startDateTime": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "trainee": {
+                    "type": "string"
+                },
+                "trainer": {
+                    "type": "string"
+                }
+            }
+        },
         "models.FilteredTrainerInfo": {
             "type": "object",
             "properties": {
@@ -1011,6 +1079,23 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.FilteredTrainerInfo"
                     }
+                }
+            }
+        },
+        "responses.GetBookingsResponse": {
+            "type": "object",
+            "properties": {
+                "bookings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Booking"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         },
