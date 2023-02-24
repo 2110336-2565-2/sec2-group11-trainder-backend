@@ -12,7 +12,7 @@ import (
 )
 
 func InitializeDatabase() {
-	// Check if `users` collection exists
+	// Check if `users` & `bookings` collection exists
 	db := configs.DB.Database(configs.EnvMongoDBName())
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -21,14 +21,24 @@ func InitializeDatabase() {
 		log.Fatal(err)
 	}
 	userCollectionExists := false
+	bookingCollectionExists := false
 	for _, collectionName := range collectionNames {
 		if collectionName == "users" {
 			userCollectionExists = true
+		} else if collectionName == "bookings" {
+			bookingCollectionExists = true
 		}
 	}
 	if !userCollectionExists {
 		fmt.Println("User collections does not exist, creating `users` collection with `root` user")
 		CreateRootUser()
+	}
+	if !bookingCollectionExists {
+		fmt.Println("Booking collection does not exist, creating `bookings` collection")
+		err := db.CreateCollection(ctx, "bookings")
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
 

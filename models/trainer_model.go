@@ -11,6 +11,27 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+type FilteredTrainerInfo struct {
+	Username    string      `json:"username"`
+	FirstName   string      `json:"firstname"`
+	LastName    string      `json:"lastname"`
+	Gender      string      `json:"gender"`
+	Address     string      `json:"address"`
+	AvatarUrl   string      `json:"avatarUrl"`
+	TrainerInfo TrainerInfo `json:"trainerInfo"`
+}
+type Review struct {
+	Username  string    `bson:"username"`
+	Rating    float64   `bson:"rating"`
+	Comment   string    `bson:"comment"`
+	CreatedAt time.Time `bson:"createdAt"`
+}
+type UserNotExist struct{}
+
+func (e *UserNotExist) Error() string {
+	return "error: user not existed"
+}
+
 // Use for only finding the profile of a trainer, which will have normal user profile and trainer info
 func FindTrainerProfile(username string) (userProfile UserProfile, trainerInfo TrainerInfo, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -42,27 +63,6 @@ func FindTrainerProfile(username string) (userProfile UserProfile, trainerInfo T
 	return userProfile, user.TrainerInfo, nil
 }
 
-type FilteredTrainerInfo struct {
-	Username    string      `json:"username"`
-	FirstName   string      `json:"firstname"`
-	LastName    string      `json:"lastname"`
-	Gender      string      `json:"gender"`
-	Address     string      `json:"address"`
-	AvatarUrl   string      `json:"avatarUrl"`
-	TrainerInfo TrainerInfo `json:"trainerInfo"`
-}
-type Review struct {
-	Username        string    `bson:"username"`
-	Rating          float64   `bson:"rating"`
-	Comment         string    `bson:"comment"`
-	ReviewCreatedAt time.Time `bson:"reviewCreatedAt"`
-}
-type UserNotExist struct{}
-
-func (e *UserNotExist) Error() string {
-	return "error: user not existed"
-}
-
 func userExists(username string) (bool, error) {
 	filter := bson.M{"username": username}
 	count, err := userCollection.CountDocuments(context.Background(), filter, nil)
@@ -73,10 +73,7 @@ func userExists(username string) (bool, error) {
 }
 
 func updateRatingByUsername(username string) error {
-	projection := bson.M{
-		"reviews": 1,
-		"_id":     0,
-	}
+	projection := bson.M{"reviews": 1, "_id": 0}
 	var user User
 	err := userCollection.FindOne(context.Background(), bson.M{"username": username}, options.FindOne().SetProjection(projection)).Decode(&user)
 	if err != nil {
@@ -104,10 +101,10 @@ func AddReview(trainerUsername string, username string, rating float64, comment 
 		return err
 	}
 	review := Review{
-		Username:        username,
-		Rating:          rating,
-		Comment:         comment,
-		ReviewCreatedAt: time.Now(),
+		Username:  username,
+		Rating:    rating,
+		Comment:   comment,
+		CreatedAt: time.Now(),
 	}
 	filter := bson.M{"username": trainerUsername}
 	update := bson.M{"$push": bson.M{"reviews": review}}
@@ -308,10 +305,10 @@ func GetReviews(username string, limit int) ([]Review, error) {
 		for _, r := range result.ReviewSlice {
 			// fmt.Println(r.Username)
 			review := Review{
-				Username:        r.Username,
-				Rating:          r.Rating,
-				Comment:         r.Comment,
-				ReviewCreatedAt: r.ReviewCreatedAt,
+				Username:  r.Username,
+				Rating:    r.Rating,
+				Comment:   r.Comment,
+				CreatedAt: r.CreatedAt,
 			}
 			reviews = append(reviews, review)
 		}

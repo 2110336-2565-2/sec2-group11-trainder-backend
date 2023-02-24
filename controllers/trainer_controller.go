@@ -83,7 +83,7 @@ func CurrentTrainerUserProfile() gin.HandlerFunc {
 //	@Tags			Trainer
 //	@Accept			json
 //	@Produce		json
-//	@Param			input	body		GetTrainerInput						true	"Put username input for retrieving the trainer profile"
+//	@Param			input	body		GetTrainerForm true					"Put username input for retrieving the trainer profile"
 //	@Success		200		{object}	responses.TrainerProfileResponse	"Successfully retrieved the trainer profile"
 //	@Failure		400		{object}	responses.TrainerProfileResponse	"Failed to retrieve the trainer profile"
 //	@Security		BearerAuth
@@ -120,7 +120,7 @@ func GetTrainerProfile() gin.HandlerFunc {
 //	@Tags		Trainer
 //	@Accept		json
 //	@Produce	json
-//	@Param		profile	body		UpdateTrainerInput			true	"Trainer's information to update"
+//	@Param		profile	body		UpdateTrainerDetails true	"Trainer's information to update"
 //	@Success	200		{object}	responses.ProfileResponse	"Successfully update the trainer's profile"
 //	@Failure	400		{object}	responses.ProfileResponse	"Bad Request, either invalid input or user is not a trainer"
 //	@Failure	401		{object}	responses.ProfileResponse	"Unauthorized, the user is not logged in"
@@ -170,8 +170,9 @@ func UpdateTrainerProfile() gin.HandlerFunc {
 //	@Tags			Trainer
 //	@Accept			json
 //	@Produce		json
-//	@Param			FilterTrainer	body		FilterTrainerInput	true	"Parameters for filtering trainers"
+//	@Param			FilterTrainer	body		FilterTrainerForm true	"Parameters for filtering trainers"
 //	@Success		200				{object}	responses.FilterTrainerResponse
+//	@Failure		400				{object}	responses.FilterTrainerResponse
 //	@Security		BearerAuth
 //	@Router			/protected/filter-trainer [post]
 func FilterTrainer() gin.HandlerFunc {
@@ -227,8 +228,9 @@ func FilterTrainer() gin.HandlerFunc {
 // @Tags		Trainer
 // @Accept		json
 // @Produce		json
-// @Param		GetReviewsInput	body		GetReviewsInput 	true	"Parameters for querying trainer reviews"
+// @Param		GetReviewsInput	body		GetReviewsForm true	"Parameters for querying trainer reviews"
 // @Success		200				{object}	responses.TrainerReviewsResponse
+// @Failure		400				{object}	responses.TrainerReviewsResponse
 // @Security	BearerAuth
 // @Router		/protected/get-reviews [post]
 func GetReviews() gin.HandlerFunc {
@@ -264,8 +266,9 @@ func GetReviews() gin.HandlerFunc {
 // @Tags		Trainer
 // @Accept		json
 // @Produce		json
-// @Param		ReviewRequest	body		ReviewRequest	true	"Parameters for trainer review"
+// @Param		ReviewRequest	body		ReviewDetails	true	"Parameters for trainer review"
 // @Success		200				{object}	responses.AddReviewResponse
+// @Failure		400				{object}	responses.AddReviewResponse
 // @Security	BearerAuth
 // @Router		/protected/add-review [post]
 func AddTrainerReview() gin.HandlerFunc {

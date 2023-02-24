@@ -1,5 +1,16 @@
 definitions:
-  controllers.FilterTrainerInput:
+  controllers.BookingForm:
+    properties:
+      date:
+        type: string
+      endTime:
+        type: string
+      startTime:
+        type: string
+      trainer:
+        type: string
+    type: object
+  controllers.FilterTrainerForm:
     properties:
       feeMax:
         type: number
@@ -14,7 +25,7 @@ definitions:
     required:
     - limit
     type: object
-  controllers.GetReviewsInput:
+  controllers.GetReviewsForm:
     properties:
       limit:
         type: integer
@@ -24,7 +35,7 @@ definitions:
     - limit
     - trainerUsername
     type: object
-  controllers.GetTrainerInput:
+  controllers.GetTrainerForm:
     properties:
       username:
         type: string
@@ -41,7 +52,7 @@ definitions:
     - password
     - username
     type: object
-  controllers.ProfileInput:
+  controllers.ProfileDetails:
     properties:
       address:
         type: string
@@ -110,7 +121,7 @@ definitions:
     - username
     - usertype
     type: object
-  controllers.ReviewRequest:
+  controllers.ReviewDetails:
     properties:
       comment:
         type: string
@@ -123,7 +134,7 @@ definitions:
     - rating
     - trainerUsername
     type: object
-  controllers.UpdateTrainerInput:
+  controllers.UpdateTrainerDetails:
     properties:
       certificateUrl:
         type: string
@@ -159,19 +170,19 @@ definitions:
     properties:
       comment:
         type: string
+      createdAt:
+        type: string
       rating:
         type: number
-      reviewCreatedAt:
-        type: string
       username:
         type: string
     type: object
   models.TrainerInfo:
     properties:
-      certificateUrl:
+      certificateURL:
         type: string
       fee:
-        type: integer
+        type: number
       rating:
         type: number
       specialty:
@@ -330,7 +341,7 @@ paths:
         name: ReviewRequest
         required: true
         schema:
-          $ref: '#/definitions/controllers.ReviewRequest'
+          $ref: '#/definitions/controllers.ReviewDetails'
       produces:
       - application/json
       responses:
@@ -338,11 +349,46 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.AddReviewResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.FilterTrainerResponse'
       security:
       - BearerAuth: []
       summary: Add trainer review
       tags:
       - Trainer
+  /protected/create-booking:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new booking with the specified trainer, trainee, date,
+        start time, and end time
+      parameters:
+      - description: put booking details and pass to gin.Context
+        in: body
+        name: json_in_ginContext
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.BookingForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: booking created successfully
+          schema:
+            type: string
+        "400":
+          description: bad request
+          schema:
+            type: string
+        "500":
+          description: internal server error
+          schema:
+            type: string
+      summary: Create a new booking
+      tags:
+      - bookings
   /protected/filter-trainer:
     post:
       consumes:
@@ -354,12 +400,16 @@ paths:
         name: FilterTrainer
         required: true
         schema:
-          $ref: '#/definitions/controllers.FilterTrainerInput'
+          $ref: '#/definitions/controllers.FilterTrainerForm'
       produces:
       - application/json
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/responses.FilterTrainerResponse'
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/responses.FilterTrainerResponse'
       security:
@@ -379,7 +429,7 @@ paths:
         name: GetReviewsInput
         required: true
         schema:
-          $ref: '#/definitions/controllers.GetReviewsInput'
+          $ref: '#/definitions/controllers.GetReviewsForm'
       produces:
       - application/json
       responses:
@@ -387,6 +437,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.TrainerReviewsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.FilterTrainerResponse'
       security:
       - BearerAuth: []
       summary: Get reviews of specific trainer
@@ -424,7 +478,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/controllers.GetTrainerInput'
+          $ref: '#/definitions/controllers.GetTrainerForm'
       produces:
       - application/json
       responses:
@@ -473,7 +527,7 @@ paths:
         name: ProfileToUpdate
         required: true
         schema:
-          $ref: '#/definitions/controllers.ProfileInput'
+          $ref: '#/definitions/controllers.ProfileDetails'
       produces:
       - application/json
       responses:
@@ -496,7 +550,7 @@ paths:
         name: profile
         required: true
         schema:
-          $ref: '#/definitions/controllers.UpdateTrainerInput'
+          $ref: '#/definitions/controllers.UpdateTrainerDetails'
       produces:
       - application/json
       responses:

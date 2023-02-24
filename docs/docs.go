@@ -74,7 +74,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.ReviewRequest"
+                            "$ref": "#/definitions/controllers.ReviewDetails"
                         }
                     }
                 ],
@@ -83,6 +83,58 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.AddReviewResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.FilterTrainerResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/create-booking": {
+            "post": {
+                "description": "Creates a new booking with the specified trainer, trainee, date, start time, and end time",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bookings"
+                ],
+                "summary": "Create a new booking",
+                "parameters": [
+                    {
+                        "description": "put booking details and pass to gin.Context",
+                        "name": "json_in_ginContext",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.BookingForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "booking created successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -113,13 +165,19 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.FilterTrainerInput"
+                            "$ref": "#/definitions/controllers.FilterTrainerForm"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.FilterTrainerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.FilterTrainerResponse"
                         }
@@ -152,7 +210,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.GetReviewsInput"
+                            "$ref": "#/definitions/controllers.GetReviewsForm"
                         }
                     }
                 ],
@@ -161,6 +219,12 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.TrainerReviewsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.FilterTrainerResponse"
                         }
                     }
                 }
@@ -225,7 +289,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.GetTrainerInput"
+                            "$ref": "#/definitions/controllers.GetTrainerForm"
                         }
                     }
                 ],
@@ -304,7 +368,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.ProfileInput"
+                            "$ref": "#/definitions/controllers.ProfileDetails"
                         }
                     }
                 ],
@@ -342,7 +406,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.UpdateTrainerInput"
+                            "$ref": "#/definitions/controllers.UpdateTrainerDetails"
                         }
                     }
                 ],
@@ -436,7 +500,24 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controllers.FilterTrainerInput": {
+        "controllers.BookingForm": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "endTime": {
+                    "type": "string"
+                },
+                "startTime": {
+                    "type": "string"
+                },
+                "trainer": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.FilterTrainerForm": {
             "type": "object",
             "required": [
                 "limit"
@@ -459,7 +540,7 @@ const docTemplate = `{
                 }
             }
         },
-        "controllers.GetReviewsInput": {
+        "controllers.GetReviewsForm": {
             "type": "object",
             "required": [
                 "limit",
@@ -474,7 +555,7 @@ const docTemplate = `{
                 }
             }
         },
-        "controllers.GetTrainerInput": {
+        "controllers.GetTrainerForm": {
             "type": "object",
             "required": [
                 "username"
@@ -500,7 +581,7 @@ const docTemplate = `{
                 }
             }
         },
-        "controllers.ProfileInput": {
+        "controllers.ProfileDetails": {
             "type": "object",
             "required": [
                 "address",
@@ -596,7 +677,7 @@ const docTemplate = `{
                 }
             }
         },
-        "controllers.ReviewRequest": {
+        "controllers.ReviewDetails": {
             "type": "object",
             "required": [
                 "comment",
@@ -615,7 +696,7 @@ const docTemplate = `{
                 }
             }
         },
-        "controllers.UpdateTrainerInput": {
+        "controllers.UpdateTrainerDetails": {
             "type": "object",
             "properties": {
                 "certificateUrl": {
@@ -670,11 +751,11 @@ const docTemplate = `{
                 "comment": {
                     "type": "string"
                 },
+                "createdAt": {
+                    "type": "string"
+                },
                 "rating": {
                     "type": "number"
-                },
-                "reviewCreatedAt": {
-                    "type": "string"
                 },
                 "username": {
                     "type": "string"
@@ -684,11 +765,11 @@ const docTemplate = `{
         "models.TrainerInfo": {
             "type": "object",
             "properties": {
-                "certificateUrl": {
+                "certificateURL": {
                     "type": "string"
                 },
                 "fee": {
-                    "type": "integer"
+                    "type": "number"
                 },
                 "rating": {
                     "type": "number"
