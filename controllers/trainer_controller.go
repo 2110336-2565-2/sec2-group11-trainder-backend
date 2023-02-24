@@ -5,7 +5,6 @@ import (
 
 	"trainder-api/models"
 	"trainder-api/responses"
-
 	"trainder-api/utils/tokens"
 
 	"github.com/gin-gonic/gin"
@@ -24,6 +23,20 @@ type UpdateTrainerInput struct {
 	Fee            float64  `json:"fee"`
 	TraineeCount   int32    `json:"traineeCount"`
 	CertificateUrl string   `json:"certificateUrl"`
+}
+type GetTrainerInput struct {
+	Username string `json:"username" binding:"required"`
+}
+
+type ReviewRequest struct {
+	TrainerUsername string  `json:"trainerUsername" binding:"required"`
+	Rating          float64 `json:"rating" binding:"required"`
+	Comment         string  `json:"comment" binding:"required"`
+}
+
+type GetReviewsInput struct {
+	TrainerUsername string `json:"trainerUsername" binding:"required"`
+	Limit           int    `json:"limit" binding:"required"`
 }
 
 // CurrentTrainerUserProfile retrieves the trainer profile of the current user for the user that is a trainer
@@ -62,10 +75,6 @@ func CurrentTrainerUserProfile() gin.HandlerFunc {
 			TrainerInfo: trainerProfile,
 		})
 	}
-}
-
-type GetTrainerInput struct {
-	Username string `json:"username" binding:"required"`
 }
 
 // GetTrainerProfile retrieves the trainer profile of any trainer
@@ -211,5 +220,86 @@ func FilterTrainer() gin.HandlerFunc {
 		// 	})
 		// }
 
+	}
+}
+
+// @Summary		Get reviews of specific trainer
+// @Description	Get reviews of specific trainer username from database sort by recent date then rating desc, limit number of output by limit
+// @Tags		Trainer
+// @Accept		json
+// @Produce		json
+// @Param		GetReviewsInput	body		GetReviewsInput 	true	"Parameters for querying trainer reviews"
+// @Success		200				{object}	responses.TrainerReviewsResponse
+// @Security	BearerAuth
+// @Router		/protected/reviews [post]
+func GetReviews() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var input GetReviewsInput
+
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(http.StatusBadRequest, responses.TrainerReviewsResponse{
+				Status:  http.StatusBadRequest,
+				Message: "input missing",
+			})
+			return
+		}
+		// fmt.Println("input", input)
+		result, err := models.GetReviews(input.TrainerUsername, input.Limit)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.TrainerReviewsResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
+		c.JSON(http.StatusOK, responses.TrainerReviewsResponse{
+			Status:  http.StatusOK,
+			Message: `Successfully retrieve reviews of trainer` + input.TrainerUsername,
+			Reviews: result,
+		})
+	}
+}
+
+// @Summary		Add trainer review
+// @Description	Add review on trainer to database
+// @Tags		Trainer
+// @Accept		json
+// @Produce		json
+// @Param		ReviewRequest	body		ReviewRequest	true	"Parameters for trainer review"
+// @Success		200				{object}	responses.AddReviewResponse
+// @Security	BearerAuth
+// @Router		/protected/add-review [post]
+func AddTrainerReview() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var input ReviewRequest
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(http.StatusBadRequest, responses.AddReviewResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
+		username, err := tokens.ExtractTokenUsername(c)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.AddReviewResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
+		err = models.AddReview(input.TrainerUsername, username, input.Rating, input.Comment)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.AddReviewResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK,
+			responses.RegisterResponse{
+				Status:  http.StatusOK,
+				Message: input.TrainerUsername + ` update success!`,
+			})
 	}
 }

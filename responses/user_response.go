@@ -33,3 +33,13 @@ type FilterTrainerResponse struct {
 	Message  string                       `json:"message,omitempty"`
 	Trainers []models.FilteredTrainerInfo `json:"trainers,omitempty"`
 }
+
+type TrainerReviewsResponse struct {
+	Status  int             `json:"status"`
+	Message string          `json:"message,omitempty"`
+	Reviews []models.Review `json:"reviews,omitempty"`
+}
+type AddReviewResponse struct {
+	Status  int    `json:"status"`
+	Message string `json:"message,omitempty"`
+}

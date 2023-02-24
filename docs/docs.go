@@ -49,6 +49,45 @@ const docTemplate = `{
                 }
             }
         },
+        "/protected/add-review": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Add review on trainer to database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Trainer"
+                ],
+                "summary": "Add trainer review",
+                "parameters": [
+                    {
+                        "description": "Parameters for trainer review",
+                        "name": "ReviewRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ReviewRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.AddReviewResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/protected/filter-trainer": {
             "post": {
                 "security": [
@@ -117,6 +156,45 @@ const docTemplate = `{
                         "description": "Unauthorized, the user is not logged in",
                         "schema": {
                             "$ref": "#/definitions/responses.UserProfileResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/reviews": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get reviews of specific trainer username from database sort by recent date then rating desc, limit number of output by limit",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Trainer"
+                ],
+                "summary": "Get reviews of specific trainer",
+                "parameters": [
+                    {
+                        "description": "Parameters for querying trainer reviews",
+                        "name": "GetReviewsInput",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.GetReviewsInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.TrainerReviewsResponse"
                         }
                     }
                 }
@@ -337,7 +415,7 @@ const docTemplate = `{
                 "operationId": "register-user",
                 "parameters": [
                     {
-                        "description": "put register input and pass to  gin.Context",
+                        "description": "put register input and pass to gin.Context",
                         "name": "json_in_ginContext",
                         "in": "body",
                         "required": true,
@@ -378,6 +456,21 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
+                }
+            }
+        },
+        "controllers.GetReviewsInput": {
+            "type": "object",
+            "required": [
+                "limit",
+                "trainerUsername"
+            ],
+            "properties": {
+                "limit": {
+                    "type": "integer"
+                },
+                "trainerUsername": {
+                    "type": "string"
                 }
             }
         },
@@ -454,6 +547,8 @@ const docTemplate = `{
                 "firstname",
                 "gender",
                 "lastname",
+                "lat",
+                "lng",
                 "password",
                 "phoneNumber",
                 "username",
@@ -481,6 +576,12 @@ const docTemplate = `{
                 "lastname": {
                     "type": "string"
                 },
+                "lat": {
+                    "type": "number"
+                },
+                "lng": {
+                    "type": "number"
+                },
                 "password": {
                     "type": "string"
                 },
@@ -491,6 +592,25 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "usertype": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.ReviewRequest": {
+            "type": "object",
+            "required": [
+                "comment",
+                "rating",
+                "trainerUsername"
+            ],
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "number"
+                },
+                "trainerUsername": {
                     "type": "string"
                 }
             }
@@ -544,14 +664,31 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Review": {
+            "type": "object",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "number"
+                },
+                "reviewCreatedAt": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "models.TrainerInfo": {
             "type": "object",
             "properties": {
-                "certificateUrl": {
+                "certificateURL": {
                     "type": "string"
                 },
                 "fee": {
-                    "type": "integer"
+                    "type": "number"
                 },
                 "rating": {
                     "type": "number"
@@ -591,6 +728,12 @@ const docTemplate = `{
                 "lastname": {
                     "type": "string"
                 },
+                "lat": {
+                    "type": "number"
+                },
+                "lng": {
+                    "type": "number"
+                },
                 "phoneNumber": {
                     "type": "string"
                 },
@@ -599,6 +742,17 @@ const docTemplate = `{
                 },
                 "usertype": {
                     "type": "string"
+                }
+            }
+        },
+        "responses.AddReviewResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         },
@@ -686,6 +840,23 @@ const docTemplate = `{
                 },
                 "user": {
                     "$ref": "#/definitions/models.UserProfile"
+                }
+            }
+        },
+        "responses.TrainerReviewsResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "reviews": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Review"
+                    }
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         },
