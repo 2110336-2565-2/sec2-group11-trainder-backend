@@ -10,6 +10,13 @@ definitions:
       trainer:
         type: string
     type: object
+  controllers.DeleteBookingForm:
+    properties:
+      bookingId:
+        type: string
+    required:
+    - bookingId
+    type: object
   controllers.FilterTrainerForm:
     properties:
       feeMax:
@@ -246,6 +253,13 @@ definitions:
       username:
         type: string
     type: object
+  responses.DeleteBookingResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
   responses.FilterTrainerResponse:
     properties:
       message:
@@ -409,6 +423,34 @@ paths:
       summary: Create a new booking
       tags:
       - bookings
+  /protected/delete-booking:
+    post:
+      consumes:
+      - application/json
+      description: delete a booking with the specified bookingId
+      parameters:
+      - description: put DeleteBookingForm details and pass to gin.Context
+        in: body
+        name: json_in_ginContext
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.DeleteBookingForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully delete booking
+          schema:
+            $ref: '#/definitions/responses.DeleteBookingResponse'
+        "400":
+          description: Bad Request, missing filed of objectId or cannot find bookingObjectId
+          schema:
+            $ref: '#/definitions/responses.DeleteBookingResponse'
+      security:
+      - BearerAuth: []
+      summary: delete a booking
+      tags:
+      - bookings
   /protected/filter-trainer:
     post:
       consumes:
@@ -540,8 +582,8 @@ paths:
     post:
       consumes:
       - application/json
-      description: Update a booking with the specified update input consist of bookingId,
-        status(pending/confirm/complete) and paymentStatus(pending/paid)
+      description: Update a booking of sepecified bookingId with the specified update
+        input consist of status(pending/confirm/complete) and paymentStatus(pending/paid)
       parameters:
       - description: put updateBookingForm details and pass to gin.Context
         in: body
@@ -557,7 +599,7 @@ paths:
           schema:
             $ref: '#/definitions/responses.UpdateBookingResponse'
         "400":
-          description: Bad Request, missing filed of objectId or cannot found bookingObjectId
+          description: Bad Request, missing filed of objectId or cannot find bookingObjectId
           schema:
             $ref: '#/definitions/responses.UpdateBookingResponse'
       security:

@@ -145,6 +145,51 @@ const docTemplate = `{
                 }
             }
         },
+        "/protected/delete-booking": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "delete a booking with the specified bookingId",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bookings"
+                ],
+                "summary": "delete a booking",
+                "parameters": [
+                    {
+                        "description": "put DeleteBookingForm details and pass to gin.Context",
+                        "name": "json_in_ginContext",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.DeleteBookingForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully delete booking",
+                        "schema": {
+                            "$ref": "#/definitions/responses.DeleteBookingResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, missing filed of objectId or cannot find bookingObjectId",
+                        "schema": {
+                            "$ref": "#/definitions/responses.DeleteBookingResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/protected/filter-trainer": {
             "post": {
                 "security": [
@@ -355,7 +400,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Update a booking with the specified update input consist of bookingId, status(pending/confirm/complete) and paymentStatus(pending/paid)",
+                "description": "Update a booking of sepecified bookingId with the specified update input consist of status(pending/confirm/complete) and paymentStatus(pending/paid)",
                 "consumes": [
                     "application/json"
                 ],
@@ -385,7 +430,7 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Bad Request, missing filed of objectId or cannot found bookingObjectId",
+                        "description": "Bad Request, missing filed of objectId or cannot find bookingObjectId",
                         "schema": {
                             "$ref": "#/definitions/responses.UpdateBookingResponse"
                         }
@@ -575,6 +620,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "trainer": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.DeleteBookingForm": {
+            "type": "object",
+            "required": [
+                "bookingId"
+            ],
+            "properties": {
+                "bookingId": {
                     "type": "string"
                 }
             }
@@ -927,6 +983,17 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "responses.DeleteBookingResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         },
