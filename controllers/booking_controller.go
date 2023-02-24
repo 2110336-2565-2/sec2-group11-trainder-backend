@@ -72,6 +72,15 @@ func Book() gin.HandlerFunc {
 	}
 }
 
+// @Summary Get bookings for the logged in trainer
+// @Description Retrieve a list of upcoming bookings for the trainer who is currently logged in
+// @Tags bookings
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} GetBookingsResponse
+// @Failure 400 {object} GetBookingsResponse
+// @Router /protected/bookings [POST]
 func GetBookings() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		username, err := tokens.ExtractTokenUsername(c)
