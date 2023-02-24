@@ -15,7 +15,6 @@ type FilterTrainerInput struct {
 	Limit     int      `json:"limit" binding:"required"`
 	FeeMin    float64  `json:"feeMin"`
 	FeeMax    float64  `json:"feeMax"`
-	// Rating     float64 `json:"Rating" binding:"required"`
 }
 type UpdateTrainerInput struct {
 	Specialty      []string `json:"specialty"`
