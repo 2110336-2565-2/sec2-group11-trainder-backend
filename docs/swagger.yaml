@@ -168,10 +168,10 @@ definitions:
     type: object
   models.TrainerInfo:
     properties:
-      certificateUrl:
+      certificateURL:
         type: string
       fee:
-        type: integer
+        type: number
       rating:
         type: number
       specialty:
@@ -367,7 +367,28 @@ paths:
       summary: FilterTrainer base on filter input
       tags:
       - Trainer
-  /protected/get-reviews:
+  /protected/profile:
+    get:
+      consumes:
+      - application/json
+      description: getProfile of the current user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.UserProfileResponse'
+        "401":
+          description: Unauthorized, the user is not logged in
+          schema:
+            $ref: '#/definitions/responses.UserProfileResponse'
+      security:
+      - BearerAuth: []
+      summary: getProfile of the current user
+      tags:
+      - user
+  /protected/reviews:
     post:
       consumes:
       - application/json
@@ -392,27 +413,6 @@ paths:
       summary: Get reviews of specific trainer
       tags:
       - Trainer
-  /protected/profile:
-    get:
-      consumes:
-      - application/json
-      description: getProfile of the current user
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/responses.UserProfileResponse'
-        "401":
-          description: Unauthorized, the user is not logged in
-          schema:
-            $ref: '#/definitions/responses.UserProfileResponse'
-      security:
-      - BearerAuth: []
-      summary: getProfile of the current user
-      tags:
-      - user
   /protected/trainer:
     post:
       consumes:
