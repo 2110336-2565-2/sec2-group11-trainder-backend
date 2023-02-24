@@ -88,7 +88,7 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/responses.FilterTrainerResponse"
+                            "$ref": "#/definitions/responses.AddReviewResponse"
                         }
                     }
                 }
@@ -96,6 +96,11 @@ const docTemplate = `{
         },
         "/protected/create-booking": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Creates a new booking with the specified trainer, trainee, date, start time, and end time",
                 "consumes": [
                     "application/json"
@@ -135,6 +140,51 @@ const docTemplate = `{
                         "description": "internal server error",
                         "schema": {
                             "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/delete-booking": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "delete a booking with the specified bookingId",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bookings"
+                ],
+                "summary": "delete a booking",
+                "parameters": [
+                    {
+                        "description": "put DeleteBookingForm details and pass to gin.Context",
+                        "name": "json_in_ginContext",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.DeleteBookingForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully delete booking",
+                        "schema": {
+                            "$ref": "#/definitions/responses.DeleteBookingResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, missing filed of objectId or cannot find bookingObjectId",
+                        "schema": {
+                            "$ref": "#/definitions/responses.DeleteBookingResponse"
                         }
                     }
                 }
@@ -224,7 +274,7 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/responses.FilterTrainerResponse"
+                            "$ref": "#/definitions/responses.TrainerReviewsResponse"
                         }
                     }
                 }
@@ -343,6 +393,51 @@ const docTemplate = `{
                 }
             }
         },
+        "/protected/update-booking": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update a booking of sepecified bookingId with the specified update input consist of status(pending/confirm/complete) and paymentStatus(pending/paid)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bookings"
+                ],
+                "summary": "Update a booking",
+                "parameters": [
+                    {
+                        "description": "put updateBookingForm details and pass to gin.Context",
+                        "name": "json_in_ginContext",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.UpdateBookingForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully update booking",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UpdateBookingResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, missing filed of objectId or cannot find bookingObjectId",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UpdateBookingResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/protected/update-profile": {
             "post": {
                 "security": [
@@ -375,6 +470,12 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ProfileResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.ProfileResponse"
                         }
@@ -459,6 +560,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/responses.CurrentUserResponse"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.CurrentUserResponse"
+                        }
                     }
                 }
             }
@@ -513,6 +620,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "trainer": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.DeleteBookingForm": {
+            "type": "object",
+            "required": [
+                "bookingId"
+            ],
+            "properties": {
+                "bookingId": {
                     "type": "string"
                 }
             }
@@ -696,6 +814,23 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.UpdateBookingForm": {
+            "type": "object",
+            "required": [
+                "bookingId"
+            ],
+            "properties": {
+                "bookingId": {
+                    "type": "string"
+                },
+                "paymentStatus": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
         "controllers.UpdateTrainerDetails": {
             "type": "object",
             "properties": {
@@ -851,6 +986,17 @@ const docTemplate = `{
                 }
             }
         },
+        "responses.DeleteBookingResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
         "responses.FilterTrainerResponse": {
             "type": "object",
             "properties": {
@@ -935,6 +1081,17 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.Review"
                     }
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.UpdateBookingResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
                 },
                 "status": {
                     "type": "integer"

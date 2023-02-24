@@ -34,7 +34,12 @@ func ProtectedRoute(router *gin.Engine) {
 
 	// Add booking
 	protected.POST("/create-booking", controllers.Book())
-	
+
 	// Get bookings
 	protected.POST("/get-bookings", controllers.GetBookings())
+
+	// Booking
+	protected.POST("/update-booking", controllers.UpdateBooking())
+	protected.POST("/delete-booking", controllers.DeleteBooking())
+
 }

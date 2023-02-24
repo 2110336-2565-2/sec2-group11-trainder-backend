@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"trainder-api/models"
 	"trainder-api/responses"
@@ -15,6 +14,16 @@ type BookingForm struct {
 	Date      string `json:"date"`
 	StartTime string `json:"startTime"`
 	EndTime   string `json:"endTime"`
+}
+
+type UpdateBookingForm struct {
+	BookingId     string `json:"bookingId" binding:"required"`
+	Status        string `json:"status"`
+	PaymentStatus string `json:"paymentStatus"`
+}
+
+type DeleteBookingForm struct {
+	BookingId string `json:"bookingId" binding:"required"`
 }
 
 // @Summary Create a new booking
@@ -71,11 +80,8 @@ func GetBookings() gin.HandlerFunc {
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			})
-			return
 		}
-		fmt.Println(username)
 		result, err := models.GetUpcomingBookingsForTrainer(username)
-		_ = result
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.GetBookingsResponse{
 				Status:  http.StatusBadRequest,
@@ -88,6 +94,80 @@ func GetBookings() gin.HandlerFunc {
 			Message:  `success!`,
 			Bookings: result,
 		})
+	}
+}
 
+// @Summary Update a booking
+// @Description Update a booking of sepecified bookingId with the specified update input consist of status(pending/confirm/complete) and paymentStatus(pending/paid)
+// @Tags bookings
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param json_in_ginContext body UpdateBookingForm true "put updateBookingForm details and pass to gin.Context"
+// @Success	200		{object}	responses.UpdateBookingResponse	"Successfully update booking"
+// @Failure	400		{object}	responses.UpdateBookingResponse	"Bad Request, missing filed of objectId or cannot find bookingObjectId"
+// @Router /protected/update-booking [post]
+func UpdateBooking() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var input UpdateBookingForm
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(http.StatusBadRequest, responses.UpdateBookingResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
+
+		err := models.UpdateBooking(input.BookingId, input.Status, input.PaymentStatus)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.UpdateBookingResponse{
+				Status:  http.StatusBadRequest,
+				Message: `update failed ` + err.Error(),
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK,
+			responses.UpdateBookingResponse{
+				Status:  http.StatusOK,
+				Message: `update booking success!`,
+			})
+	}
+}
+
+// @Summary delete a booking
+// @Description delete a booking with the specified bookingId
+// @Tags bookings
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param json_in_ginContext body DeleteBookingForm true "put DeleteBookingForm details and pass to gin.Context"
+// @Success	200		{object}	responses.DeleteBookingResponse	"Successfully delete booking"
+// @Failure	400		{object}	responses.DeleteBookingResponse	"Bad Request, missing filed of objectId or cannot find bookingObjectId"
+// @Router /protected/delete-booking [post]
+func DeleteBooking() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var input DeleteBookingForm
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(http.StatusBadRequest, responses.DeleteBookingResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
+		err := models.DeleteBooking(input.BookingId)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.DeleteBookingResponse{
+				Status:  http.StatusBadRequest,
+				Message: `delete booking failed: ` + err.Error(),
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK,
+			responses.UpdateBookingResponse{
+				Status:  http.StatusOK,
+				Message: `delete booking success!`,
+			})
 	}
 }

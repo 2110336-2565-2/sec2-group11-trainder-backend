@@ -10,6 +10,13 @@ definitions:
       trainer:
         type: string
     type: object
+  controllers.DeleteBookingForm:
+    properties:
+      bookingId:
+        type: string
+    required:
+    - bookingId
+    type: object
   controllers.FilterTrainerForm:
     properties:
       feeMax:
@@ -134,6 +141,17 @@ definitions:
     - rating
     - trainerUsername
     type: object
+  controllers.UpdateBookingForm:
+    properties:
+      bookingId:
+        type: string
+      paymentStatus:
+        type: string
+      status:
+        type: string
+    required:
+    - bookingId
+    type: object
   controllers.UpdateTrainerDetails:
     properties:
       certificateUrl:
@@ -235,6 +253,13 @@ definitions:
       username:
         type: string
     type: object
+  responses.DeleteBookingResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
   responses.FilterTrainerResponse:
     properties:
       message:
@@ -290,6 +315,13 @@ definitions:
         items:
           $ref: '#/definitions/models.Review'
         type: array
+      status:
+        type: integer
+    type: object
+  responses.UpdateBookingResponse:
+    properties:
+      message:
+        type: string
       status:
         type: integer
     type: object
@@ -352,7 +384,7 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.FilterTrainerResponse'
+            $ref: '#/definitions/responses.AddReviewResponse'
       security:
       - BearerAuth: []
       summary: Add trainer review
@@ -386,7 +418,37 @@ paths:
           description: internal server error
           schema:
             type: string
+      security:
+      - BearerAuth: []
       summary: Create a new booking
+      tags:
+      - bookings
+  /protected/delete-booking:
+    post:
+      consumes:
+      - application/json
+      description: delete a booking with the specified bookingId
+      parameters:
+      - description: put DeleteBookingForm details and pass to gin.Context
+        in: body
+        name: json_in_ginContext
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.DeleteBookingForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully delete booking
+          schema:
+            $ref: '#/definitions/responses.DeleteBookingResponse'
+        "400":
+          description: Bad Request, missing filed of objectId or cannot find bookingObjectId
+          schema:
+            $ref: '#/definitions/responses.DeleteBookingResponse'
+      security:
+      - BearerAuth: []
+      summary: delete a booking
       tags:
       - bookings
   /protected/filter-trainer:
@@ -440,7 +502,7 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.FilterTrainerResponse'
+            $ref: '#/definitions/responses.TrainerReviewsResponse'
       security:
       - BearerAuth: []
       summary: Get reviews of specific trainer
@@ -516,6 +578,35 @@ paths:
       summary: Retrieve trainer profile of current user
       tags:
       - Trainer
+  /protected/update-booking:
+    post:
+      consumes:
+      - application/json
+      description: Update a booking of sepecified bookingId with the specified update
+        input consist of status(pending/confirm/complete) and paymentStatus(pending/paid)
+      parameters:
+      - description: put updateBookingForm details and pass to gin.Context
+        in: body
+        name: json_in_ginContext
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.UpdateBookingForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully update booking
+          schema:
+            $ref: '#/definitions/responses.UpdateBookingResponse'
+        "400":
+          description: Bad Request, missing filed of objectId or cannot find bookingObjectId
+          schema:
+            $ref: '#/definitions/responses.UpdateBookingResponse'
+      security:
+      - BearerAuth: []
+      summary: Update a booking
+      tags:
+      - bookings
   /protected/update-profile:
     post:
       consumes:
@@ -533,6 +624,10 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/responses.ProfileResponse'
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/responses.ProfileResponse'
       security:
@@ -582,6 +677,10 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/responses.CurrentUserResponse'
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/responses.CurrentUserResponse'
       security:
