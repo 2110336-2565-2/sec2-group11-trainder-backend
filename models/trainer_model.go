@@ -267,7 +267,7 @@ func GetReviews(username string, limit int) ([]Review, error) {
 	pipeline := bson.A{
 		bson.M{"$match": bson.M{"username": username}},
 		bson.M{"$unwind": "$reviews"},
-		bson.M{"$sort": bson.M{"reviews.reviewCreatedAt": -1, "reviews.rating": -1}},
+		bson.M{"$sort": bson.M{"reviews.createdAt": -1, "reviews.rating": -1}},
 		bson.M{"$limit": limit},
 		bson.M{"$group": bson.M{
 			"_id":      "$_id",
