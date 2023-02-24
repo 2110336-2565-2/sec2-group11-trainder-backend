@@ -52,9 +52,9 @@ type FilteredTrainerInfo struct {
 	TrainerInfo TrainerInfo `json:"trainerInfo"`
 }
 type Review struct {
-	Username        string    `json:"username"`
-	Rating          float64   `json:"rating"`
-	Comment         string    `json:"comment"`
+	Username        string    `bson:"username"`
+	Rating          float64   `bson:"rating"`
+	Comment         string    `bson:"comment"`
 	ReviewCreatedAt time.Time `bson:"reviewCreatedAt"`
 }
 type UserNotExist struct{}
