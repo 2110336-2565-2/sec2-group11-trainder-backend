@@ -31,8 +31,8 @@ jobs:
       - name: Test
         run: go test -v ./...
         env:
-          - MONGO_URI: mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000
-          - MONGO_DATABASE_NAME: trainder
-          - TOKEN_HOUR_LIFESPAN: 24
-          - API_SECRET: api_secret
-          - INIT_ROOT_PASSWORD: password
+          MONGO_URI: mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000
+          MONGO_DATABASE_NAME: trainder
+          TOKEN_HOUR_LIFESPAN: 24
+          API_SECRET: api_secret
+          INIT_ROOT_PASSWORD: password
