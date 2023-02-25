@@ -32,7 +32,7 @@ jobs:
         run: go test -v ./...
         env:
           TRAINDER_DO_NOT_USE_DOTENV: true
-          MONGO_URI: mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000
+          MONGO_URI: mongodb://locahost:27017
           MONGO_DATABASE_NAME: trainder
           TOKEN_HOUR_LIFESPAN: 24
           API_SECRET: api_secret
