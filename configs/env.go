@@ -36,17 +36,11 @@ func EnvTokenLifeSpan() (tokenLifespan int, err error) {
 
 func EnvApiSecret() string {
 	loadDotEnv()
-	if err := godotenv.Load(); err != nil {
-		log.Fatal("Error loading .env file")
-	}
 	return os.Getenv("API_SECRET")
 }
 
 func EnvInitRootPassword() string {
 	loadDotEnv()
-	if err := godotenv.Load(); err != nil {
-		log.Fatal("Error loading .env file")
-	}
 	env := os.Getenv("INIT_ROOT_PASSWORD")
 	if env == "" {
 		log.Fatal("Root password cannot be empty")
