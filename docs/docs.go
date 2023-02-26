@@ -269,7 +269,41 @@ const docTemplate = `{
                 }
             }
         },
-        "/protected/get-reviews": {
+        "/protected/profile": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "getProfile of the current user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "getProfile of the current user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UserProfileResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, the user is not logged in",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UserProfileResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/reviews": {
             "post": {
                 "security": [
                     {
@@ -309,40 +343,6 @@ const docTemplate = `{
                         "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.TrainerReviewsResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/protected/profile": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "getProfile of the current user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "getProfile of the current user",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/responses.UserProfileResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized, the user is not logged in",
-                        "schema": {
-                            "$ref": "#/definitions/responses.UserProfileResponse"
                         }
                     }
                 }

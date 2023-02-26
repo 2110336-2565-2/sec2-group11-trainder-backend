@@ -38,7 +38,6 @@ go install github.com/swaggo/swag/cmd/swag@latest
 4. The documentation will be available at [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
 
 ## Test
-For now, if you want to run tests, simply execute this command
 ```sh
 go test .
 ```

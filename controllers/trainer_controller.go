@@ -232,7 +232,7 @@ func FilterTrainer() gin.HandlerFunc {
 // @Success		200				{object}	responses.TrainerReviewsResponse
 // @Failure		400				{object}	responses.TrainerReviewsResponse
 // @Security	BearerAuth
-// @Router		/protected/get-reviews [post]
+// @Router		/protected/reviews [post]
 func GetReviews() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input GetReviewsForm
