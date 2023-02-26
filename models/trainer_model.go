@@ -2,7 +2,6 @@ package models
 
 import (
 	"context"
-	"fmt"
 	"math"
 	"time"
 
@@ -288,7 +287,8 @@ func GetReviews(username string, limit int) ([]Review, error) {
 	// var reviews []Review
 	cursor, err := userCollection.Aggregate(context.Background(), pipeline, limitOptions)
 	if err != nil {
-		fmt.Println(err)
+		// fmt.Println(err)
+		return nil, err
 	}
 	defer cursor.Close(context.Background())
 	// var reviews []Review
@@ -298,7 +298,8 @@ func GetReviews(username string, limit int) ([]Review, error) {
 		// var result bson.M
 		err := cursor.Decode(&result)
 		if err != nil {
-			fmt.Println(err)
+			// fmt.Println(err)
+			return nil, err
 		}
 		// fmt.Println("result.MySlice", result.MySlice)
 
