@@ -298,7 +298,6 @@ func GetReviews(username string, limit int) ([]Review, error) {
 		// var result bson.M
 		err := cursor.Decode(&result)
 		if err != nil {
-			// fmt.Println(err)
 			return nil, err
 		}
 		// fmt.Println("result.MySlice", result.MySlice)

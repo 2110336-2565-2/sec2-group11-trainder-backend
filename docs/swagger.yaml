@@ -167,6 +167,28 @@ definitions:
       traineeCount:
         type: integer
     type: object
+  models.Booking:
+    properties:
+      _id:
+        type: string
+      endDateTime:
+        type: string
+      payment:
+        properties:
+          status:
+            type: string
+          totalCost:
+            type: number
+        type: object
+      startDateTime:
+        type: string
+      status:
+        type: string
+      trainee:
+        type: string
+      trainer:
+        type: string
+    type: object
   models.FilteredTrainerInfo:
     properties:
       address:
@@ -270,6 +292,17 @@ definitions:
         items:
           $ref: '#/definitions/models.FilteredTrainerInfo'
         type: array
+    type: object
+  responses.GetBookingsResponse:
+    properties:
+      bookings:
+        items:
+          $ref: '#/definitions/models.Booking'
+        type: array
+      message:
+        type: string
+      status:
+        type: integer
     type: object
   responses.LoginResponse:
     properties:
@@ -390,6 +423,28 @@ paths:
       summary: Add trainer review
       tags:
       - Trainer
+  /protected/bookings:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of upcoming bookings for the trainer who is currently
+        logged in
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.GetBookingsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.GetBookingsResponse'
+      security:
+      - BearerAuth: []
+      summary: Get bookings for the logged in trainer
+      tags:
+      - bookings
   /protected/create-booking:
     post:
       consumes:
@@ -427,7 +482,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: delete a booking with the specified bookingId
+      description: Delete a booking with the specified bookingId
       parameters:
       - description: put DeleteBookingForm details and pass to gin.Context
         in: body
@@ -448,7 +503,7 @@ paths:
             $ref: '#/definitions/responses.DeleteBookingResponse'
       security:
       - BearerAuth: []
-      summary: delete a booking
+      summary: Delete a booking
       tags:
       - bookings
   /protected/filter-trainer:
@@ -479,7 +534,28 @@ paths:
       summary: FilterTrainer base on filter input
       tags:
       - Trainer
-  /protected/get-reviews:
+  /protected/profile:
+    get:
+      consumes:
+      - application/json
+      description: getProfile of the current user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.UserProfileResponse'
+        "401":
+          description: Unauthorized, the user is not logged in
+          schema:
+            $ref: '#/definitions/responses.UserProfileResponse'
+      security:
+      - BearerAuth: []
+      summary: getProfile of the current user
+      tags:
+      - user
+  /protected/reviews:
     post:
       consumes:
       - application/json
@@ -508,27 +584,6 @@ paths:
       summary: Get reviews of specific trainer
       tags:
       - Trainer
-  /protected/profile:
-    get:
-      consumes:
-      - application/json
-      description: getProfile of the current user
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/responses.UserProfileResponse'
-        "401":
-          description: Unauthorized, the user is not logged in
-          schema:
-            $ref: '#/definitions/responses.UserProfileResponse'
-      security:
-      - BearerAuth: []
-      summary: getProfile of the current user
-      tags:
-      - user
   /protected/trainer:
     post:
       consumes:

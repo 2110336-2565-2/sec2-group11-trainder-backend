@@ -72,6 +72,15 @@ func Book() gin.HandlerFunc {
 	}
 }
 
+// @Summary Get bookings for the logged in trainer
+// @Description Retrieve a list of upcoming bookings for the trainer who is currently logged in
+// @Tags bookings
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} responses.GetBookingsResponse
+// @Failure 400 {object} responses.GetBookingsResponse
+// @Router /protected/bookings [GET]
 func GetBookings() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		username, err := tokens.ExtractTokenUsername(c)
@@ -135,8 +144,8 @@ func UpdateBooking() gin.HandlerFunc {
 	}
 }
 
-// @Summary delete a booking
-// @Description delete a booking with the specified bookingId
+// @Summary Delete a booking
+// @Description Delete a booking with the specified bookingId
 // @Tags bookings
 // @Accept json
 // @Produce json
