@@ -153,7 +153,7 @@ func UpdateBooking() gin.HandlerFunc {
 // @Param json_in_ginContext body DeleteBookingForm true "put DeleteBookingForm details and pass to gin.Context"
 // @Success	200		{object}	responses.DeleteBookingResponse	"Successfully delete booking"
 // @Failure	400		{object}	responses.DeleteBookingResponse	"Bad Request, missing filed of objectId or cannot find bookingObjectId"
-// @Router /protected/delete-booking [post]
+// @Router /protected/delete-booking [delete]
 func DeleteBooking() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input DeleteBookingForm

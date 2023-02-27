@@ -28,7 +28,7 @@ type Booking struct {
 }
 
 func CreateBooking(trainee string, trainer string, date string, startTime string, endTime string) error {
-	fmt.Println(trainer)
+	// fmt.Println(trainer)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	filter := bson.M{"username": trainer, "usertype": "Trainer"}
@@ -92,7 +92,7 @@ func GetUpcomingBookingsForTrainer(trainerUsername string) ([]Booking, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(cursor)
+	// fmt.Println(cursor)
 	var bookings []Booking
 	for cursor.Next(ctx) {
 		var booking Booking
@@ -100,7 +100,7 @@ func GetUpcomingBookingsForTrainer(trainerUsername string) ([]Booking, error) {
 		if err != nil {
 			return nil, err
 		}
-		fmt.Println(booking)
+		// fmt.Println(booking)
 		bookings = append(bookings, booking)
 	}
 

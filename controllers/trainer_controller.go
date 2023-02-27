@@ -7,20 +7,22 @@ import (
 	"trainder-api/responses"
 	"trainder-api/utils/tokens"
 
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 )
 
 type FilterTrainerForm struct {
 	Specialty []string `json:"specialty"`
-	Limit     int    `json:"limit" binding:"required"`
-	FeeMin    int    `json:"feeMin"`
-	FeeMax    int    `json:"feeMax"`
+	Limit     int      `json:"limit" binding:"required"`
+	FeeMin    int      `json:"feeMin"`
+	FeeMax    int      `json:"feeMax"`
 }
 type UpdateTrainerDetails struct {
 	Specialty      []string `json:"specialty"`
 	Rating         float64  `json:"rating"`
-	Fee            int    `json:"fee"`
-	TraineeCount   int    `json:"traineeCount"`
+	Fee            int      `json:"fee"`
+	TraineeCount   int      `json:"traineeCount"`
 	CertificateUrl string   `json:"certificateUrl"`
 }
 type GetTrainerForm struct {
@@ -36,6 +38,10 @@ type ReviewDetails struct {
 type GetReviewsForm struct {
 	TrainerUsername string `json:"trainerUsername" binding:"required"`
 	Limit           int    `json:"limit" binding:"required"`
+}
+
+type TraineeReviewableForm struct {
+	TrainerUsername string `json:"trainerUsername" binding:"required"`
 }
 
 // CurrentTrainerUserProfile retrieves the trainer profile of the current user for the user that is a trainer
@@ -280,5 +286,52 @@ func AddTrainerReview() gin.HandlerFunc {
 				Status:  http.StatusOK,
 				Message: input.TrainerUsername + ` update success!`,
 			})
+	}
+}
+
+// @Summary		find if this trainee can still review a specific trainer
+// @Description	find if this trainee can still review a specific trainer by (find number of times trainee paid that trainer) minus (number of time trainee comment on that trainer)
+// @Tags		Trainer
+// @Accept		json
+// @Produce		json
+// @Param		Reviewable	body		TraineeReviewableForm	true	"Parameters for trainee reviewable (trainer username)"
+// @Success		200				{object}	responses.ReviewableResponse
+// @Failure		400				{object}	responses.ReviewableResponse
+// @Security	BearerAuth
+// @Router		/protected/reviewable [POST]
+func Reviewable() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var input TraineeReviewableForm
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(http.StatusBadRequest, responses.ReviewableResponse{
+				Status:    http.StatusBadRequest,
+				Message:   err.Error(),
+				CanReview: false,
+			})
+			return
+		}
+		username, err := tokens.ExtractTokenUsername(c)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.ReviewableResponse{
+				Status:    http.StatusBadRequest,
+				Message:   err.Error(),
+				CanReview: false,
+			})
+			return
+		}
+		canReview, reviewLeft, err := models.Reviewable(username, input.TrainerUsername)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.ReviewableResponse{
+				Status:    http.StatusBadRequest,
+				Message:   err.Error(),
+				CanReview: false,
+			})
+			return
+		}
+		c.JSON(http.StatusOK, responses.ReviewableResponse{
+			Status:    http.StatusOK,
+			Message:   username + ` has ` + strconv.Itoa(reviewLeft) + ` review(s) left for reviewing trainer ` + input.TrainerUsername,
+			CanReview: canReview,
+		})
 	}
 }

@@ -40,6 +40,9 @@ func ProtectedRoute(router *gin.Engine) {
 
 	// Booking
 	protected.POST("/update-booking", controllers.UpdateBooking())
-	protected.POST("/delete-booking", controllers.DeleteBooking())
+	protected.DELETE("/delete-booking", controllers.DeleteBooking())
+
+	//Reviewable
+	protected.POST("/reviewable", controllers.Reviewable())
 
 }
