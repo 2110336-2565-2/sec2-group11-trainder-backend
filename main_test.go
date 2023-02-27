@@ -203,33 +203,33 @@ func TestUpdateTrainerHandler(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 }
 
-// func TestFilter(t *testing.T) {
-// 	r := SetUpRouter()
-// 	routes.AuthRoute(r)
-// 	routes.ProtectedRoute(r)
-// 	user := User{
-// 		Username: "test01",
-// 		Password: "password01",
-// 	}
-// 	update := FilterTrainer{
-// 		Specialty: []string{"yoga"},
-// 		Limit:     1,
-// 	}
-// 	jsonValue, _ := json.Marshal(user)
-// 	loginReq, _ := http.NewRequest("POST", "/login", bytes.NewBuffer(jsonValue))
-// 	w := httptest.NewRecorder()
-// 	r.ServeHTTP(w, loginReq)
+func TestFilter(t *testing.T) {
+	r := SetUpRouter()
+	routes.AuthRoute(r)
+	routes.ProtectedRoute(r)
+	user := User{
+		Username: "test01",
+		Password: "password01",
+	}
+	update := FilterTrainer{
+		Specialty: []string{"yoga"},
+		Limit:     1,
+	}
+	jsonValue, _ := json.Marshal(user)
+	loginReq, _ := http.NewRequest("POST", "/login", bytes.NewBuffer(jsonValue))
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, loginReq)
 
-// 	var response responses.LoginResponse
-// 	err := json.Unmarshal(w.Body.Bytes(), &response)
-// 	if err != nil {
-// 		t.Fatal("Failed to parse response: ", err)
-// 	}
-// 	jwt := response.Token
-// 	jsonValue, _ = json.Marshal(update)
-// 	userReq, _ := http.NewRequest("POST", "/protected/filter-trainer", bytes.NewBuffer(jsonValue))
-// 	userReq.Header.Set("Authorization", "Bearer "+jwt)
-// 	w = httptest.NewRecorder()
-// 	r.ServeHTTP(w, userReq)
-// 	assert.Equal(t, http.StatusOK, w.Code)
-// }
+	var response responses.LoginResponse
+	err := json.Unmarshal(w.Body.Bytes(), &response)
+	if err != nil {
+		t.Fatal("Failed to parse response: ", err)
+	}
+	jwt := response.Token
+	jsonValue, _ = json.Marshal(update)
+	userReq, _ := http.NewRequest("POST", "/protected/filter-trainer", bytes.NewBuffer(jsonValue))
+	userReq.Header.Set("Authorization", "Bearer "+jwt)
+	w = httptest.NewRecorder()
+	r.ServeHTTP(w, userReq)
+	assert.Equal(t, http.StatusOK, w.Code)
+}
