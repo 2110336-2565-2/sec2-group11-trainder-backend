@@ -25,9 +25,21 @@ func ProtectedRoute(router *gin.Engine) {
 	// Get Others Trainer information
 	protected.POST("/trainer", controllers.GetTrainerProfile())
 	protected.POST("/filter-trainer", controllers.FilterTrainer())
+
 	// Get review
 	protected.POST("/reviews", controllers.GetReviews())
 
 	// Add review
 	protected.POST("/add-review", controllers.AddTrainerReview())
+
+	// Add booking
+	protected.POST("/create-booking", controllers.Book())
+
+	// Get bookings
+	protected.GET("/bookings", controllers.GetBookings())
+
+	// Booking
+	protected.POST("/update-booking", controllers.UpdateBooking())
+	protected.POST("/delete-booking", controllers.DeleteBooking())
+
 }

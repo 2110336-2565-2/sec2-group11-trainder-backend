@@ -1,5 +1,23 @@
 definitions:
-  controllers.FilterTrainerInput:
+  controllers.BookingForm:
+    properties:
+      date:
+        type: string
+      endTime:
+        type: string
+      startTime:
+        type: string
+      trainer:
+        type: string
+    type: object
+  controllers.DeleteBookingForm:
+    properties:
+      bookingId:
+        type: string
+    required:
+    - bookingId
+    type: object
+  controllers.FilterTrainerForm:
     properties:
       feeMax:
         type: number
@@ -14,7 +32,7 @@ definitions:
     required:
     - limit
     type: object
-  controllers.GetReviewsInput:
+  controllers.GetReviewsForm:
     properties:
       limit:
         type: integer
@@ -24,7 +42,7 @@ definitions:
     - limit
     - trainerUsername
     type: object
-  controllers.GetTrainerInput:
+  controllers.GetTrainerForm:
     properties:
       username:
         type: string
@@ -41,7 +59,7 @@ definitions:
     - password
     - username
     type: object
-  controllers.ProfileInput:
+  controllers.ProfileDetails:
     properties:
       address:
         type: string
@@ -110,7 +128,7 @@ definitions:
     - username
     - usertype
     type: object
-  controllers.ReviewRequest:
+  controllers.ReviewDetails:
     properties:
       comment:
         type: string
@@ -123,7 +141,18 @@ definitions:
     - rating
     - trainerUsername
     type: object
-  controllers.UpdateTrainerInput:
+  controllers.UpdateBookingForm:
+    properties:
+      bookingId:
+        type: string
+      paymentStatus:
+        type: string
+      status:
+        type: string
+    required:
+    - bookingId
+    type: object
+  controllers.UpdateTrainerDetails:
     properties:
       certificateUrl:
         type: string
@@ -137,6 +166,28 @@ definitions:
         type: array
       traineeCount:
         type: integer
+    type: object
+  models.Booking:
+    properties:
+      _id:
+        type: string
+      endDateTime:
+        type: string
+      payment:
+        properties:
+          status:
+            type: string
+          totalCost:
+            type: number
+        type: object
+      startDateTime:
+        type: string
+      status:
+        type: string
+      trainee:
+        type: string
+      trainer:
+        type: string
     type: object
   models.FilteredTrainerInfo:
     properties:
@@ -159,10 +210,10 @@ definitions:
     properties:
       comment:
         type: string
+      createdAt:
+        type: string
       rating:
         type: number
-      reviewCreatedAt:
-        type: string
       username:
         type: string
     type: object
@@ -224,6 +275,13 @@ definitions:
       username:
         type: string
     type: object
+  responses.DeleteBookingResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
   responses.FilterTrainerResponse:
     properties:
       message:
@@ -234,6 +292,17 @@ definitions:
         items:
           $ref: '#/definitions/models.FilteredTrainerInfo'
         type: array
+    type: object
+  responses.GetBookingsResponse:
+    properties:
+      bookings:
+        items:
+          $ref: '#/definitions/models.Booking'
+        type: array
+      message:
+        type: string
+      status:
+        type: integer
     type: object
   responses.LoginResponse:
     properties:
@@ -279,6 +348,13 @@ definitions:
         items:
           $ref: '#/definitions/models.Review'
         type: array
+      status:
+        type: integer
+    type: object
+  responses.UpdateBookingResponse:
+    properties:
+      message:
+        type: string
       status:
         type: integer
     type: object
@@ -330,7 +406,7 @@ paths:
         name: ReviewRequest
         required: true
         schema:
-          $ref: '#/definitions/controllers.ReviewRequest'
+          $ref: '#/definitions/controllers.ReviewDetails'
       produces:
       - application/json
       responses:
@@ -338,11 +414,98 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.AddReviewResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.AddReviewResponse'
       security:
       - BearerAuth: []
       summary: Add trainer review
       tags:
       - Trainer
+  /protected/bookings:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of upcoming bookings for the trainer who is currently
+        logged in
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.GetBookingsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.GetBookingsResponse'
+      security:
+      - BearerAuth: []
+      summary: Get bookings for the logged in trainer
+      tags:
+      - bookings
+  /protected/create-booking:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new booking with the specified trainer, trainee, date,
+        start time, and end time
+      parameters:
+      - description: put booking details and pass to gin.Context
+        in: body
+        name: json_in_ginContext
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.BookingForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: booking created successfully
+          schema:
+            type: string
+        "400":
+          description: bad request
+          schema:
+            type: string
+        "500":
+          description: internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create a new booking
+      tags:
+      - bookings
+  /protected/delete-booking:
+    post:
+      consumes:
+      - application/json
+      description: Delete a booking with the specified bookingId
+      parameters:
+      - description: put DeleteBookingForm details and pass to gin.Context
+        in: body
+        name: json_in_ginContext
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.DeleteBookingForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully delete booking
+          schema:
+            $ref: '#/definitions/responses.DeleteBookingResponse'
+        "400":
+          description: Bad Request, missing filed of objectId or cannot find bookingObjectId
+          schema:
+            $ref: '#/definitions/responses.DeleteBookingResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete a booking
+      tags:
+      - bookings
   /protected/filter-trainer:
     post:
       consumes:
@@ -354,12 +517,16 @@ paths:
         name: FilterTrainer
         required: true
         schema:
-          $ref: '#/definitions/controllers.FilterTrainerInput'
+          $ref: '#/definitions/controllers.FilterTrainerForm'
       produces:
       - application/json
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/responses.FilterTrainerResponse'
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/responses.FilterTrainerResponse'
       security:
@@ -400,12 +567,16 @@ paths:
         name: GetReviewsInput
         required: true
         schema:
-          $ref: '#/definitions/controllers.GetReviewsInput'
+          $ref: '#/definitions/controllers.GetReviewsForm'
       produces:
       - application/json
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/responses.TrainerReviewsResponse'
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/responses.TrainerReviewsResponse'
       security:
@@ -424,7 +595,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/controllers.GetTrainerInput'
+          $ref: '#/definitions/controllers.GetTrainerForm'
       produces:
       - application/json
       responses:
@@ -462,6 +633,35 @@ paths:
       summary: Retrieve trainer profile of current user
       tags:
       - Trainer
+  /protected/update-booking:
+    post:
+      consumes:
+      - application/json
+      description: Update a booking of sepecified bookingId with the specified update
+        input consist of status(pending/confirm/complete) and paymentStatus(pending/paid)
+      parameters:
+      - description: put updateBookingForm details and pass to gin.Context
+        in: body
+        name: json_in_ginContext
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.UpdateBookingForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully update booking
+          schema:
+            $ref: '#/definitions/responses.UpdateBookingResponse'
+        "400":
+          description: Bad Request, missing filed of objectId or cannot find bookingObjectId
+          schema:
+            $ref: '#/definitions/responses.UpdateBookingResponse'
+      security:
+      - BearerAuth: []
+      summary: Update a booking
+      tags:
+      - bookings
   /protected/update-profile:
     post:
       consumes:
@@ -473,12 +673,16 @@ paths:
         name: ProfileToUpdate
         required: true
         schema:
-          $ref: '#/definitions/controllers.ProfileInput'
+          $ref: '#/definitions/controllers.ProfileDetails'
       produces:
       - application/json
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/responses.ProfileResponse'
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/responses.ProfileResponse'
       security:
@@ -496,7 +700,7 @@ paths:
         name: profile
         required: true
         schema:
-          $ref: '#/definitions/controllers.UpdateTrainerInput'
+          $ref: '#/definitions/controllers.UpdateTrainerDetails'
       produces:
       - application/json
       responses:
@@ -528,6 +732,10 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/responses.CurrentUserResponse'
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/responses.CurrentUserResponse'
       security:

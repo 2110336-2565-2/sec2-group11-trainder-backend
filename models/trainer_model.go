@@ -2,7 +2,6 @@ package models
 
 import (
 	"context"
-	"fmt"
 	"math"
 	"time"
 
@@ -10,6 +9,27 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
+
+type FilteredTrainerInfo struct {
+	Username    string      `json:"username"`
+	FirstName   string      `json:"firstname"`
+	LastName    string      `json:"lastname"`
+	Gender      string      `json:"gender"`
+	Address     string      `json:"address"`
+	AvatarUrl   string      `json:"avatarUrl"`
+	TrainerInfo TrainerInfo `json:"trainerInfo"`
+}
+type Review struct {
+	Username  string    `bson:"username"`
+	Rating    float64   `bson:"rating"`
+	Comment   string    `bson:"comment"`
+	CreatedAt time.Time `bson:"createdAt"`
+}
+type UserNotExist struct{}
+
+func (e *UserNotExist) Error() string {
+	return "error: user not existed"
+}
 
 // Use for only finding the profile of a trainer, which will have normal user profile and trainer info
 func FindTrainerProfile(username string) (userProfile UserProfile, trainerInfo TrainerInfo, err error) {
@@ -42,27 +62,6 @@ func FindTrainerProfile(username string) (userProfile UserProfile, trainerInfo T
 	return userProfile, user.TrainerInfo, nil
 }
 
-type FilteredTrainerInfo struct {
-	Username    string      `json:"username"`
-	FirstName   string      `json:"firstname"`
-	LastName    string      `json:"lastname"`
-	Gender      string      `json:"gender"`
-	Address     string      `json:"address"`
-	AvatarUrl   string      `json:"avatarUrl"`
-	TrainerInfo TrainerInfo `json:"trainerInfo"`
-}
-type Review struct {
-	Username        string    `bson:"username"`
-	Rating          float64   `bson:"rating"`
-	Comment         string    `bson:"comment"`
-	ReviewCreatedAt time.Time `bson:"reviewCreatedAt"`
-}
-type UserNotExist struct{}
-
-func (e *UserNotExist) Error() string {
-	return "error: user not existed"
-}
-
 func userExists(username string) (bool, error) {
 	filter := bson.M{"username": username}
 	count, err := userCollection.CountDocuments(context.Background(), filter, nil)
@@ -73,10 +72,7 @@ func userExists(username string) (bool, error) {
 }
 
 func updateRatingByUsername(username string) error {
-	projection := bson.M{
-		"reviews": 1,
-		"_id":     0,
-	}
+	projection := bson.M{"reviews": 1, "_id": 0}
 	var user User
 	err := userCollection.FindOne(context.Background(), bson.M{"username": username}, options.FindOne().SetProjection(projection)).Decode(&user)
 	if err != nil {
@@ -104,10 +100,10 @@ func AddReview(trainerUsername string, username string, rating float64, comment 
 		return err
 	}
 	review := Review{
-		Username:        username,
-		Rating:          rating,
-		Comment:         comment,
-		ReviewCreatedAt: time.Now(),
+		Username:  username,
+		Rating:    rating,
+		Comment:   comment,
+		CreatedAt: time.Now(),
 	}
 	filter := bson.M{"username": trainerUsername}
 	update := bson.M{"$push": bson.M{"reviews": review}}
@@ -124,7 +120,7 @@ func AddReview(trainerUsername string, username string, rating float64, comment 
 
 }
 
-func FindFilteredTrainer(specialty []string, limit int, feeLowerBound float64, feeUpperBound float64) ([]FilteredTrainerInfo, error) {
+func FindFilteredTrainer(specialty []string, limit int, feeLowerBound int, feeUpperBound int) ([]FilteredTrainerInfo, error) {
 	// ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	ctx := context.TODO()
 
@@ -206,9 +202,8 @@ func FindFilteredTrainer(specialty []string, limit int, feeLowerBound float64, f
 	return results, nil
 }
 
-func UpdateTrainerProfile(username string, specialty []string, rating float64, fee float64, traineeCount int32, certificateUrl string) (result *mongo.UpdateResult, err error) {
+func UpdateTrainerProfile(username string, specialty []string, rating float64, fee int, traineeCount int, certificateUrl string) (result *mongo.UpdateResult, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-
 	defer cancel()
 	update := bson.M{
 		"$set": bson.M{
@@ -225,7 +220,6 @@ func UpdateTrainerProfile(username string, specialty []string, rating float64, f
 		bson.M{"username": username},
 		update,
 	)
-
 	return
 }
 
@@ -270,7 +264,7 @@ func GetReviews(username string, limit int) ([]Review, error) {
 	pipeline := bson.A{
 		bson.M{"$match": bson.M{"username": username}},
 		bson.M{"$unwind": "$reviews"},
-		bson.M{"$sort": bson.M{"reviews.reviewCreatedAt": -1, "reviews.rating": -1}},
+		bson.M{"$sort": bson.M{"reviews.createdAt": -1, "reviews.rating": -1}},
 		bson.M{"$limit": limit},
 		bson.M{"$group": bson.M{
 			"_id":      "$_id",
@@ -291,7 +285,7 @@ func GetReviews(username string, limit int) ([]Review, error) {
 	// var reviews []Review
 	cursor, err := userCollection.Aggregate(context.Background(), pipeline, limitOptions)
 	if err != nil {
-		fmt.Println(err)
+		return nil, err
 	}
 	defer cursor.Close(context.Background())
 	// var reviews []Review
@@ -308,10 +302,10 @@ func GetReviews(username string, limit int) ([]Review, error) {
 		for _, r := range result.ReviewSlice {
 			// fmt.Println(r.Username)
 			review := Review{
-				Username:        r.Username,
-				Rating:          r.Rating,
-				Comment:         r.Comment,
-				ReviewCreatedAt: r.ReviewCreatedAt,
+				Username:  r.Username,
+				Rating:    r.Rating,
+				Comment:   r.Comment,
+				CreatedAt: r.CreatedAt,
 			}
 			reviews = append(reviews, review)
 		}

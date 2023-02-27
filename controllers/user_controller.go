@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ProfileInput struct {
+type ProfileDetails struct {
 	FirstName   string `json:"firstname" binding:"required"`
 	LastName    string `json:"lastname" binding:"required"`
 	BirthDate   string `json:"birthdate" binding:"required"`
@@ -30,6 +30,7 @@ type ProfileInput struct {
 //	@Produce		json
 //	@Security		BearerAuth
 //	@Success		200	{object}	responses.CurrentUserResponse
+//  @Failure		400	{object}	responses.CurrentUserResponse
 //	@Security		BearerAuth
 //	@Router			/protected/user [get]
 func CurrentUser() gin.HandlerFunc {
@@ -56,13 +57,14 @@ func CurrentUser() gin.HandlerFunc {
 //	@Tags			user
 //	@Accept			json
 //	@Produce		json
-//	@Param			ProfileToUpdate	body		ProfileInput	true	"put profile input json and pass to  gin.Context"
+//	@Param			ProfileToUpdate	body		ProfileDetails	true	"put profile input json and pass to  gin.Context"
 //	@Success		200				{object}	responses.ProfileResponse
+//  @Failure		400				{object}	responses.ProfileResponse
 //	@Security		BearerAuth
 //	@Router			/protected/update-profile [post]
 func UpdateProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var input ProfileInput
+		var input ProfileDetails
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, responses.ProfileResponse{
 				Status:  http.StatusBadRequest,

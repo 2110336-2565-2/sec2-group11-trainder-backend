@@ -10,31 +10,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type FilterTrainerInput struct {
+type FilterTrainerForm struct {
 	Specialty []string `json:"specialty"`
-	Limit     int      `json:"limit" binding:"required"`
-	FeeMin    float64  `json:"feeMin"`
-	FeeMax    float64  `json:"feeMax"`
-	// Rating     float64 `json:"Rating" binding:"required"`
+	Limit     int    `json:"limit" binding:"required"`
+	FeeMin    int    `json:"feeMin"`
+	FeeMax    int    `json:"feeMax"`
 }
-type UpdateTrainerInput struct {
+type UpdateTrainerDetails struct {
 	Specialty      []string `json:"specialty"`
 	Rating         float64  `json:"rating"`
-	Fee            float64  `json:"fee"`
-	TraineeCount   int32    `json:"traineeCount"`
+	Fee            int    `json:"fee"`
+	TraineeCount   int    `json:"traineeCount"`
 	CertificateUrl string   `json:"certificateUrl"`
 }
-type GetTrainerInput struct {
+type GetTrainerForm struct {
 	Username string `json:"username" binding:"required"`
 }
 
-type ReviewRequest struct {
+type ReviewDetails struct {
 	TrainerUsername string  `json:"trainerUsername" binding:"required"`
-	Rating          float64 `json:"rating" binding:"required"`
 	Comment         string  `json:"comment" binding:"required"`
+	Rating          float64 `json:"rating" binding:"required"`
 }
 
-type GetReviewsInput struct {
+type GetReviewsForm struct {
 	TrainerUsername string `json:"trainerUsername" binding:"required"`
 	Limit           int    `json:"limit" binding:"required"`
 }
@@ -84,14 +83,14 @@ func CurrentTrainerUserProfile() gin.HandlerFunc {
 //	@Tags			Trainer
 //	@Accept			json
 //	@Produce		json
-//	@Param			input	body		GetTrainerInput						true	"Put username input for retrieving the trainer profile"
+//	@Param			input	body		GetTrainerForm true					"Put username input for retrieving the trainer profile"
 //	@Success		200		{object}	responses.TrainerProfileResponse	"Successfully retrieved the trainer profile"
 //	@Failure		400		{object}	responses.TrainerProfileResponse	"Failed to retrieve the trainer profile"
 //	@Security		BearerAuth
 //	@Router			/protected/trainer [post]
 func GetTrainerProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var input GetTrainerInput
+		var input GetTrainerForm
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, responses.TrainerProfileResponse{
 				Status:  http.StatusBadRequest,
@@ -121,7 +120,7 @@ func GetTrainerProfile() gin.HandlerFunc {
 //	@Tags		Trainer
 //	@Accept		json
 //	@Produce	json
-//	@Param		profile	body		UpdateTrainerInput			true	"Trainer's information to update"
+//	@Param		profile	body		UpdateTrainerDetails true	"Trainer's information to update"
 //	@Success	200		{object}	responses.ProfileResponse	"Successfully update the trainer's profile"
 //	@Failure	400		{object}	responses.ProfileResponse	"Bad Request, either invalid input or user is not a trainer"
 //	@Failure	401		{object}	responses.ProfileResponse	"Unauthorized, the user is not logged in"
@@ -129,7 +128,7 @@ func GetTrainerProfile() gin.HandlerFunc {
 //	@Router		/protected/update-trainer [post]
 func UpdateTrainerProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var input UpdateTrainerInput
+		var input UpdateTrainerDetails
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, responses.ProfileResponse{
 				Status:  http.StatusBadRequest,
@@ -138,7 +137,7 @@ func UpdateTrainerProfile() gin.HandlerFunc {
 			return
 		}
 		username, err := tokens.ExtractTokenUsername(c)
-		if err != nil || !models.IsTrainer(username) {
+		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.ProfileResponse{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
@@ -155,7 +154,6 @@ func UpdateTrainerProfile() gin.HandlerFunc {
 			})
 			return
 		}
-
 		c.JSON(http.StatusOK,
 			responses.ProfileResponse{
 				Status:  http.StatusOK,
@@ -171,13 +169,14 @@ func UpdateTrainerProfile() gin.HandlerFunc {
 //	@Tags			Trainer
 //	@Accept			json
 //	@Produce		json
-//	@Param			FilterTrainer	body		FilterTrainerInput	true	"Parameters for filtering trainers"
+//	@Param			FilterTrainer	body		FilterTrainerForm true	"Parameters for filtering trainers"
 //	@Success		200				{object}	responses.FilterTrainerResponse
+//	@Failure		400				{object}	responses.FilterTrainerResponse
 //	@Security		BearerAuth
 //	@Router			/protected/filter-trainer [post]
 func FilterTrainer() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var input FilterTrainerInput
+		var input FilterTrainerForm
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, responses.FilterTrainerResponse{
 				Status:  http.StatusBadRequest,
@@ -189,7 +188,7 @@ func FilterTrainer() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.FilterTrainerResponse{
 				Status:  http.StatusBadRequest,
-				Message: `filter trainer profile unsuccessful`,
+				Message: err.Error(),
 			})
 			return
 		}
@@ -198,28 +197,6 @@ func FilterTrainer() gin.HandlerFunc {
 			Message:  `Successfully retrieve filtered trainer`,
 			Trainers: result,
 		})
-
-		// if len(input.Specialty) == 0 {
-
-		// } else {
-		// 	result, err := models.FindFilteredTrainer(input.Specialty, input.Limit)
-		// 	fmt.Println(result)
-		// 	// result, err := models.FindProfile(input.Username, "trainer")
-		// 	if err != nil {
-		// 		fmt.Println(err)
-		// 		c.JSON(http.StatusBadRequest, responses.FilterTrainerResponse{
-		// 			Status:  http.StatusBadRequest,
-		// 			Message: `filter trainer profile  unsuccessful`,
-		// 		})
-		// 		return
-		// 	}
-		// 	c.JSON(http.StatusOK, responses.FilterTrainerResponses{
-		// 		Status:   http.StatusOK,
-		// 		Message:  `Successfully retrieve filtered trainer`,
-		// 		Trainers: result,
-		// 	})
-		// }
-
 	}
 }
 
@@ -228,13 +205,14 @@ func FilterTrainer() gin.HandlerFunc {
 // @Tags		Trainer
 // @Accept		json
 // @Produce		json
-// @Param		GetReviewsInput	body		GetReviewsInput 	true	"Parameters for querying trainer reviews"
+// @Param		GetReviewsInput	body		GetReviewsForm true	"Parameters for querying trainer reviews"
 // @Success		200				{object}	responses.TrainerReviewsResponse
+// @Failure		400				{object}	responses.TrainerReviewsResponse
 // @Security	BearerAuth
 // @Router		/protected/reviews [post]
 func GetReviews() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var input GetReviewsInput
+		var input GetReviewsForm
 
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, responses.TrainerReviewsResponse{
@@ -254,7 +232,7 @@ func GetReviews() gin.HandlerFunc {
 		}
 		c.JSON(http.StatusOK, responses.TrainerReviewsResponse{
 			Status:  http.StatusOK,
-			Message: `Successfully retrieve reviews of trainer` + input.TrainerUsername,
+			Message: `Successfully retrieve reviews of trainer ` + input.TrainerUsername,
 			Reviews: result,
 		})
 	}
@@ -265,13 +243,14 @@ func GetReviews() gin.HandlerFunc {
 // @Tags		Trainer
 // @Accept		json
 // @Produce		json
-// @Param		ReviewRequest	body		ReviewRequest	true	"Parameters for trainer review"
+// @Param		ReviewRequest	body		ReviewDetails	true	"Parameters for trainer review"
 // @Success		200				{object}	responses.AddReviewResponse
+// @Failure		400				{object}	responses.AddReviewResponse
 // @Security	BearerAuth
 // @Router		/protected/add-review [post]
 func AddTrainerReview() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var input ReviewRequest
+		var input ReviewDetails
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, responses.AddReviewResponse{
 				Status:  http.StatusBadRequest,
