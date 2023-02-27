@@ -180,7 +180,7 @@ const docTemplate = `{
             }
         },
         "/protected/delete-booking": {
-            "post": {
+            "delete": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -298,6 +298,51 @@ const docTemplate = `{
                         "description": "Unauthorized, the user is not logged in",
                         "schema": {
                             "$ref": "#/definitions/responses.UserProfileResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/reviewable": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "find if this trainee can still review a specific trainer by (find number of times trainee paid that trainer) minus (number of time trainee comment on that trainer)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Trainer"
+                ],
+                "summary": "find if this trainee can still review a specific trainer",
+                "parameters": [
+                    {
+                        "description": "Parameters for trainee reviewable (trainer username)",
+                        "name": "Reviewable",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.TraineeReviewableForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ReviewableResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ReviewableResponse"
                         }
                     }
                 }
@@ -676,10 +721,10 @@ const docTemplate = `{
             ],
             "properties": {
                 "feeMax": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "feeMin": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "limit": {
                     "type": "integer"
@@ -848,6 +893,17 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.TraineeReviewableForm": {
+            "type": "object",
+            "required": [
+                "trainerUsername"
+            ],
+            "properties": {
+                "trainerUsername": {
+                    "type": "string"
+                }
+            }
+        },
         "controllers.UpdateBookingForm": {
             "type": "object",
             "required": [
@@ -872,7 +928,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "fee": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "rating": {
                     "type": "number"
@@ -968,11 +1024,11 @@ const docTemplate = `{
         "models.TrainerInfo": {
             "type": "object",
             "properties": {
-                "certificateURL": {
+                "certificateUrl": {
                     "type": "string"
                 },
                 "fee": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "rating": {
                     "type": "number"
@@ -1130,6 +1186,20 @@ const docTemplate = `{
         "responses.RegisterResponse": {
             "type": "object",
             "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.ReviewableResponse": {
+            "type": "object",
+            "properties": {
+                "canReview": {
+                    "type": "boolean"
+                },
                 "message": {
                     "type": "string"
                 },

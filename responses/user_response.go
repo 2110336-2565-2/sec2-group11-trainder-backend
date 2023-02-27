@@ -43,3 +43,9 @@ type AddReviewResponse struct {
 	Status  int    `json:"status"`
 	Message string `json:"message,omitempty"`
 }
+
+type ReviewableResponse struct {
+	Status    int    `json:"status"`
+	Message   string `json:"message,omitempty"`
+	CanReview bool   `json:"canReview"`
+}

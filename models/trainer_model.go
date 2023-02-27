@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"fmt"
 	"math"
 	"time"
 
@@ -313,5 +314,87 @@ func GetReviews(username string, limit int) ([]Review, error) {
 	}
 
 	return reviews, nil
+
+}
+
+func Reviewable(traineeUsername string, trainerUsername string) (bool, int, error) {
+	trainingCount, err := getPaidTrainingCount(traineeUsername, trainerUsername)
+	if err != nil {
+		return false, 0, fmt.Errorf("Error from Reviewable: failed to getPaidTrainingCount: %v", err)
+	}
+	// fmt.Println("trainingCount", trainingCount)
+	commentCount, err := getCommentCountFromTrainee(traineeUsername, trainerUsername)
+	if err != nil {
+		return false, 0, fmt.Errorf("Error from Reviewable: failed to getCommentCountFromTrainee: %v", err)
+	}
+	// fmt.Println("commentCount", commentCount)
+	commentLeft := trainingCount - commentCount
+	if commentLeft > 0 {
+		return true, commentLeft, nil
+	} else {
+		return false, commentLeft, nil
+	}
+
+}
+func getPaidTrainingCount(traineeUsername string, trainerUsername string) (int, error) {
+	_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	filter := bson.M{
+		"trainer":        trainerUsername,
+		"trainee":        traineeUsername,
+		"payment.status": "paid",
+	}
+	count, err := bookingsCollection.CountDocuments(context.Background(), filter)
+	if err != nil {
+		return 0, err
+	}
+	return int(count), nil
+
+}
+
+func getCommentCountFromTrainee(traineeUsername string, trainerUsername string) (int, error) {
+
+	isExist, err := userExists(trainerUsername)
+	if err != nil {
+		return 0, err
+	}
+	if !isExist {
+		err = &UserNotExist{}
+		return 0, err
+	}
+	_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	pipeline := bson.A{
+		bson.M{"$match": bson.M{"username": trainerUsername}},
+		bson.M{"$unwind": "$reviews"},
+		bson.M{"$match": bson.M{"reviews.username": traineeUsername}},
+		bson.M{"$group": bson.M{
+			"_id":   "$_id",
+			"count": bson.M{"$sum": 1},
+		}},
+		bson.M{"$project": bson.M{
+			"_id":   0,
+			"count": 1,
+		}},
+	}
+	limitOptions := options.Aggregate().SetMaxTime(2 * time.Second)
+
+	// var reviews []Review
+	cursor, err := userCollection.Aggregate(context.Background(), pipeline, limitOptions)
+	if err != nil {
+		return 0, fmt.Errorf("Error from getCommentCountFromTrainee: %v", err)
+	}
+	defer cursor.Close(context.Background())
+	if cursor.Next(context.Background()) {
+		var result struct {
+			Count int `bson:"count"`
+		}
+		err = cursor.Decode(&result)
+		if err != nil {
+			return 0, err
+		}
+		return result.Count, nil
+	}
+	return 0, fmt.Errorf("Error from getCommentCountFromTrainee: %v", err)
 
 }

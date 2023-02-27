@@ -20,9 +20,9 @@ definitions:
   controllers.FilterTrainerForm:
     properties:
       feeMax:
-        type: number
+        type: integer
       feeMin:
-        type: number
+        type: integer
       limit:
         type: integer
       specialty:
@@ -141,6 +141,13 @@ definitions:
     - rating
     - trainerUsername
     type: object
+  controllers.TraineeReviewableForm:
+    properties:
+      trainerUsername:
+        type: string
+    required:
+    - trainerUsername
+    type: object
   controllers.UpdateBookingForm:
     properties:
       bookingId:
@@ -157,7 +164,7 @@ definitions:
       certificateUrl:
         type: string
       fee:
-        type: number
+        type: integer
       rating:
         type: number
       specialty:
@@ -219,10 +226,10 @@ definitions:
     type: object
   models.TrainerInfo:
     properties:
-      certificateURL:
+      certificateUrl:
         type: string
       fee:
-        type: number
+        type: integer
       rating:
         type: number
       specialty:
@@ -324,6 +331,15 @@ definitions:
     type: object
   responses.RegisterResponse:
     properties:
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  responses.ReviewableResponse:
+    properties:
+      canReview:
+        type: boolean
       message:
         type: string
       status:
@@ -479,7 +495,7 @@ paths:
       tags:
       - bookings
   /protected/delete-booking:
-    post:
+    delete:
       consumes:
       - application/json
       description: Delete a booking with the specified bookingId
@@ -555,6 +571,36 @@ paths:
       summary: getProfile of the current user
       tags:
       - user
+  /protected/reviewable:
+    post:
+      consumes:
+      - application/json
+      description: find if this trainee can still review a specific trainer by (find
+        number of times trainee paid that trainer) minus (number of time trainee comment
+        on that trainer)
+      parameters:
+      - description: Parameters for trainee reviewable (trainer username)
+        in: body
+        name: Reviewable
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.TraineeReviewableForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ReviewableResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.ReviewableResponse'
+      security:
+      - BearerAuth: []
+      summary: find if this trainee can still review a specific trainer
+      tags:
+      - Trainer
   /protected/reviews:
     post:
       consumes:

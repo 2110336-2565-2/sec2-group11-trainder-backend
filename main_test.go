@@ -48,7 +48,7 @@ type UpdateUser struct {
 type UpdateTrainer struct {
 	Specialty      []string `json:"specialty"`
 	Rating         float64  `json:"rating"`
-	Fee            float64  `json:"fee"`
+	Fee            int      `json:"fee"`
 	TraineeCount   int32    `json:"traineeCount"`
 	CertificateUrl string   `json:"certificateUrl"`
 }
