@@ -12,15 +12,15 @@ import (
 
 type FilterTrainerForm struct {
 	Specialty []string `json:"specialty"`
-	Limit     int32    `json:"limit" binding:"required"`
-	FeeMin    int32    `json:"feeMin"`
-	FeeMax    int32    `json:"feeMax"`
+	Limit     int    `json:"limit" binding:"required"`
+	FeeMin    int    `json:"feeMin"`
+	FeeMax    int    `json:"feeMax"`
 }
 type UpdateTrainerDetails struct {
 	Specialty      []string `json:"specialty"`
 	Rating         float64  `json:"rating"`
-	Fee            int32    `json:"fee"`
-	TraineeCount   int32    `json:"traineeCount"`
+	Fee            int    `json:"fee"`
+	TraineeCount   int    `json:"traineeCount"`
 	CertificateUrl string   `json:"certificateUrl"`
 }
 type GetTrainerForm struct {
@@ -35,7 +35,7 @@ type ReviewDetails struct {
 
 type GetReviewsForm struct {
 	TrainerUsername string `json:"trainerUsername" binding:"required"`
-	Limit           int32    `json:"limit" binding:"required"`
+	Limit           int    `json:"limit" binding:"required"`
 }
 
 // CurrentTrainerUserProfile retrieves the trainer profile of the current user for the user that is a trainer

@@ -120,7 +120,7 @@ func AddReview(trainerUsername string, username string, rating float64, comment 
 
 }
 
-func FindFilteredTrainer(specialty []string, limit int32, feeLowerBound int32, feeUpperBound int32) ([]FilteredTrainerInfo, error) {
+func FindFilteredTrainer(specialty []string, limit int, feeLowerBound int, feeUpperBound int) ([]FilteredTrainerInfo, error) {
 	// ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	ctx := context.TODO()
 
@@ -202,7 +202,7 @@ func FindFilteredTrainer(specialty []string, limit int32, feeLowerBound int32, f
 	return results, nil
 }
 
-func UpdateTrainerProfile(username string, specialty []string, rating float64, fee int32, traineeCount int32, certificateUrl string) (result *mongo.UpdateResult, err error) {
+func UpdateTrainerProfile(username string, specialty []string, rating float64, fee int, traineeCount int, certificateUrl string) (result *mongo.UpdateResult, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	update := bson.M{
@@ -250,7 +250,7 @@ func GetDistance(lat1 float64, lng1 float64, lat2 float64, lng2 float64) float64
 	return dist * 180 / PI * 1.609344 * 60 * 1.1515
 }
 
-func GetReviews(username string, limit int32) ([]Review, error) {
+func GetReviews(username string, limit int) ([]Review, error) {
 	isExist, err := userExists(username)
 	if err != nil {
 		return nil, err
