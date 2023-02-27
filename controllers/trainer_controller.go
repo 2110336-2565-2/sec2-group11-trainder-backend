@@ -12,15 +12,15 @@ import (
 
 type FilterTrainerForm struct {
 	Specialty []string `json:"specialty"`
-	Limit     int      `json:"limit" binding:"required"`
-	FeeMin    float64  `json:"feeMin"`
-	FeeMax    float64  `json:"feeMax"`
+	Limit     int    `json:"limit" binding:"required"`
+	FeeMin    int    `json:"feeMin"`
+	FeeMax    int    `json:"feeMax"`
 }
 type UpdateTrainerDetails struct {
 	Specialty      []string `json:"specialty"`
 	Rating         float64  `json:"rating"`
-	Fee            float64  `json:"fee"`
-	TraineeCount   int32    `json:"traineeCount"`
+	Fee            int    `json:"fee"`
+	TraineeCount   int    `json:"traineeCount"`
 	CertificateUrl string   `json:"certificateUrl"`
 }
 type GetTrainerForm struct {
@@ -29,8 +29,8 @@ type GetTrainerForm struct {
 
 type ReviewDetails struct {
 	TrainerUsername string  `json:"trainerUsername" binding:"required"`
-	Rating          float64 `json:"rating" binding:"required"`
 	Comment         string  `json:"comment" binding:"required"`
+	Rating          float64 `json:"rating" binding:"required"`
 }
 
 type GetReviewsForm struct {
@@ -137,7 +137,7 @@ func UpdateTrainerProfile() gin.HandlerFunc {
 			return
 		}
 		username, err := tokens.ExtractTokenUsername(c)
-		if err != nil || !models.IsTrainer(username) {
+		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.ProfileResponse{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
@@ -154,7 +154,6 @@ func UpdateTrainerProfile() gin.HandlerFunc {
 			})
 			return
 		}
-
 		c.JSON(http.StatusOK,
 			responses.ProfileResponse{
 				Status:  http.StatusOK,
@@ -189,7 +188,7 @@ func FilterTrainer() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.FilterTrainerResponse{
 				Status:  http.StatusBadRequest,
-				Message: `filter trainer profile unsuccessful`,
+				Message: err.Error(),
 			})
 			return
 		}
@@ -198,28 +197,6 @@ func FilterTrainer() gin.HandlerFunc {
 			Message:  `Successfully retrieve filtered trainer`,
 			Trainers: result,
 		})
-
-		// if len(input.Specialty) == 0 {
-
-		// } else {
-		// 	result, err := models.FindFilteredTrainer(input.Specialty, input.Limit)
-		// 	fmt.Println(result)
-		// 	// result, err := models.FindProfile(input.Username, "trainer")
-		// 	if err != nil {
-		// 		fmt.Println(err)
-		// 		c.JSON(http.StatusBadRequest, responses.FilterTrainerResponse{
-		// 			Status:  http.StatusBadRequest,
-		// 			Message: `filter trainer profile  unsuccessful`,
-		// 		})
-		// 		return
-		// 	}
-		// 	c.JSON(http.StatusOK, responses.FilterTrainerResponses{
-		// 		Status:   http.StatusOK,
-		// 		Message:  `Successfully retrieve filtered trainer`,
-		// 		Trainers: result,
-		// 	})
-		// }
-
 	}
 }
 

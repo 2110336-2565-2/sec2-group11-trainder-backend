@@ -120,7 +120,7 @@ func AddReview(trainerUsername string, username string, rating float64, comment 
 
 }
 
-func FindFilteredTrainer(specialty []string, limit int, feeLowerBound float64, feeUpperBound float64) ([]FilteredTrainerInfo, error) {
+func FindFilteredTrainer(specialty []string, limit int, feeLowerBound int, feeUpperBound int) ([]FilteredTrainerInfo, error) {
 	// ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	ctx := context.TODO()
 
@@ -202,9 +202,8 @@ func FindFilteredTrainer(specialty []string, limit int, feeLowerBound float64, f
 	return results, nil
 }
 
-func UpdateTrainerProfile(username string, specialty []string, rating float64, fee float64, traineeCount int32, certificateUrl string) (result *mongo.UpdateResult, err error) {
+func UpdateTrainerProfile(username string, specialty []string, rating float64, fee int, traineeCount int, certificateUrl string) (result *mongo.UpdateResult, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-
 	defer cancel()
 	update := bson.M{
 		"$set": bson.M{
@@ -221,7 +220,6 @@ func UpdateTrainerProfile(username string, specialty []string, rating float64, f
 		bson.M{"username": username},
 		update,
 	)
-
 	return
 }
 
@@ -287,7 +285,6 @@ func GetReviews(username string, limit int) ([]Review, error) {
 	// var reviews []Review
 	cursor, err := userCollection.Aggregate(context.Background(), pipeline, limitOptions)
 	if err != nil {
-		// fmt.Println(err)
 		return nil, err
 	}
 	defer cursor.Close(context.Background())

@@ -6,7 +6,6 @@ import (
 	"trainder-api/configs"
 	"trainder-api/utils/tokens"
 
-	"github.com/shopspring/decimal"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 
@@ -16,11 +15,11 @@ import (
 var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
 
 type TrainerInfo struct {
-	Specialty      []string        `bson:"specialty"`
-	Fee            decimal.Decimal `bson:"fee"`
-	CertificateURL string          `bson:"certificateUrl"`
-	Rating         float64         `bson:"rating"`
-	TraineeCount   int64           `bson:"traineeCount"`
+	Specialty      []string `bson:"specialty"`
+	CertificateURL string   `bson:"certificateUrl"`
+	TraineeCount   int32    `bson:"traineeCount"`
+	Fee            int32    `bson:"fee"`
+	Rating         float64  `bson:"rating"`
 }
 type User struct {
 	Username       string      `bson:"username"`
@@ -43,10 +42,10 @@ type User struct {
 }
 
 func (tr TrainerInfo) Init() TrainerInfo {
-	tr.Fee = decimal.NewFromFloat(0)
-	tr.CertificateURL = "certificateURLString"
+	tr.Fee = 0
 	tr.Rating = 0
 	tr.TraineeCount = 0
+	tr.CertificateURL = "certificateURLString"
 	tr.Specialty = []string{}
 	return tr
 }
