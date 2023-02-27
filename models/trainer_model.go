@@ -2,7 +2,6 @@ package models
 
 import (
 	"context"
-	"fmt"
 	"math"
 	"time"
 
@@ -121,7 +120,7 @@ func AddReview(trainerUsername string, username string, rating float64, comment 
 
 }
 
-func FindFilteredTrainer(specialty []string, limit int, feeLowerBound float64, feeUpperBound float64) ([]FilteredTrainerInfo, error) {
+func FindFilteredTrainer(specialty []string, limit int32, feeLowerBound int32, feeUpperBound int32) ([]FilteredTrainerInfo, error) {
 	// ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	ctx := context.TODO()
 
@@ -203,9 +202,8 @@ func FindFilteredTrainer(specialty []string, limit int, feeLowerBound float64, f
 	return results, nil
 }
 
-func UpdateTrainerProfile(username string, specialty []string, rating float64, fee float64, traineeCount int32, certificateUrl string) (result *mongo.UpdateResult, err error) {
+func UpdateTrainerProfile(username string, specialty []string, rating float64, fee int32, traineeCount int32, certificateUrl string) (result *mongo.UpdateResult, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-
 	defer cancel()
 	update := bson.M{
 		"$set": bson.M{
@@ -222,7 +220,6 @@ func UpdateTrainerProfile(username string, specialty []string, rating float64, f
 		bson.M{"username": username},
 		update,
 	)
-
 	return
 }
 
@@ -253,7 +250,7 @@ func GetDistance(lat1 float64, lng1 float64, lat2 float64, lng2 float64) float64
 	return dist * 180 / PI * 1.609344 * 60 * 1.1515
 }
 
-func GetReviews(username string, limit int) ([]Review, error) {
+func GetReviews(username string, limit int32) ([]Review, error) {
 	isExist, err := userExists(username)
 	if err != nil {
 		return nil, err
@@ -288,7 +285,7 @@ func GetReviews(username string, limit int) ([]Review, error) {
 	// var reviews []Review
 	cursor, err := userCollection.Aggregate(context.Background(), pipeline, limitOptions)
 	if err != nil {
-		fmt.Println(err)
+		return nil, err
 	}
 	defer cursor.Close(context.Background())
 	// var reviews []Review
