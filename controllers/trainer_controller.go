@@ -12,15 +12,15 @@ import (
 
 type FilterTrainerForm struct {
 	Specialty []string `json:"specialty"`
-	Limit     int    `json:"limit" binding:"required"`
-	FeeMin    int    `json:"feeMin"`
-	FeeMax    int    `json:"feeMax"`
+	Limit     int      `json:"limit" binding:"required"`
+	FeeMin    int      `json:"feeMin"`
+	FeeMax    int      `json:"feeMax"`
 }
 type UpdateTrainerDetails struct {
 	Specialty      []string `json:"specialty"`
 	Rating         float64  `json:"rating"`
-	Fee            int    `json:"fee"`
-	TraineeCount   int    `json:"traineeCount"`
+	Fee            int      `json:"fee"`
+	TraineeCount   int      `json:"traineeCount"`
 	CertificateUrl string   `json:"certificateUrl"`
 }
 type GetTrainerForm struct {
@@ -280,5 +280,10 @@ func AddTrainerReview() gin.HandlerFunc {
 				Status:  http.StatusOK,
 				Message: input.TrainerUsername + ` update success!`,
 			})
+	}
+}
+
+func Reviewable() gin.HandlerFunc {
+	return func(c *gin.Context) {
 	}
 }
