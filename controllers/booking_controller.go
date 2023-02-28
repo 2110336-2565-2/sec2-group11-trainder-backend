@@ -72,8 +72,8 @@ func Book() gin.HandlerFunc {
 	}
 }
 
-// @Summary Get bookings for the logged in trainer
-// @Description Retrieve a list of upcoming bookings for the trainer who is currently logged in
+// @Summary Get bookings for the logged in user
+// @Description Retrieve a list of upcoming bookings for the user who is currently logged in
 // @Tags bookings
 // @Accept json
 // @Produce json
@@ -90,7 +90,7 @@ func GetBookings() gin.HandlerFunc {
 				Message: err.Error(),
 			})
 		}
-		result, err := models.GetUpcomingBookingsForTrainer(username)
+		result, err := models.GetUpcomingBookings(username)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.GetBookingsResponse{
 				Status:  http.StatusBadRequest,

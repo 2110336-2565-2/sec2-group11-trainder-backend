@@ -78,6 +78,77 @@ func CreateBooking(trainee string, trainer string, date string, startTime string
 	return nil
 }
 
+// merge into one function ()
+func GetUpcomingBookings(Username string) ([]Booking, error) {
+	now := time.Now()
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	var filter bson.M
+	if IsTrainer(Username) {
+		filter = bson.M{
+			"trainer": Username,
+			"startDateTime": bson.M{
+				"$gt": now,
+			},
+		}
+	} else {
+		filter = bson.M{
+			"trainee": Username,
+			"startDateTime": bson.M{
+				"$gt": now,
+			},
+		}
+	}
+
+	cursor, err := bookingsCollection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	// fmt.Println(cursor)
+	var bookings []Booking
+	for cursor.Next(ctx) {
+		var booking Booking
+		err := cursor.Decode(&booking)
+		if err != nil {
+			return nil, err
+		}
+		// fmt.Println(booking)
+		bookings = append(bookings, booking)
+	}
+
+	return bookings, nil
+
+}
+
+func GetUpcomingBookingsForTrainee(trainerUsername string) ([]Booking, error) {
+	now := time.Now()
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	filter := bson.M{
+		"trainee": trainerUsername,
+		"startDateTime": bson.M{
+			"$gt": now,
+		},
+	}
+	cursor, err := bookingsCollection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	// fmt.Println(cursor)
+	var bookings []Booking
+	for cursor.Next(ctx) {
+		var booking Booking
+		err := cursor.Decode(&booking)
+		if err != nil {
+			return nil, err
+		}
+		// fmt.Println(booking)
+		bookings = append(bookings, booking)
+	}
+
+	return bookings, nil
+
+}
 func GetUpcomingBookingsForTrainer(trainerUsername string) ([]Booking, error) {
 	now := time.Now()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)

@@ -443,7 +443,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Retrieve a list of upcoming bookings for the trainer who is currently
+      description: Retrieve a list of upcoming bookings for the user who is currently
         logged in
       produces:
       - application/json
@@ -458,7 +458,7 @@ paths:
             $ref: '#/definitions/responses.GetBookingsResponse'
       security:
       - BearerAuth: []
-      summary: Get bookings for the logged in trainer
+      summary: Get bookings for the logged in user
       tags:
       - bookings
   /protected/create-booking:

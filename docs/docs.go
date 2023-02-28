@@ -101,7 +101,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Retrieve a list of upcoming bookings for the trainer who is currently logged in",
+                "description": "Retrieve a list of upcoming bookings for the user who is currently logged in",
                 "consumes": [
                     "application/json"
                 ],
@@ -111,7 +111,7 @@ const docTemplate = `{
                 "tags": [
                     "bookings"
                 ],
-                "summary": "Get bookings for the logged in trainer",
+                "summary": "Get bookings for the logged in user",
                 "responses": {
                     "200": {
                         "description": "OK",
