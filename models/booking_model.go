@@ -78,16 +78,28 @@ func CreateBooking(trainee string, trainer string, date string, startTime string
 	return nil
 }
 
-func GetUpcomingBookingsForTrainer(trainerUsername string) ([]Booking, error) {
+// merge into one function ()
+func GetUpcomingBookings(Username string) ([]Booking, error) {
 	now := time.Now()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	filter := bson.M{
-		"trainer": trainerUsername,
-		"startDateTime": bson.M{
-			"$gt": now,
-		},
+	var filter bson.M
+	if IsTrainer(Username) {
+		filter = bson.M{
+			"trainer": Username,
+			"startDateTime": bson.M{
+				"$gt": now,
+			},
+		}
+	} else {
+		filter = bson.M{
+			"trainee": Username,
+			"startDateTime": bson.M{
+				"$gt": now,
+			},
+		}
 	}
+
 	cursor, err := bookingsCollection.Find(ctx, filter)
 	if err != nil {
 		return nil, err
