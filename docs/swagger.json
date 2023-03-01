@@ -869,7 +869,6 @@
         "controllers.ReviewDetails": {
             "type": "object",
             "required": [
-                "comment",
                 "rating",
                 "trainerUsername"
             ],
@@ -878,7 +877,7 @@
                     "type": "string"
                 },
                 "rating": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "trainerUsername": {
                     "type": "string"
@@ -1006,7 +1005,7 @@
                     "type": "string"
                 },
                 "rating": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "username": {
                     "type": "string"

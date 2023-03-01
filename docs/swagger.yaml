@@ -133,11 +133,10 @@ definitions:
       comment:
         type: string
       rating:
-        type: number
+        type: integer
       trainerUsername:
         type: string
     required:
-    - comment
     - rating
     - trainerUsername
     type: object
@@ -220,7 +219,7 @@ definitions:
       createdAt:
         type: string
       rating:
-        type: number
+        type: integer
       username:
         type: string
     type: object

@@ -30,9 +30,9 @@ type GetTrainerForm struct {
 }
 
 type ReviewDetails struct {
-	TrainerUsername string  `json:"trainerUsername" binding:"required"`
-	Comment         string  `json:"comment" binding:"required"`
-	Rating          float64 `json:"rating" binding:"required"`
+	TrainerUsername string `json:"trainerUsername" binding:"required"`
+	Comment         string `json:"comment"`
+	Rating          int    `json:"rating" binding:"required"`
 }
 
 type GetReviewsForm struct {

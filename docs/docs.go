@@ -877,7 +877,6 @@ const docTemplate = `{
         "controllers.ReviewDetails": {
             "type": "object",
             "required": [
-                "comment",
                 "rating",
                 "trainerUsername"
             ],
@@ -886,7 +885,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "rating": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "trainerUsername": {
                     "type": "string"
@@ -1014,7 +1013,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "rating": {
-                    "type": "number"
+                    "type": "integer"
                 },
                 "username": {
                     "type": "string"
