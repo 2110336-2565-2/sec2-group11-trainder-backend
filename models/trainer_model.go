@@ -22,8 +22,8 @@ type FilteredTrainerInfo struct {
 }
 type Review struct {
 	Username  string    `bson:"username"`
-	Rating    float64   `bson:"rating"`
 	Comment   string    `bson:"comment"`
+	Rating    int       `bson:"rating"`
 	CreatedAt time.Time `bson:"createdAt"`
 }
 type UserNotExist struct{}
@@ -79,11 +79,11 @@ func updateRatingByUsername(username string) error {
 	if err != nil {
 		return err
 	}
-	var sum float64
+	var sum int
 	for _, review := range user.Reviews {
 		sum += review.Rating
 	}
-	avgRating := math.Round(sum/float64(len(user.Reviews))*100) / 100
+	avgRating := math.Round(float64(sum)/float64(len(user.Reviews))*100) / 100
 	_, err = userCollection.UpdateOne(context.Background(), bson.M{"username": username}, bson.M{"$set": bson.M{"trainerInfo.rating": avgRating}})
 	if err != nil {
 		return err
@@ -91,7 +91,7 @@ func updateRatingByUsername(username string) error {
 	return nil
 }
 
-func AddReview(trainerUsername string, username string, rating float64, comment string) error {
+func AddReview(trainerUsername string, username string, rating int, comment string) error {
 	isExist, err := userExists(trainerUsername)
 	if err != nil {
 		return err
