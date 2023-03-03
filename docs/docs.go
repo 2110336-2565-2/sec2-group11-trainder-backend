@@ -943,7 +943,33 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Booking": {
+        "models.FilteredTrainerInfo": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "avatarUrl": {
+                    "type": "string"
+                },
+                "firstname": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "trainerInfo": {
+                    "$ref": "#/definitions/models.TrainerInfo"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ReturnBooking": {
             "type": "object",
             "properties": {
                 "_id": {
@@ -972,33 +998,19 @@ const docTemplate = `{
                 "trainee": {
                     "type": "string"
                 },
+                "traineeFirstName": {
+                    "type": "string"
+                },
+                "traineeLastName": {
+                    "type": "string"
+                },
                 "trainer": {
                     "type": "string"
-                }
-            }
-        },
-        "models.FilteredTrainerInfo": {
-            "type": "object",
-            "properties": {
-                "address": {
+                },
+                "trainerFirstName": {
                     "type": "string"
                 },
-                "avatarUrl": {
-                    "type": "string"
-                },
-                "firstname": {
-                    "type": "string"
-                },
-                "gender": {
-                    "type": "string"
-                },
-                "lastname": {
-                    "type": "string"
-                },
-                "trainerInfo": {
-                    "$ref": "#/definitions/models.TrainerInfo"
-                },
-                "username": {
+                "trainerLastName": {
                     "type": "string"
                 }
             }
@@ -1143,7 +1155,7 @@ const docTemplate = `{
                 "bookings": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.Booking"
+                        "$ref": "#/definitions/models.ReturnBooking"
                     }
                 },
                 "message": {

@@ -27,6 +27,23 @@ type Booking struct {
 	} `bson:"payment" json:"payment"`
 }
 
+type ReturnBooking struct {
+	ID               primitive.ObjectID `bson:"_id" json:"_id"`
+	Trainer          string             `bson:"trainer" json:"trainer"`
+	TrainerFirstName string             `bson:"trainerFirstName" json:"trainerFirstName"`
+	TrainerLastName  string             `bson:"trainerLastName" json:"trainerLastName"`
+	Trainee          string             `bson:"trainee" json:"trainee"`
+	TraineeFirstName string             `bson:"traineeFirstName" json:"traineeFirstName"`
+	TraineeLastName  string             `bson:"traineeLastName" json:"traineeLastName"`
+	StartDateTime    time.Time          `bson:"startDateTime" json:"startDateTime"`
+	EndDateTime      time.Time          `bson:"endDateTime" json:"endDateTime"`
+	Status           string             `bson:"status" json:"status"`
+	Payment          struct {
+		TotalCost float64 `bson:"totalCost" json:"totalCost"`
+		Status    string  `bson:"status" json:"status"`
+	} `bson:"payment" json:"payment"`
+}
+
 func CreateBooking(trainee string, trainer string, date string, startTime string, endTime string) error {
 	// fmt.Println(trainer)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -79,10 +96,11 @@ func CreateBooking(trainee string, trainer string, date string, startTime string
 }
 
 // merge into one function ()
-func GetUpcomingBookings(Username string) ([]Booking, error) {
+func GetUpcomingBookings(Username string) ([]ReturnBooking, error) {
 	now := time.Now()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
+
 	var filter bson.M
 	if IsTrainer(Username) {
 		filter = bson.M{
@@ -105,15 +123,42 @@ func GetUpcomingBookings(Username string) ([]Booking, error) {
 		return nil, err
 	}
 	// fmt.Println(cursor)
-	var bookings []Booking
+	var bookings []ReturnBooking
 	for cursor.Next(ctx) {
 		var booking Booking
 		err := cursor.Decode(&booking)
 		if err != nil {
 			return nil, err
 		}
+		var trainerInfo User
+		err = userCollection.FindOne(ctx, bson.M{"username": booking.Trainer}).Decode(&trainerInfo)
+		if err != nil {
+			// fmt.Println(err)
+			return nil, err
+		}
+
+		var traineeInfo User
+		err = userCollection.FindOne(ctx, bson.M{"username": booking.Trainee}).Decode(&traineeInfo)
+		if err != nil {
+			// fmt.Println(err)
+			return nil, err
+		}
+		result := ReturnBooking{
+			ID:               booking.ID,
+			Trainer:          booking.Trainer,
+			TrainerFirstName: trainerInfo.FirstName,
+			TrainerLastName:  trainerInfo.LastName,
+			Trainee:          booking.Trainee,
+			TraineeFirstName: traineeInfo.FirstName,
+			TraineeLastName:  traineeInfo.LastName,
+			StartDateTime:    booking.StartDateTime,
+			EndDateTime:      booking.EndDateTime,
+			Status:           booking.Status,
+			Payment:          booking.Payment,
+		}
+
 		// fmt.Println(booking)
-		bookings = append(bookings, booking)
+		bookings = append(bookings, result)
 	}
 
 	return bookings, nil

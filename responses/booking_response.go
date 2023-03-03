@@ -8,9 +8,9 @@ type CreateBookingResponse struct {
 }
 
 type GetBookingsResponse struct {
-	Status   int              `json:"status"`
-	Message  string           `json:"message,omitempty"`
-	Bookings []models.Booking `json:"bookings,omitempty"`
+	Status   int                    `json:"status"`
+	Message  string                 `json:"message,omitempty"`
+	Bookings []models.ReturnBooking `json:"bookings,omitempty"`
 }
 type UpdateBookingResponse struct {
 	Status  int    `json:"status"`
