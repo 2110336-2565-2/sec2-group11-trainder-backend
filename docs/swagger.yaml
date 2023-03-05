@@ -173,7 +173,24 @@ definitions:
       traineeCount:
         type: integer
     type: object
-  models.Booking:
+  models.FilteredTrainerInfo:
+    properties:
+      address:
+        type: string
+      avatarUrl:
+        type: string
+      firstname:
+        type: string
+      gender:
+        type: string
+      lastname:
+        type: string
+      trainerInfo:
+        $ref: '#/definitions/models.TrainerInfo'
+      username:
+        type: string
+    type: object
+  models.ReturnBooking:
     properties:
       _id:
         type: string
@@ -192,24 +209,15 @@ definitions:
         type: string
       trainee:
         type: string
+      traineeFirstName:
+        type: string
+      traineeLastName:
+        type: string
       trainer:
         type: string
-    type: object
-  models.FilteredTrainerInfo:
-    properties:
-      address:
+      trainerFirstName:
         type: string
-      avatarUrl:
-        type: string
-      firstname:
-        type: string
-      gender:
-        type: string
-      lastname:
-        type: string
-      trainerInfo:
-        $ref: '#/definitions/models.TrainerInfo'
-      username:
+      trainerLastName:
         type: string
     type: object
   models.Review:
@@ -303,7 +311,7 @@ definitions:
     properties:
       bookings:
         items:
-          $ref: '#/definitions/models.Booking'
+          $ref: '#/definitions/models.ReturnBooking'
         type: array
       message:
         type: string
