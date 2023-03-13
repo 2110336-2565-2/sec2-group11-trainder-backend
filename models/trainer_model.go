@@ -337,6 +337,7 @@ func Reviewable(traineeUsername string, trainerUsername string) (bool, int, erro
 
 }
 func getPaidTrainingCount(traineeUsername string, trainerUsername string) (int, error) {
+	fmt.Println(trainerUsername, traineeUsername)
 	_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	filter := bson.M{
@@ -345,6 +346,7 @@ func getPaidTrainingCount(traineeUsername string, trainerUsername string) (int, 
 		"payment.status": "paid",
 	}
 	count, err := bookingsCollection.CountDocuments(context.Background(), filter)
+	fmt.Println(count)
 	if err != nil {
 		return 0, err
 	}
@@ -362,6 +364,20 @@ func getCommentCountFromTrainee(traineeUsername string, trainerUsername string) 
 		err = &UserNotExist{}
 		return 0, err
 	}
+	filter := bson.M{"username": traineeUsername}
+	var result bson.M
+
+	err = userCollection.FindOne(context.Background(), filter).Decode(&result)
+	if err != nil {
+		return 0, err
+	}
+
+	reviews, ok := result["reviews"].([]interface{})
+	if !ok || len(reviews) == 0 {
+		fmt.Println("Reviews field is empty")
+		return 0, nil
+	}
+
 	_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	pipeline := bson.A{
