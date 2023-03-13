@@ -364,16 +364,15 @@ func getCommentCountFromTrainee(traineeUsername string, trainerUsername string) 
 		err = &UserNotExist{}
 		return 0, err
 	}
-	filter := bson.M{"username": traineeUsername}
-	var result bson.M
+	filter := bson.M{"username": trainerUsername}
+	var result User
 
 	err = userCollection.FindOne(context.Background(), filter).Decode(&result)
 	if err != nil {
 		return 0, err
 	}
 
-	reviews, ok := result["reviews"].([]interface{})
-	if !ok || len(reviews) == 0 {
+	if len(result.Reviews) == 0 {
 		fmt.Println("Reviews field is empty")
 		return 0, nil
 	}
