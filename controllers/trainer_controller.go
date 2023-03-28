@@ -89,7 +89,7 @@ func CurrentTrainerUserProfile() gin.HandlerFunc {
 //	@Tags			Trainer
 //	@Accept			json
 //	@Produce		json
-//	@Param			input	body		GetTrainerForm						true	"Put username input for retrieving the trainer profile"
+//	@Param			input	body		GetTrainerForm true					"Put username input for retrieving the trainer profile"
 //	@Success		200		{object}	responses.TrainerProfileResponse	"Successfully retrieved the trainer profile"
 //	@Failure		400		{object}	responses.TrainerProfileResponse	"Failed to retrieve the trainer profile"
 //	@Security		BearerAuth
@@ -126,7 +126,7 @@ func GetTrainerProfile() gin.HandlerFunc {
 //	@Tags		Trainer
 //	@Accept		json
 //	@Produce	json
-//	@Param		profile	body		UpdateTrainerDetails		true	"Trainer's information to update"
+//	@Param		profile	body		UpdateTrainerDetails true	"Trainer's information to update"
 //	@Success	200		{object}	responses.ProfileResponse	"Successfully update the trainer's profile"
 //	@Failure	400		{object}	responses.ProfileResponse	"Bad Request, either invalid input or user is not a trainer"
 //	@Failure	401		{object}	responses.ProfileResponse	"Unauthorized, the user is not logged in"
@@ -175,7 +175,7 @@ func UpdateTrainerProfile() gin.HandlerFunc {
 //	@Tags			Trainer
 //	@Accept			json
 //	@Produce		json
-//	@Param			FilterTrainer	body		FilterTrainerForm	true	"Parameters for filtering trainers"
+//	@Param			FilterTrainer	body		FilterTrainerForm true	"Parameters for filtering trainers"
 //	@Success		200				{object}	responses.FilterTrainerResponse
 //	@Failure		400				{object}	responses.FilterTrainerResponse
 //	@Security		BearerAuth
@@ -206,16 +206,16 @@ func FilterTrainer() gin.HandlerFunc {
 	}
 }
 
-//	@Summary		Get reviews of specific trainer
-//	@Description	Get reviews of specific trainer username from database sort by recent date then rating desc, limit number of output by limit
-//	@Tags			Trainer
-//	@Accept			json
-//	@Produce		json
-//	@Param			GetReviewsInput	body		GetReviewsForm	true	"Parameters for querying trainer reviews"
-//	@Success		200				{object}	responses.TrainerReviewsResponse
-//	@Failure		400				{object}	responses.TrainerReviewsResponse
-//	@Security		BearerAuth
-//	@Router			/protected/reviews [post]
+// @Summary		Get reviews of specific trainer
+// @Description	Get reviews of specific trainer username from database sort by recent date then rating desc, limit number of output by limit
+// @Tags		Trainer
+// @Accept		json
+// @Produce		json
+// @Param		GetReviewsInput	body		GetReviewsForm true	"Parameters for querying trainer reviews"
+// @Success		200				{object}	responses.TrainerReviewsResponse
+// @Failure		400				{object}	responses.TrainerReviewsResponse
+// @Security	BearerAuth
+// @Router		/protected/reviews [post]
 func GetReviews() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input GetReviewsForm
@@ -244,16 +244,16 @@ func GetReviews() gin.HandlerFunc {
 	}
 }
 
-//	@Summary		Add trainer review
-//	@Description	Add review on trainer to database
-//	@Tags			Trainer
-//	@Accept			json
-//	@Produce		json
-//	@Param			ReviewRequest	body		ReviewDetails	true	"Parameters for trainer review"
-//	@Success		200				{object}	responses.AddReviewResponse
-//	@Failure		400				{object}	responses.AddReviewResponse
-//	@Security		BearerAuth
-//	@Router			/protected/add-review [post]
+// @Summary		Add trainer review
+// @Description	Add review on trainer to database
+// @Tags		Trainer
+// @Accept		json
+// @Produce		json
+// @Param		ReviewRequest	body		ReviewDetails	true	"Parameters for trainer review"
+// @Success		200				{object}	responses.AddReviewResponse
+// @Failure		400				{object}	responses.AddReviewResponse
+// @Security	BearerAuth
+// @Router		/protected/add-review [post]
 func AddTrainerReview() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input ReviewDetails
@@ -289,16 +289,16 @@ func AddTrainerReview() gin.HandlerFunc {
 	}
 }
 
-//	@Summary		find if this trainee can still review a specific trainer
-//	@Description	find if this trainee can still review a specific trainer by (find number of times trainee paid that trainer) minus (number of time trainee comment on that trainer)
-//	@Tags			Trainer
-//	@Accept			json
-//	@Produce		json
-//	@Param			Reviewable	body		TraineeReviewableForm	true	"Parameters for trainee reviewable (trainer username)"
-//	@Success		200			{object}	responses.ReviewableResponse
-//	@Failure		400			{object}	responses.ReviewableResponse
-//	@Security		BearerAuth
-//	@Router			/protected/reviewable [POST]
+// @Summary		find if this trainee can still review a specific trainer
+// @Description	find if this trainee can still review a specific trainer by (find number of times trainee paid that trainer) minus (number of time trainee comment on that trainer)
+// @Tags		Trainer
+// @Accept		json
+// @Produce		json
+// @Param		Reviewable	body		TraineeReviewableForm	true	"Parameters for trainee reviewable (trainer username)"
+// @Success		200				{object}	responses.ReviewableResponse
+// @Failure		400				{object}	responses.ReviewableResponse
+// @Security	BearerAuth
+// @Router		/protected/reviewable [POST]
 func Reviewable() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input TraineeReviewableForm
