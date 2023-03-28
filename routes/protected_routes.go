@@ -3,11 +3,12 @@ package routes
 import (
 	"trainder-api/controllers"
 	"trainder-api/middlewares"
+	"trainder-api/ws"
 
 	"github.com/gin-gonic/gin"
 )
 
-func ProtectedRoute(router *gin.Engine) {
+func ProtectedRoute(router *gin.Engine, wsHandler *ws.Handler) {
 	protected := router.Group("/protected")
 	protected.Use(middlewares.JwtAuthMiddleware())
 
@@ -42,7 +43,12 @@ func ProtectedRoute(router *gin.Engine) {
 	protected.POST("/update-booking", controllers.UpdateBooking())
 	protected.DELETE("/delete-booking", controllers.DeleteBooking())
 
-	//Reviewable
+	// Reviewable
 	protected.POST("/reviewable", controllers.Reviewable())
 
+	// chat
+	protected.POST("/create-room", wsHandler.CreateRoom)
+	protected.GET("/get-rooms", wsHandler.GetRooms)
+	protected.GET("/get-clients/:roomId", wsHandler.GetClients)
+	router.GET("/join-room/:roomId", wsHandler.JoinRoom)
 }

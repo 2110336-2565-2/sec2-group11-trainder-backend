@@ -5,6 +5,7 @@ import (
 	"runtime"
 	"trainder-api/routes"
 	"trainder-api/utils/inits"
+	"trainder-api/ws"
 
 	_ "trainder-api/docs"
 
@@ -27,6 +28,9 @@ func main() {
 	config.AllowAllOrigins = true
 	config.AddAllowHeaders("Origin", "Authorization")
 	router.Use(cors.New(config))
+	hub := ws.NewHub()
+	wsHandler := ws.NewHandler(hub)
+	go hub.Run()
 
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
@@ -35,7 +39,7 @@ func main() {
 	})
 
 	routes.AuthRoute(router)
-	routes.ProtectedRoute(router)
+	routes.ProtectedRoute(router, wsHandler)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	os := runtime.GOOS

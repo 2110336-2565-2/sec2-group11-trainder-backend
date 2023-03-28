@@ -9,6 +9,7 @@ import (
 	"trainder-api/models"
 	"trainder-api/responses"
 	"trainder-api/routes"
+	"trainder-api/ws"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -64,9 +65,12 @@ func SetUpRouter() *gin.Engine {
 }
 
 func TestRegisterHandler(t *testing.T) {
+	hub := ws.NewHub()
+	wsHandler := ws.NewHandler(hub)
+	go hub.Run()
 	r := SetUpRouter()
 	routes.AuthRoute(r)
-	routes.ProtectedRoute(r)
+	routes.ProtectedRoute(r, wsHandler)
 	_ = models.DeleteUser("test01")
 	registerInput := RegisterInput{
 		Username:    "test01",
@@ -90,9 +94,12 @@ func TestRegisterHandler(t *testing.T) {
 }
 
 func TestLoginHandler(t *testing.T) {
+	hub := ws.NewHub()
+	wsHandler := ws.NewHandler(hub)
+	go hub.Run()
 	r := SetUpRouter()
 	routes.AuthRoute(r)
-	routes.ProtectedRoute(r)
+	routes.ProtectedRoute(r, wsHandler)
 	user := User{
 		Username: "test01",
 		Password: "password01",
@@ -106,9 +113,12 @@ func TestLoginHandler(t *testing.T) {
 }
 
 func TestUserHandler(t *testing.T) {
+	hub := ws.NewHub()
+	wsHandler := ws.NewHandler(hub)
+	go hub.Run()
 	r := SetUpRouter()
 	routes.AuthRoute(r)
-	routes.ProtectedRoute(r)
+	routes.ProtectedRoute(r, wsHandler)
 	user := User{
 		Username: "test01",
 		Password: "password01",
@@ -132,9 +142,12 @@ func TestUserHandler(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 }
 func TestUpdateHanlder(t *testing.T) {
+	hub := ws.NewHub()
+	wsHandler := ws.NewHandler(hub)
+	go hub.Run()
 	r := SetUpRouter()
 	routes.AuthRoute(r)
-	routes.ProtectedRoute(r)
+	routes.ProtectedRoute(r, wsHandler)
 	user := User{
 		Username: "test01",
 		Password: "password01",
@@ -170,9 +183,12 @@ func TestUpdateHanlder(t *testing.T) {
 }
 
 func TestUpdateTrainerHandler(t *testing.T) {
+	hub := ws.NewHub()
+	wsHandler := ws.NewHandler(hub)
+	go hub.Run()
 	r := SetUpRouter()
 	routes.AuthRoute(r)
-	routes.ProtectedRoute(r)
+	routes.ProtectedRoute(r, wsHandler)
 	user := User{
 		Username: "test01",
 		Password: "password01",
@@ -204,9 +220,12 @@ func TestUpdateTrainerHandler(t *testing.T) {
 }
 
 func TestFilter(t *testing.T) {
+	hub := ws.NewHub()
+	wsHandler := ws.NewHandler(hub)
+	go hub.Run()
 	r := SetUpRouter()
 	routes.AuthRoute(r)
-	routes.ProtectedRoute(r)
+	routes.ProtectedRoute(r, wsHandler)
 	user := User{
 		Username: "test01",
 		Password: "password01",
