@@ -39,7 +39,7 @@ func main() {
 	})
 
 	routes.AuthRoute(router)
-	routes.ProtectedRoute(router,wsHandler)
+	routes.ProtectedRoute(router, wsHandler)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	os := runtime.GOOS

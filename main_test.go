@@ -70,7 +70,7 @@ func TestRegisterHandler(t *testing.T) {
 	go hub.Run()
 	r := SetUpRouter()
 	routes.AuthRoute(r)
-	routes.ProtectedRoute(r,wsHandler)
+	routes.ProtectedRoute(r, wsHandler)
 	_ = models.DeleteUser("test01")
 	registerInput := RegisterInput{
 		Username:    "test01",
@@ -99,7 +99,7 @@ func TestLoginHandler(t *testing.T) {
 	go hub.Run()
 	r := SetUpRouter()
 	routes.AuthRoute(r)
-	routes.ProtectedRoute(r,wsHandler)
+	routes.ProtectedRoute(r, wsHandler)
 	user := User{
 		Username: "test01",
 		Password: "password01",
@@ -118,7 +118,7 @@ func TestUserHandler(t *testing.T) {
 	go hub.Run()
 	r := SetUpRouter()
 	routes.AuthRoute(r)
-	routes.ProtectedRoute(r,wsHandler)
+	routes.ProtectedRoute(r, wsHandler)
 	user := User{
 		Username: "test01",
 		Password: "password01",
@@ -147,7 +147,7 @@ func TestUpdateHanlder(t *testing.T) {
 	go hub.Run()
 	r := SetUpRouter()
 	routes.AuthRoute(r)
-	routes.ProtectedRoute(r,wsHandler)
+	routes.ProtectedRoute(r, wsHandler)
 	user := User{
 		Username: "test01",
 		Password: "password01",
@@ -188,7 +188,7 @@ func TestUpdateTrainerHandler(t *testing.T) {
 	go hub.Run()
 	r := SetUpRouter()
 	routes.AuthRoute(r)
-	routes.ProtectedRoute(r,wsHandler)
+	routes.ProtectedRoute(r, wsHandler)
 	user := User{
 		Username: "test01",
 		Password: "password01",
@@ -225,7 +225,7 @@ func TestFilter(t *testing.T) {
 	go hub.Run()
 	r := SetUpRouter()
 	routes.AuthRoute(r)
-	routes.ProtectedRoute(r,wsHandler)
+	routes.ProtectedRoute(r, wsHandler)
 	user := User{
 		Username: "test01",
 		Password: "password01",

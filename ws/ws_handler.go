@@ -11,6 +11,10 @@ import (
 type Handler struct {
 	hub *Hub
 }
+type GetRoomsResponse struct {
+	Status int       `json:"status"`
+	Rooms  []RoomRes `json:"rooms"`
+}
 
 func NewHandler(h *Hub) *Handler {
 	return &Handler{
@@ -102,7 +106,10 @@ func (h *Handler) GetRooms(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, rooms)
+	c.JSON(http.StatusOK, GetRoomsResponse{
+		Status: http.StatusOK,
+		Rooms:  rooms,
+	})
 }
 
 type ClientRes struct {

@@ -47,7 +47,8 @@ func ProtectedRoute(router *gin.Engine, wsHandler *ws.Handler) {
 	protected.POST("/reviewable", controllers.Reviewable())
 
 	// chat
-	protected.POST("/create-room",wsHandler.CreateRoom)
-	protected.GET("/get-rooms",wsHandler.GetRooms)
-	protected.GET("/join-room/:roomId",wsHandler.JoinRoom)
+	protected.POST("/create-room", wsHandler.CreateRoom)
+	protected.GET("/get-rooms", wsHandler.GetRooms)
+	protected.GET("/get-clients/:roomId", wsHandler.GetClients)
+	router.GET("/join-room/:roomId", wsHandler.JoinRoom)
 }
