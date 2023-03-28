@@ -30,7 +30,7 @@ type ProfileDetails struct {
 //	@Produce		json
 //	@Security		BearerAuth
 //	@Success		200	{object}	responses.CurrentUserResponse
-//  @Failure		400	{object}	responses.CurrentUserResponse
+//	@Failure		400	{object}	responses.CurrentUserResponse
 //	@Security		BearerAuth
 //	@Router			/protected/user [get]
 func CurrentUser() gin.HandlerFunc {
@@ -59,7 +59,7 @@ func CurrentUser() gin.HandlerFunc {
 //	@Produce		json
 //	@Param			ProfileToUpdate	body		ProfileDetails	true	"put profile input json and pass to  gin.Context"
 //	@Success		200				{object}	responses.ProfileResponse
-//  @Failure		400				{object}	responses.ProfileResponse
+//	@Failure		400				{object}	responses.ProfileResponse
 //	@Security		BearerAuth
 //	@Router			/protected/update-profile [post]
 func UpdateProfile() gin.HandlerFunc {

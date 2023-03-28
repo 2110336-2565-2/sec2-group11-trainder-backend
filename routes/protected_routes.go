@@ -51,4 +51,7 @@ func ProtectedRoute(router *gin.Engine, wsHandler *ws.Handler) {
 	protected.GET("/get-rooms", wsHandler.GetRooms)
 	protected.GET("/get-clients/:roomId", wsHandler.GetClients)
 	router.GET("/join-room/:roomId", wsHandler.JoinRoom)
+
+	// Payment
+	protected.POST("/create-payment", controllers.CreatePayment())
 }

@@ -47,3 +47,13 @@ func EnvInitRootPassword() string {
 	}
 	return env
 }
+
+func EnvOmisePublicKey() string {
+	loadDotEnv()
+	return os.Getenv("OMISE_PUBLIC_KEY")
+}
+
+func EnvOmiseSecretKey() string {
+	loadDotEnv()
+	return os.Getenv("OMISE_SECRET_KEY")
+}

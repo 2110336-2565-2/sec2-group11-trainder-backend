@@ -26,17 +26,17 @@ type DeleteBookingForm struct {
 	BookingId string `json:"bookingId" binding:"required"`
 }
 
-// @Summary Create a new booking
-// @Description Creates a new booking with the specified trainer, trainee, date, start time, and end time
-// @Tags bookings
-// @Accept json
-// @Produce json
-// @Security BearerAuth
-// @Param json_in_ginContext body BookingForm true "put booking details and pass to gin.Context"
-// @Success 200 {object} string "booking created successfully"
-// @Failure 400 {object} string "bad request"
-// @Failure 500 {object} string "internal server error"
-// @Router /protected/create-booking [post]
+//	@Summary		Create a new booking
+//	@Description	Creates a new booking with the specified trainer, trainee, date, start time, and end time
+//	@Tags			bookings
+//	@Accept			json
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			json_in_ginContext	body		BookingForm	true	"put booking details and pass to gin.Context"
+//	@Success		200					{object}	string		"booking created successfully"
+//	@Failure		400					{object}	string		"bad request"
+//	@Failure		500					{object}	string		"internal server error"
+//	@Router			/protected/create-booking [post]
 func Book() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input BookingForm
@@ -72,15 +72,15 @@ func Book() gin.HandlerFunc {
 	}
 }
 
-// @Summary Get bookings for the logged in user
-// @Description Retrieve a list of upcoming bookings for the user who is currently logged in
-// @Tags bookings
-// @Accept json
-// @Produce json
-// @Security BearerAuth
-// @Success 200 {object} responses.GetBookingsResponse
-// @Failure 400 {object} responses.GetBookingsResponse
-// @Router /protected/bookings [GET]
+//	@Summary		Get bookings for the logged in user
+//	@Description	Retrieve a list of upcoming bookings for the user who is currently logged in
+//	@Tags			bookings
+//	@Accept			json
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Success		200	{object}	responses.GetBookingsResponse
+//	@Failure		400	{object}	responses.GetBookingsResponse
+//	@Router			/protected/bookings [GET]
 func GetBookings() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		username, err := tokens.ExtractTokenUsername(c)
@@ -106,16 +106,16 @@ func GetBookings() gin.HandlerFunc {
 	}
 }
 
-// @Summary Update a booking
-// @Description Update a booking of sepecified bookingId with the specified update input consist of status(pending/confirm/complete) and paymentStatus(pending/paid)
-// @Tags bookings
-// @Accept json
-// @Produce json
-// @Security BearerAuth
-// @Param json_in_ginContext body UpdateBookingForm true "put updateBookingForm details and pass to gin.Context"
-// @Success	200		{object}	responses.UpdateBookingResponse	"Successfully update booking"
-// @Failure	400		{object}	responses.UpdateBookingResponse	"Bad Request, missing filed of objectId or cannot find bookingObjectId"
-// @Router /protected/update-booking [post]
+//	@Summary		Update a booking
+//	@Description	Update a booking of sepecified bookingId with the specified update input consist of status(pending/confirm/complete) and paymentStatus(pending/paid)
+//	@Tags			bookings
+//	@Accept			json
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			json_in_ginContext	body		UpdateBookingForm				true	"put updateBookingForm details and pass to gin.Context"
+//	@Success		200					{object}	responses.UpdateBookingResponse	"Successfully update booking"
+//	@Failure		400					{object}	responses.UpdateBookingResponse	"Bad Request, missing filed of objectId or cannot find bookingObjectId"
+//	@Router			/protected/update-booking [post]
 func UpdateBooking() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input UpdateBookingForm
@@ -144,16 +144,16 @@ func UpdateBooking() gin.HandlerFunc {
 	}
 }
 
-// @Summary Delete a booking
-// @Description Delete a booking with the specified bookingId
-// @Tags bookings
-// @Accept json
-// @Produce json
-// @Security BearerAuth
-// @Param json_in_ginContext body DeleteBookingForm true "put DeleteBookingForm details and pass to gin.Context"
-// @Success	200		{object}	responses.DeleteBookingResponse	"Successfully delete booking"
-// @Failure	400		{object}	responses.DeleteBookingResponse	"Bad Request, missing filed of objectId or cannot find bookingObjectId"
-// @Router /protected/delete-booking [delete]
+//	@Summary		Delete a booking
+//	@Description	Delete a booking with the specified bookingId
+//	@Tags			bookings
+//	@Accept			json
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			json_in_ginContext	body		DeleteBookingForm				true	"put DeleteBookingForm details and pass to gin.Context"
+//	@Success		200					{object}	responses.DeleteBookingResponse	"Successfully delete booking"
+//	@Failure		400					{object}	responses.DeleteBookingResponse	"Bad Request, missing filed of objectId or cannot find bookingObjectId"
+//	@Router			/protected/delete-booking [delete]
 func DeleteBooking() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input DeleteBookingForm
