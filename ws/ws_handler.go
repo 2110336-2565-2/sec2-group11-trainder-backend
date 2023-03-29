@@ -123,9 +123,9 @@ func (h *Handler) GetClients(c *gin.Context) {
 	var clients []ClientRes
 	roomId := c.Param("roomId")
 
-	fmt.Println("roomId", roomId)
-	_, f := h.hub.Rooms[roomId]
-	fmt.Println("f", f)
+	// fmt.Println("roomId", roomId)
+	// _, f := h.hub.Rooms[roomId]
+	// fmt.Println("f", f)
 
 	if _, ok := h.hub.Rooms[roomId]; !ok {
 		clients = make([]ClientRes, 0)

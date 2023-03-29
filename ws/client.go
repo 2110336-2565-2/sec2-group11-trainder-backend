@@ -57,7 +57,7 @@ func (c *Client) readMessage(hub *Hub) {
 			Username: c.Username,
 		}
 
-		fmt.Println("msg", msg.Content, msg.RoomID, msg.Username)
+		// fmt.Println("msg", msg.Content, msg.RoomID, msg.Username)
 
 		hub.Broadcast <- msg
 
