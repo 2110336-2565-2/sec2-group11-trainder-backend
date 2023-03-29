@@ -179,6 +179,45 @@ const docTemplate = `{
                 }
             }
         },
+        "/protected/create-payment": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a payment using token and bookingId",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "payment"
+                ],
+                "summary": "Create a payment",
+                "parameters": [
+                    {
+                        "description": "details for creating payment",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.CreatePaymentForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.CreatePaymentResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/protected/delete-booking": {
             "delete": {
                 "security": [
@@ -737,6 +776,22 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.CreatePaymentForm": {
+            "type": "object",
+            "required": [
+                "bookingID",
+                "token"
+            ],
+            "properties": {
+                "bookingID": {
+                    "description": "amount is temp should handle via booking id and calculate",
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
         "controllers.DeleteBookingForm": {
             "type": "object",
             "required": [
@@ -1003,6 +1058,20 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Payment": {
+            "type": "object",
+            "properties": {
+                "chargeID": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "totalCost": {
+                    "type": "number"
+                }
+            }
+        },
         "models.ReturnBooking": {
             "type": "object",
             "properties": {
@@ -1013,15 +1082,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "payment": {
-                    "type": "object",
-                    "properties": {
-                        "status": {
-                            "type": "string"
-                        },
-                        "totalCost": {
-                            "type": "number"
-                        }
-                    }
+                    "$ref": "#/definitions/models.Payment"
                 },
                 "startDateTime": {
                     "type": "string"
@@ -1131,6 +1192,17 @@ const docTemplate = `{
             }
         },
         "responses.AddReviewResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.CreatePaymentResponse": {
             "type": "object",
             "properties": {
                 "message": {
