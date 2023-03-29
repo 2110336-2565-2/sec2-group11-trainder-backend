@@ -13,7 +13,8 @@ import (
 type PaymentInfo struct {
 	TraineeUsername string
 	TotalCost       int64
-	Status          string
+	BookingStatus   string
+	PaymentStatus   string
 }
 
 func GetPaymentInfo(bookingID string) (PaymentInfo, error) {
@@ -38,7 +39,8 @@ func GetPaymentInfo(bookingID string) (PaymentInfo, error) {
 	return PaymentInfo{
 		TraineeUsername: result.Trainee,
 		TotalCost:       int64(result.Payment.TotalCost),
-		Status:          result.Payment.Status,
+		BookingStatus:   result.Status,
+		PaymentStatus:   result.Payment.Status,
 	}, err
 }
 

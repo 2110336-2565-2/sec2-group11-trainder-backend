@@ -63,9 +63,16 @@ func CreatePayment() gin.HandlerFunc {
 			})
 			return
 		}
+		if paymentInfo.BookingStatus != "confirm" {
+			c.JSON(http.StatusBadRequest, responses.CreatePaymentResponse{
+				Status:  http.StatusBadRequest,
+				Message: `can only pay for booking that is confirmed`,
+			})
+			return
+		}
 
 		// Check if the booking is already paid
-		if paymentInfo.Status == "paid" {
+		if paymentInfo.PaymentStatus == "paid" {
 			c.JSON(http.StatusBadRequest, responses.CreatePaymentResponse{
 				Status:  http.StatusBadRequest,
 				Message: `booking already paid`,
