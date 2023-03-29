@@ -136,6 +136,12 @@ func GetBooking() gin.HandlerFunc {
 		// Only use the first value in query
 		bookingID := bookingIDs[0]
 		result, err := models.GetBooking(bookingID)
+		if result.Trainee != username && result.Trainer != username {
+			c.JSON(http.StatusUnauthorized, responses.GetBookingResponse{
+				Status:  http.StatusUnauthorized,
+				Message: "can only view own booking",
+			})
+		}
 
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.GetBookingResponse{
