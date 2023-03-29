@@ -180,3 +180,38 @@ func DeleteBooking() gin.HandlerFunc {
 			})
 	}
 }
+
+// @Summary Get today bookings for the logged in user
+// @Description Retrieve a list of today bookings for the user who is currently logged in
+// @Tags bookings
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} responses.GetBookingsResponse
+// @Failure 400 {object} responses.GetBookingsResponse
+// @Router /protected/today-event [GET]
+func GetTodayEvents() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		username, err := tokens.ExtractTokenUsername(c)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.GetBookingsResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+		}
+
+		result, err := models.GetTodayBookings(username)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.GetBookingsResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
+		c.JSON(http.StatusOK, responses.GetBookingsResponse{
+			Status:   http.StatusOK,
+			Message:  `success!`,
+			Bookings: result,
+		})
+	}
+}
