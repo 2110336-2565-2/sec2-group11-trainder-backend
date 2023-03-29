@@ -643,6 +643,12 @@ paths:
       - application/json
       description: Retrieve a list of today bookings for the user who is currently
         logged in
+      parameters:
+      - description: put date in query param in format yyy-mm-dd
+        in: query
+        name: date
+        required: true
+        type: string
       produces:
       - application/json
       responses:

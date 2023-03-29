@@ -411,6 +411,15 @@ const docTemplate = `{
                     "bookings"
                 ],
                 "summary": "Get today bookings for the logged in user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "put date in query param in format yyy-mm-dd",
+                        "name": "date",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

@@ -216,9 +216,15 @@ func DeleteBooking(bookingObjectId string) error {
 	return nil
 }
 
-func GetTodayBookings(Username string) ([]ReturnBooking, error) {
+func GetSpecificDayBookings(Username string, date string) ([]ReturnBooking, error) {
 	// today, err := time.Parse("2006-01-02 15:04", time.Now().String())
-	today := time.Now().Truncate(24 * time.Hour)
+	startDateTimeStr := date + " " + "00:00"
+	datetime, err := time.Parse("2006-01-02 15:04", startDateTimeStr)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse start datetime: %v", err)
+	}
+	today := datetime.Truncate(24 * time.Hour)
+	// today := time.Now().Truncate(24 * time.Hour)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	var filter bson.M
