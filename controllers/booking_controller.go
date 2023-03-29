@@ -17,9 +17,8 @@ type BookingForm struct {
 }
 
 type UpdateBookingForm struct {
-	BookingId     string `json:"bookingId" binding:"required"`
-	Status        string `json:"status"`
-	PaymentStatus string `json:"paymentStatus"`
+	BookingId string `json:"bookingId" binding:"required"`
+	Status    string `json:"status"`
 }
 
 type DeleteBookingForm struct {
@@ -163,7 +162,7 @@ func GetBooking() gin.HandlerFunc {
 }
 
 // @Summary Update a booking
-// @Description Update a booking of sepecified bookingId with the specified update input consist of status(pending/confirm/complete) and paymentStatus(pending/paid)
+// @Description Update a booking of specified bookingId with the specified update input consist of status(pending/confirm/complete) and paymentStatus(pending/paid)
 // @Tags bookings
 // @Accept json
 // @Produce json
@@ -183,7 +182,24 @@ func UpdateBooking() gin.HandlerFunc {
 			return
 		}
 
-		err := models.UpdateBooking(input.BookingId, input.Status, input.PaymentStatus)
+		username, err := tokens.ExtractTokenUsername(c)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, responses.UpdateBookingResponse{
+				Status:  http.StatusUnauthorized,
+				Message: `cannot extract username from token`,
+			})
+			return
+		}
+
+		if !models.IsTrainer(username) {
+			c.JSON(http.StatusUnauthorized, responses.UpdateBookingResponse{
+				Status:  http.StatusUnauthorized,
+				Message: `only Trainer can update the status`,
+			})
+			return
+		}
+
+		err = models.UpdateBooking(input.BookingId, input.Status, username)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.UpdateBookingResponse{
 				Status:  http.StatusBadRequest,

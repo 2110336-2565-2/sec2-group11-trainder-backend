@@ -184,11 +184,21 @@ func GetUpcomingBookings(Username string) ([]ReturnBooking, error) {
 
 }
 
-func UpdateBooking(bookingObjectId string, status string, paymentStatus string) error {
+func UpdateBooking(bookingObjectId string, status string, username string) error {
+	booking, err := GetBooking(bookingObjectId)
+	if err != nil {
+		return err
+	}
+
+	if username != booking.Trainer {
+		return fmt.Errorf("can only update own booking")
+	}
+
 	objectID, err := primitive.ObjectIDFromHex(bookingObjectId)
 	if err != nil {
 		return fmt.Errorf("failed to parse bookingObjId: %v", err)
 	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -196,10 +206,6 @@ func UpdateBooking(bookingObjectId string, status string, paymentStatus string) 
 
 	if len(status) != 0 {
 		updateArr["status"] = status
-
-	}
-	if len(paymentStatus) != 0 {
-		updateArr["payment.status"] = paymentStatus
 	}
 
 	res, err := bookingsCollection.UpdateOne(
@@ -210,7 +216,6 @@ func UpdateBooking(bookingObjectId string, status string, paymentStatus string) 
 	if err != nil {
 		return fmt.Errorf("failed to UpdateOne bookingsCollection: %v", err)
 	}
-	// fmt.Println("res", res, res.MatchedCount)
 	if res.MatchedCount == 0 {
 		return fmt.Errorf("the bookingObjectId could not be found")
 	}
