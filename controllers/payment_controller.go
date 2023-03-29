@@ -24,7 +24,7 @@ type CreatePaymentForm struct {
 // @Accept			json
 // @Produce		json
 // @Security		BearerAuth
-// @Param			body	CreatePayment	true	"details for creating payment"
+// @Param 		input 	body 			CreatePaymentForm	true	"details for creating payment"
 // @Success		200		{object}		responses.CreatePaymentResponse
 // @Router			/protected/create-payment [post]
 func CreatePayment() gin.HandlerFunc {
