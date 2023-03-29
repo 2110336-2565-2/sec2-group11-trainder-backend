@@ -10,6 +10,17 @@ definitions:
       trainer:
         type: string
     type: object
+  controllers.CreatePaymentForm:
+    properties:
+      bookingID:
+        description: amount is temp should handle via booking id and calculate
+        type: string
+      token:
+        type: string
+    required:
+    - bookingID
+    - token
+    type: object
   controllers.DeleteBookingForm:
     properties:
       bookingId:
@@ -173,13 +184,6 @@ definitions:
       traineeCount:
         type: integer
     type: object
-  models.AllChat:
-    properties:
-      audience:
-        type: string
-      messege:
-        $ref: '#/definitions/models.Messege'
-    type: object
   models.FilteredTrainerInfo:
     properties:
       address:
@@ -195,15 +199,6 @@ definitions:
       trainerInfo:
         $ref: '#/definitions/models.TrainerInfo'
       username:
-        type: string
-    type: object
-  models.Messege:
-    properties:
-      content:
-        type: string
-      createdAt:
-        type: string
-      sender:
         type: string
     type: object
   models.ReturnBooking:
@@ -342,6 +337,15 @@ definitions:
         items:
           $ref: '#/definitions/models.FilteredTrainerInfo'
         type: array
+    type: object
+  responses.GetBookingResponse:
+    properties:
+      booking:
+        $ref: '#/definitions/models.Booking'
+      message:
+        type: string
+      status:
+        type: integer
     type: object
   responses.GetBookingsResponse:
     properties:
@@ -493,6 +497,27 @@ paths:
       summary: Add trainer review
       tags:
       - Trainer
+  /protected/booking:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a single booking using id
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.GetBookingResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.GetBookingResponse'
+      security:
+      - BearerAuth: []
+      summary: Get booking by ID
+      tags:
+      - bookings
   /protected/bookings:
     get:
       consumes:
@@ -548,6 +573,30 @@ paths:
       summary: Create a new booking
       tags:
       - bookings
+  /protected/create-payment:
+    post:
+      consumes:
+      - application/json
+      description: Create a payment using token and bookingId
+      parameters:
+      - description: details for creating payment
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.CreatePaymentForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.CreatePaymentResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a payment
+      tags:
+      - payment
   /protected/delete-booking:
     delete:
       consumes:
@@ -769,6 +818,12 @@ paths:
       - application/json
       description: Retrieve a list of today bookings for the user who is currently
         logged in
+      parameters:
+      - description: put date in query param in format yyy-mm-dd
+        in: query
+        name: date
+        required: true
+        type: string
       produces:
       - application/json
       responses:

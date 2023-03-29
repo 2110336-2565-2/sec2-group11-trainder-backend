@@ -26,6 +26,10 @@ type DeleteBookingForm struct {
 	BookingId string `json:"bookingId" binding:"required"`
 }
 
+// type specificDateEventForm struct {
+// 	Date string `json:"date"`
+// }
+
 // @Summary Create a new booking
 // @Description Creates a new booking with the specified trainer, trainee, date, start time, and end time
 // @Tags bookings
@@ -99,6 +103,58 @@ func GetBookings() gin.HandlerFunc {
 			return
 		}
 		c.JSON(http.StatusOK, responses.GetBookingsResponse{
+			Status:   http.StatusOK,
+			Message:  `success!`,
+			Bookings: result,
+		})
+	}
+}
+
+// @Summary Get booking by ID
+// @Description Retrieve a single booking using id
+// @Tags bookings
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} responses.GetBookingResponse
+// @Failure 400 {object} responses.GetBookingResponse
+// @Router /protected/booking [GET]
+func GetBooking() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		username, err := tokens.ExtractTokenUsername(c)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, responses.GetBookingResponse{
+				Status:  http.StatusUnauthorized,
+				Message: err.Error(),
+			})
+		}
+		queryParams := c.Request.URL.Query()
+		bookingIDs, prs := queryParams["id"]
+		if !prs {
+			c.JSON(http.StatusBadRequest, responses.GetBookingResponse{
+				Status:  http.StatusBadRequest,
+				Message: "id not found in query",
+			})
+		}
+
+		// Only use the first value in query
+		bookingID := bookingIDs[0]
+		result, err := models.GetBooking(bookingID)
+		if result.Trainee != username && result.Trainer != username {
+			c.JSON(http.StatusUnauthorized, responses.GetBookingResponse{
+				Status:  http.StatusUnauthorized,
+				Message: "can only view own booking",
+			})
+		}
+
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.GetBookingResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
+		c.JSON(http.StatusOK, responses.GetBookingResponse{
 			Status:   http.StatusOK,
 			Message:  `success!`,
 			Bookings: result,
@@ -186,12 +242,14 @@ func DeleteBooking() gin.HandlerFunc {
 // @Tags bookings
 // @Accept json
 // @Produce json
+// @Param date query string true "put date in query param in format yyy-mm-dd"
 // @Security BearerAuth
 // @Success 200 {object} responses.GetBookingsResponse
 // @Failure 400 {object} responses.GetBookingsResponse
 // @Router /protected/today-event [GET]
 func GetTodayEvents() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		date := c.Query("date")
 		username, err := tokens.ExtractTokenUsername(c)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.GetBookingsResponse{
@@ -199,8 +257,16 @@ func GetTodayEvents() gin.HandlerFunc {
 				Message: err.Error(),
 			})
 		}
+		// var input specificDateEventForm
+		// if err := c.ShouldBindJSON(&input); err != nil {
+		// 	c.JSON(http.StatusBadRequest, responses.GetBookingsResponse{
+		// 		Status:  http.StatusBadRequest,
+		// 		Message: err.Error(),
+		// 	})
+		// 	return
+		// }
 
-		result, err := models.GetTodayBookings(username)
+		result, err := models.GetSpecificDayBookings(username, date)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.GetBookingsResponse{
 				Status:  http.StatusBadRequest,

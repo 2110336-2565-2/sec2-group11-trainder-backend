@@ -94,6 +94,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/protected/booking": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve a single booking using id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bookings"
+                ],
+                "summary": "Get booking by ID",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.GetBookingResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.GetBookingResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/protected/bookings": {
             "get": {
                 "security": [
@@ -174,6 +208,45 @@ const docTemplate = `{
                         "description": "internal server error",
                         "schema": {
                             "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/create-payment": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a payment using token and bookingId",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "payment"
+                ],
+                "summary": "Create a payment",
+                "parameters": [
+                    {
+                        "description": "details for creating payment",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.CreatePaymentForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.CreatePaymentResponse"
                         }
                     }
                 }
@@ -531,6 +604,15 @@ const docTemplate = `{
                     "bookings"
                 ],
                 "summary": "Get today bookings for the logged in user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "put date in query param in format yyy-mm-dd",
+                        "name": "date",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -857,6 +939,22 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.CreatePaymentForm": {
+            "type": "object",
+            "required": [
+                "bookingID",
+                "token"
+            ],
+            "properties": {
+                "bookingID": {
+                    "description": "amount is temp should handle via booking id and calculate",
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
         "controllers.DeleteBookingForm": {
             "type": "object",
             "required": [
@@ -1097,17 +1195,6 @@ const docTemplate = `{
                 }
             }
         },
-        "models.AllChat": {
-            "type": "object",
-            "properties": {
-                "audience": {
-                    "type": "string"
-                },
-                "messege": {
-                    "$ref": "#/definitions/models.Messege"
-                }
-            }
-        },
         "models.FilteredTrainerInfo": {
             "type": "object",
             "properties": {
@@ -1130,20 +1217,6 @@ const docTemplate = `{
                     "$ref": "#/definitions/models.TrainerInfo"
                 },
                 "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.Messege": {
-            "type": "object",
-            "properties": {
-                "content": {
-                    "type": "string"
-                },
-                "createdAt": {
-                    "type": "string"
-                },
-                "sender": {
                     "type": "string"
                 }
             }
@@ -1317,6 +1390,17 @@ const docTemplate = `{
                 }
             }
         },
+        "responses.CreatePaymentResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
         "responses.CurrentUserResponse": {
             "type": "object",
             "properties": {
@@ -1356,6 +1440,20 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.FilteredTrainerInfo"
                     }
+                }
+            }
+        },
+        "responses.GetBookingResponse": {
+            "type": "object",
+            "properties": {
+                "booking": {
+                    "$ref": "#/definitions/models.Booking"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         },

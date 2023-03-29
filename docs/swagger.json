@@ -86,6 +86,40 @@
                 }
             }
         },
+        "/protected/booking": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve a single booking using id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bookings"
+                ],
+                "summary": "Get booking by ID",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.GetBookingResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.GetBookingResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/protected/bookings": {
             "get": {
                 "security": [
@@ -166,6 +200,45 @@
                         "description": "internal server error",
                         "schema": {
                             "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/create-payment": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a payment using token and bookingId",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "payment"
+                ],
+                "summary": "Create a payment",
+                "parameters": [
+                    {
+                        "description": "details for creating payment",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.CreatePaymentForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.CreatePaymentResponse"
                         }
                     }
                 }
@@ -523,6 +596,15 @@
                     "bookings"
                 ],
                 "summary": "Get today bookings for the logged in user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "put date in query param in format yyy-mm-dd",
+                        "name": "date",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -849,6 +931,22 @@
                 }
             }
         },
+        "controllers.CreatePaymentForm": {
+            "type": "object",
+            "required": [
+                "bookingID",
+                "token"
+            ],
+            "properties": {
+                "bookingID": {
+                    "description": "amount is temp should handle via booking id and calculate",
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
         "controllers.DeleteBookingForm": {
             "type": "object",
             "required": [
@@ -1100,6 +1198,32 @@
                 }
             }
         },
+        "models.Booking": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "endDateTime": {
+                    "type": "string"
+                },
+                "payment": {
+                    "$ref": "#/definitions/models.Payment"
+                },
+                "startDateTime": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "trainee": {
+                    "type": "string"
+                },
+                "trainer": {
+                    "type": "string"
+                }
+            }
+        },
         "models.FilteredTrainerInfo": {
             "type": "object",
             "properties": {
@@ -1143,6 +1267,34 @@
         "models.ReturnBooking": {
             "type": "object",
             "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "sender": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Payment": {
+            "type": "object",
+            "properties": {
+                "chargeID": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "totalCost": {
+                    "type": "number"
+                }
+            }
+        },
+        "models.ReturnBooking": {
+            "type": "object",
+            "properties": {
                 "_id": {
                     "type": "string"
                 },
@@ -1150,15 +1302,7 @@
                     "type": "string"
                 },
                 "payment": {
-                    "type": "object",
-                    "properties": {
-                        "status": {
-                            "type": "string"
-                        },
-                        "totalCost": {
-                            "type": "number"
-                        }
-                    }
+                    "$ref": "#/definitions/models.Payment"
                 },
                 "startDateTime": {
                     "type": "string"
@@ -1278,30 +1422,10 @@
                 }
             }
         },
-        "responses.AllChatResponse": {
-            "type": "object",
-            "properties": {
-                "allChat": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.AllChat"
-                    }
-                },
-                "message": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "integer"
-                }
-            }
-        },
-        "responses.ChatRoomIDResponse": {
+        "responses.CreatePaymentResponse": {
             "type": "object",
             "properties": {
                 "message": {
-                    "type": "string"
-                },
-                "roomID": {
                     "type": "string"
                 },
                 "status": {
@@ -1348,6 +1472,20 @@
                     "items": {
                         "$ref": "#/definitions/models.FilteredTrainerInfo"
                     }
+                }
+            }
+        },
+        "responses.GetBookingResponse": {
+            "type": "object",
+            "properties": {
+                "booking": {
+                    "$ref": "#/definitions/models.Booking"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         },

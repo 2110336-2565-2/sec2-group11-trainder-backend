@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/omise/omise-go"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -35,3 +36,13 @@ func GetCollection(client *mongo.Client, collectionName string) *mongo.Collectio
 	collection := client.Database(EnvMongoDBName()).Collection(collectionName)
 	return collection
 }
+
+func ConnectOmise() *omise.Client {
+	client, e := omise.NewClient(EnvOmisePublicKey(), EnvOmiseSecretKey())
+	if e != nil {
+		log.Fatal(e)
+	}
+	return client
+}
+
+var OmiseClient *omise.Client = ConnectOmise()
