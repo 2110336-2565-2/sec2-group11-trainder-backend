@@ -37,3 +37,5 @@ jobs:
           TOKEN_HOUR_LIFESPAN: 24
           API_SECRET: api_secret
           INIT_ROOT_PASSWORD: password
+          OMISE_PUBLIC_KEY: ${{ secrets.OMISE_PUBLIC_KEY }}
+          OMISE_SECRET_KEY: ${{ secrets.OMISE_SECRET_KEY }}
