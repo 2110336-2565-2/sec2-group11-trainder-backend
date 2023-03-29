@@ -39,7 +39,7 @@ func Pay(bookingID string, chargeId string) (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	updateStatus, err := bookingsCollection.UpdateOne(ctx, filter, bson.M{"$set": bson.M{"status": "complete", "payment.status": "paid", "payment.chargeID": chargeId}})
+	updateStatus, err := bookingsCollection.UpdateOne(ctx, filter, bson.M{"$set": bson.M{"payment.status": "paid", "payment.chargeID": chargeId}})
 
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
