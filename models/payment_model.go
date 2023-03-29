@@ -18,29 +18,13 @@ type PaymentInfo struct {
 }
 
 func GetPaymentInfo(bookingID string) (PaymentInfo, error) {
-	// Filter using booking id
-	objectID, err := primitive.ObjectIDFromHex(bookingID)
-	if err != nil {
-		return PaymentInfo{}, err
-	}
-
-	filter := bson.M{"_id": objectID}
-
-	var result Booking
-
-	err = bookingsCollection.FindOne(context.TODO(), filter).Decode(&result)
-	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			return PaymentInfo{}, fmt.Errorf("no booking matched the requested id")
-		}
-		return PaymentInfo{}, err
-	}
+	booking, err := GetBooking(bookingID)
 
 	return PaymentInfo{
-		TraineeUsername: result.Trainee,
-		TotalCost:       int64(result.Payment.TotalCost),
-		BookingStatus:   result.Status,
-		PaymentStatus:   result.Payment.Status,
+		TraineeUsername: booking.Trainee,
+		TotalCost:       int64(booking.Payment.TotalCost),
+		BookingStatus:   booking.Status,
+		PaymentStatus:   booking.Payment.Status,
 	}, err
 }
 

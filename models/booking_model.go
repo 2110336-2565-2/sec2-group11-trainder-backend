@@ -96,6 +96,22 @@ func CreateBooking(trainee string, trainer string, date string, startTime string
 	return nil
 }
 
+func GetBooking(bookingID string) (result Booking, err error) {
+	objectID, err := primitive.ObjectIDFromHex(bookingID)
+	if err != nil {
+		return result, err
+	}
+
+	filter := bson.M{"_id": objectID}
+
+	err = bookingsCollection.FindOne(context.TODO(), filter).Decode(&result)
+	if err != nil {
+		return result, err
+	}
+
+	return result, err
+}
+
 // merge into one function ()
 func GetUpcomingBookings(Username string) ([]ReturnBooking, error) {
 	now := time.Now()
