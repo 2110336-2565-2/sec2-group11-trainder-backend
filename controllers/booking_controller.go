@@ -110,6 +110,58 @@ func GetBookings() gin.HandlerFunc {
 	}
 }
 
+// @Summary Get booking by ID
+// @Description Retrieve a single booking using id
+// @Tags bookings
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} responses.GetBookingResponse
+// @Failure 400 {object} responses.GetBookingResponse
+// @Router /protected/booking [GET]
+func GetBooking() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		username, err := tokens.ExtractTokenUsername(c)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, responses.GetBookingResponse{
+				Status:  http.StatusUnauthorized,
+				Message: err.Error(),
+			})
+		}
+		queryParams := c.Request.URL.Query()
+		bookingIDs, prs := queryParams["id"]
+		if !prs {
+			c.JSON(http.StatusBadRequest, responses.GetBookingResponse{
+				Status:  http.StatusBadRequest,
+				Message: "id not found in query",
+			})
+		}
+
+		// Only use the first value in query
+		bookingID := bookingIDs[0]
+		result, err := models.GetBooking(bookingID)
+		if result.Trainee != username && result.Trainer != username {
+			c.JSON(http.StatusUnauthorized, responses.GetBookingResponse{
+				Status:  http.StatusUnauthorized,
+				Message: "can only view own booking",
+			})
+		}
+
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.GetBookingResponse{
+				Status:  http.StatusBadRequest,
+				Message: err.Error(),
+			})
+			return
+		}
+		c.JSON(http.StatusOK, responses.GetBookingResponse{
+			Status:   http.StatusOK,
+			Message:  `success!`,
+			Bookings: result,
+		})
+	}
+}
+
 // @Summary Update a booking
 // @Description Update a booking of sepecified bookingId with the specified update input consist of status(pending/confirm/complete) and paymentStatus(pending/paid)
 // @Tags bookings

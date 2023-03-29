@@ -12,6 +12,12 @@ type GetBookingsResponse struct {
 	Message  string                 `json:"message,omitempty"`
 	Bookings []models.ReturnBooking `json:"bookings,omitempty"`
 }
+
+type GetBookingResponse struct {
+	Status   int            `json:"status"`
+	Message  string         `json:"message,omitempty"`
+	Bookings models.Booking `json:"booking,omitempty"`
+}
 type UpdateBookingResponse struct {
 	Status  int    `json:"status"`
 	Message string `json:"message,omitempty"`

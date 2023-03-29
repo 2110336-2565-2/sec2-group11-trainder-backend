@@ -10,6 +10,17 @@ definitions:
       trainer:
         type: string
     type: object
+  controllers.CreatePaymentForm:
+    properties:
+      bookingID:
+        description: amount is temp should handle via booking id and calculate
+        type: string
+      token:
+        type: string
+    required:
+    - bookingID
+    - token
+    type: object
   controllers.DeleteBookingForm:
     properties:
       bookingId:
@@ -190,6 +201,15 @@ definitions:
       username:
         type: string
     type: object
+  models.Payment:
+    properties:
+      chargeID:
+        type: string
+      status:
+        type: string
+      totalCost:
+        type: number
+    type: object
   models.ReturnBooking:
     properties:
       _id:
@@ -197,12 +217,7 @@ definitions:
       endDateTime:
         type: string
       payment:
-        properties:
-          status:
-            type: string
-          totalCost:
-            type: number
-        type: object
+        $ref: '#/definitions/models.Payment'
       startDateTime:
         type: string
       status:
@@ -274,6 +289,13 @@ definitions:
         type: string
     type: object
   responses.AddReviewResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  responses.CreatePaymentResponse:
     properties:
       message:
         type: string
@@ -501,6 +523,30 @@ paths:
       summary: Create a new booking
       tags:
       - bookings
+  /protected/create-payment:
+    post:
+      consumes:
+      - application/json
+      description: Create a payment using token and bookingId
+      parameters:
+      - description: details for creating payment
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.CreatePaymentForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.CreatePaymentResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a payment
+      tags:
+      - payment
   /protected/delete-booking:
     delete:
       consumes:
