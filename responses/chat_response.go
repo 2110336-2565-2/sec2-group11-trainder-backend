@@ -13,7 +13,13 @@ type ChatRoomIDResponse struct {
 }
 
 type AllChatResponse struct {
-	Status   int              `json:"status"`
-	Message  string           `json:"message,omitempty"`
-	Response []models.AllChat `json:"roomID,omitempty"`
+	Status  int              `json:"status"`
+	Message string           `json:"message,omitempty"`
+	AllChat []models.AllChat `json:"allChat,omitempty"`
+}
+
+type PastChatResponse struct {
+	Status       int              `json:"status"`
+	Message      string           `json:"message,omitempty"`
+	ChatMesseges []models.Messege `json:"chatMesseges,omitempty"`
 }

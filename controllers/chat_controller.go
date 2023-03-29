@@ -52,34 +52,35 @@ func GetChatsAndLatestMessege() gin.HandlerFunc {
 			return
 		}
 		c.JSON(http.StatusOK, responses.AllChatResponse{
-			Status:   http.StatusOK,
-			Message:  `success!`,
-			Response: result,
+			Status:  http.StatusOK,
+			Message: `success!`,
+			AllChat: result,
 		})
 	}
 }
 
 func GetPastChat() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		audience := c.Query("audience")
 		username, err := tokens.ExtractTokenUsername(c)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.GetBookingsResponse{
+			c.JSON(http.StatusBadRequest, responses.PastChatResponse{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			})
 		}
-		result, err := models.GetUpcomingBookings(username)
+		result, err := models.GetPastChat(username, audience)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.GetBookingsResponse{
+			c.JSON(http.StatusBadRequest, responses.PastChatResponse{
 				Status:  http.StatusBadRequest,
 				Message: err.Error(),
 			})
 			return
 		}
-		c.JSON(http.StatusOK, responses.GetBookingsResponse{
-			Status:   http.StatusOK,
-			Message:  `success!`,
-			Bookings: result,
+		c.JSON(http.StatusOK, responses.PastChatResponse{
+			Status:       http.StatusOK,
+			Message:      `success!`,
+			ChatMesseges: result,
 		})
 	}
 }

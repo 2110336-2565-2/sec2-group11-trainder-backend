@@ -55,5 +55,6 @@ func ProtectedRoute(router *gin.Engine, wsHandler *ws.Handler) {
 	//chat and DB part
 	protected.GET("/getRoomID", controllers.GetRoomID())
 	protected.GET("/getAllChats", controllers.GetChatsAndLatestMessege())
+	protected.GET("/get-past-chat", controllers.GetPastChat())
 
 }

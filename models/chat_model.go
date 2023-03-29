@@ -161,7 +161,44 @@ func GetAllChatLatestMessege(username string) ([]AllChat, error) {
 	return allChats, nil
 }
 
-func GetPastChat(username string, audience string) (Chat, error) {
-	var chat Chat
-	return chat, nil
+func GetPastChat(username string, audience string) ([]Messege, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	var filter bson.M
+
+	var messeges []Messege
+	// trainerFlag := false
+	if IsTrainer(username) {
+		fmt.Println("username is trainer")
+		filter = bson.M{
+			"trainer": username,
+			"trainee": audience,
+		}
+	} else {
+		filter = bson.M{
+			"trainer": audience,
+			"trainee": username,
+		}
+	}
+	fmt.Println(username, audience)
+	cursor, err := chatCollection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	// fmt.Println(cursor)
+	for cursor.Next(ctx) {
+		var chat Chat
+		err := cursor.Decode(&chat)
+		if err != nil {
+			return nil, err
+		}
+		messeges = chat.Messeges
+	}
+	return messeges, nil
+	// err := userCollection.FindOne(ctx, filter).Decode(&chat)
+	// if err != nil {
+	// 	return chat, err
+	// }
+	// fmt.Println(chat)
+	// return chat, nil
 }
