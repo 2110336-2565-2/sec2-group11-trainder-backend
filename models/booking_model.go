@@ -114,7 +114,9 @@ func GetBooking(bookingID string) (result Booking, err error) {
 
 // merge into one function ()
 func GetUpcomingBookings(Username string) ([]ReturnBooking, error) {
-	now := time.Now()
+	now := time.Now().Local()
+	fmt.Println(time.Now())
+	// fmt.Println(time.Now().UTC(), now.UTC().Truncate(24*time.Hour))
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -123,14 +125,14 @@ func GetUpcomingBookings(Username string) ([]ReturnBooking, error) {
 		filter = bson.M{
 			"trainer": Username,
 			"startDateTime": bson.M{
-				"$gt": now,
+				"$gte": now.UTC().Truncate(24 * time.Hour),
 			},
 		}
 	} else {
 		filter = bson.M{
 			"trainee": Username,
 			"startDateTime": bson.M{
-				"$gt": now,
+				"$gte": now.UTC().Truncate(24 * time.Hour),
 			},
 		}
 	}
