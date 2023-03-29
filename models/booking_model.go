@@ -115,7 +115,7 @@ func GetBooking(bookingID string) (result Booking, err error) {
 // merge into one function ()
 func GetUpcomingBookings(Username string) ([]ReturnBooking, error) {
 	now := time.Now().Local()
-	fmt.Println(time.Now())
+	// fmt.Println(time.Now())
 	// fmt.Println(time.Now().UTC(), now.UTC().Truncate(24*time.Hour))
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

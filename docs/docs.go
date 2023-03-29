@@ -94,6 +94,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/protected/booking": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve a single booking using id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bookings"
+                ],
+                "summary": "Get booking by ID",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.GetBookingResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.GetBookingResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/protected/bookings": {
             "get": {
                 "security": [
@@ -1041,6 +1075,32 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Booking": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "endDateTime": {
+                    "type": "string"
+                },
+                "payment": {
+                    "$ref": "#/definitions/models.Payment"
+                },
+                "startDateTime": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "trainee": {
+                    "type": "string"
+                },
+                "trainer": {
+                    "type": "string"
+                }
+            }
+        },
         "models.FilteredTrainerInfo": {
             "type": "object",
             "properties": {
@@ -1261,6 +1321,20 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.FilteredTrainerInfo"
                     }
+                }
+            }
+        },
+        "responses.GetBookingResponse": {
+            "type": "object",
+            "properties": {
+                "booking": {
+                    "$ref": "#/definitions/models.Booking"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         },
