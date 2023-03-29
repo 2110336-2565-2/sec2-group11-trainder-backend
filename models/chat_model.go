@@ -26,6 +26,11 @@ type Chat struct {
 	Messeges []Messege `bson:"messeges"`
 }
 
+type AllChat struct {
+	Audience string  `json:"audience"`
+	Messege  Messege `bson:"messege"`
+}
+
 // func FindChat(trainer string,trainee string) (chat Chat, err error) {
 // 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 // 	defer cancel()
@@ -68,36 +73,6 @@ func InitChat(trainer string, trainee string) error {
 
 }
 
-// func ddReview(trainerUsername string, username string, rating int, comment string) error {
-// 	isExist, err := userExists(trainerUsername)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	if !isExist {
-// 		err = &UserNotExist{}
-// 		return err
-// 	}
-// 	review := Review{
-// 		Username:  username,
-// 		Rating:    rating,
-// 		Comment:   comment,
-// 		CreatedAt: time.Now(),
-// 	}
-// 	filter := bson.M{"username": trainerUsername}
-// 	update := bson.M{"$push": bson.M{"reviews": review}}
-// 	_, err = userCollection.UpdateOne(context.Background(), filter, update)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	err = updateRatingByUsername(trainerUsername)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	return nil
-
-// }
-
 func AddMessege(roomID string, content string, sender string) error {
 
 	s := strings.Split(roomID, "_")
@@ -133,4 +108,60 @@ func AddMessege(roomID string, content string, sender string) error {
 	}
 	return nil
 
+}
+
+func GetAllChatLatestMessege(username string) ([]AllChat, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	var filter bson.M
+	trainerFlag := false
+	if IsTrainer(username) {
+		trainerFlag = true
+		filter = bson.M{
+			"trainer": username,
+		}
+	} else {
+		filter = bson.M{
+			"trainee": username,
+		}
+	}
+
+	cursor, err := chatCollection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	// fmt.Println(cursor)
+	var allChats []AllChat
+	for cursor.Next(ctx) {
+		var chat Chat
+		err := cursor.Decode(&chat)
+		if err != nil {
+			return nil, err
+		}
+		// fmt.Println("chat.Messeges", chat.Messeges, chat.Messeges[len(chat.Messeges)-1])
+		messege := chat.Messeges[len(chat.Messeges)-1]
+		// fmt.Println(messege.Content, messege.CreatedAt)
+		var result AllChat
+		if trainerFlag {
+			result = AllChat{
+				Audience: chat.Trainee,
+				Messege:  messege,
+			}
+		} else {
+			result = AllChat{
+				Audience: chat.Trainer,
+				Messege:  messege,
+			}
+		}
+
+		allChats = append(allChats, result)
+		fmt.Println("allChats", allChats)
+	}
+
+	return allChats, nil
+}
+
+func GetPastChat(username string, audience string) (Chat, error) {
+	var chat Chat
+	return chat, nil
 }
