@@ -637,6 +637,28 @@ paths:
       summary: Get reviews of specific trainer
       tags:
       - Trainer
+  /protected/today-event:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of today bookings for the user who is currently
+        logged in
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.GetBookingsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.GetBookingsResponse'
+      security:
+      - BearerAuth: []
+      summary: Get today bookings for the logged in user
+      tags:
+      - bookings
   /protected/trainer:
     post:
       consumes:

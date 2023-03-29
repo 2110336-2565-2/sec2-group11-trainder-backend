@@ -38,6 +38,7 @@ func ProtectedRoute(router *gin.Engine, wsHandler *ws.Handler) {
 
 	// Get bookings
 	protected.GET("/bookings", controllers.GetBookings())
+	protected.GET("/today-event", controllers.GetTodayEvents())
 
 	// Booking
 	protected.POST("/update-booking", controllers.UpdateBooking())
