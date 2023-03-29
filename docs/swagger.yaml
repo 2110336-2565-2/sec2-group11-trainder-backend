@@ -184,6 +184,30 @@ definitions:
       traineeCount:
         type: integer
     type: object
+  models.AllChat:
+    properties:
+      audience:
+        type: string
+      messege:
+        $ref: '#/definitions/models.Messege'
+    type: object
+  models.Booking:
+    properties:
+      _id:
+        type: string
+      endDateTime:
+        type: string
+      payment:
+        $ref: '#/definitions/models.Payment'
+      startDateTime:
+        type: string
+      status:
+        type: string
+      trainee:
+        type: string
+      trainer:
+        type: string
+    type: object
   models.FilteredTrainerInfo:
     properties:
       address:
@@ -201,6 +225,24 @@ definitions:
       username:
         type: string
     type: object
+  models.Messege:
+    properties:
+      content:
+        type: string
+      createdAt:
+        type: string
+      sender:
+        type: string
+    type: object
+  models.Payment:
+    properties:
+      chargeID:
+        type: string
+      status:
+        type: string
+      totalCost:
+        type: number
+    type: object
   models.ReturnBooking:
     properties:
       _id:
@@ -208,12 +250,7 @@ definitions:
       endDateTime:
         type: string
       payment:
-        properties:
-          status:
-            type: string
-          totalCost:
-            type: number
-        type: object
+        $ref: '#/definitions/models.Payment'
       startDateTime:
         type: string
       status:
@@ -307,6 +344,13 @@ definitions:
       message:
         type: string
       roomID:
+        type: string
+      status:
+        type: integer
+    type: object
+  responses.CreatePaymentResponse:
+    properties:
+      message:
         type: string
       status:
         type: integer

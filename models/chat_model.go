@@ -79,7 +79,7 @@ func AddMessege(roomID string, content string, sender string) error {
 	trainer := s[1]
 	trainee := s[3]
 
-	fmt.Println("AddMessege", trainer, trainee)
+	// fmt.Println("AddMessege", trainer, trainee)
 	// fmt.Println(ListCollectionNames())
 	chatexists, err := chatExists(trainer, trainee)
 	if err != nil {
@@ -155,7 +155,7 @@ func GetAllChatLatestMessege(username string) ([]AllChat, error) {
 		}
 
 		allChats = append(allChats, result)
-		fmt.Println("allChats", allChats)
+		// fmt.Println("allChats", allChats)
 	}
 
 	return allChats, nil
@@ -169,7 +169,7 @@ func GetPastChat(username string, audience string) ([]Messege, error) {
 	var messeges []Messege
 	// trainerFlag := false
 	if IsTrainer(username) {
-		fmt.Println("username is trainer")
+		// fmt.Println("username is trainer")
 		filter = bson.M{
 			"trainer": username,
 			"trainee": audience,
@@ -180,7 +180,7 @@ func GetPastChat(username string, audience string) ([]Messege, error) {
 			"trainee": username,
 		}
 	}
-	fmt.Println(username, audience)
+	// fmt.Println(username, audience)
 	cursor, err := chatCollection.Find(ctx, filter)
 	if err != nil {
 		return nil, err

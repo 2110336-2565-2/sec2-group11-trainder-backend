@@ -1264,20 +1264,6 @@
                 }
             }
         },
-        "models.ReturnBooking": {
-            "type": "object",
-            "properties": {
-                "content": {
-                    "type": "string"
-                },
-                "createdAt": {
-                    "type": "string"
-                },
-                "sender": {
-                    "type": "string"
-                }
-            }
-        },
         "models.Payment": {
             "type": "object",
             "properties": {
@@ -1415,6 +1401,37 @@
             "type": "object",
             "properties": {
                 "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.AllChatResponse": {
+            "type": "object",
+            "properties": {
+                "allChat": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.AllChat"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.ChatRoomIDResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "roomID": {
                     "type": "string"
                 },
                 "status": {

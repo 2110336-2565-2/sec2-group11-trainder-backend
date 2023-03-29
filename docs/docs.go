@@ -1195,6 +1195,43 @@ const docTemplate = `{
                 }
             }
         },
+        "models.AllChat": {
+            "type": "object",
+            "properties": {
+                "audience": {
+                    "type": "string"
+                },
+                "messege": {
+                    "$ref": "#/definitions/models.Messege"
+                }
+            }
+        },
+        "models.Booking": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "endDateTime": {
+                    "type": "string"
+                },
+                "payment": {
+                    "$ref": "#/definitions/models.Payment"
+                },
+                "startDateTime": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "trainee": {
+                    "type": "string"
+                },
+                "trainer": {
+                    "type": "string"
+                }
+            }
+        },
         "models.FilteredTrainerInfo": {
             "type": "object",
             "properties": {
@@ -1221,6 +1258,34 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Messege": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "sender": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Payment": {
+            "type": "object",
+            "properties": {
+                "chargeID": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "totalCost": {
+                    "type": "number"
+                }
+            }
+        },
         "models.ReturnBooking": {
             "type": "object",
             "properties": {
@@ -1231,15 +1296,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "payment": {
-                    "type": "object",
-                    "properties": {
-                        "status": {
-                            "type": "string"
-                        },
-                        "totalCost": {
-                            "type": "number"
-                        }
-                    }
+                    "$ref": "#/definitions/models.Payment"
                 },
                 "startDateTime": {
                     "type": "string"
