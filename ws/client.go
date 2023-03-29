@@ -1,7 +1,9 @@
 package ws
 
 import (
+	"fmt"
 	"log"
+	"trainder-api/models"
 
 	"github.com/gorilla/websocket"
 )
@@ -55,6 +57,13 @@ func (c *Client) readMessage(hub *Hub) {
 			Username: c.Username,
 		}
 
+		fmt.Println("msg", msg.Content, msg.RoomID, msg.Username)
+
 		hub.Broadcast <- msg
+
+		err = models.AddMessege(msg.RoomID, msg.Content, msg.Username)
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 }
