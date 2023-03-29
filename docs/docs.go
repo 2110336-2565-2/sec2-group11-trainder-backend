@@ -269,6 +269,126 @@ const docTemplate = `{
                 }
             }
         },
+        "/protected/get-All-Chats": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get all chat on sidebar that user communicate with with their latest messege NOTICE THAT all time in chat is at UTC",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "chats"
+                ],
+                "summary": "Get all chat on sidebar that user communicate with",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.AllChatResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.AllChatResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/get-RoomID": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get roomID to communicate with audience (can omit this function by using the roomID format trainer_{trainerUsername}_trainee_{traineeUsername})  NOTICE THAT all time in chat is at UTC",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "chats"
+                ],
+                "summary": "Get roomID to communicate with audience",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "audience of this conversation (username)",
+                        "name": "audience",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ChatRoomIDResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ChatRoomIDResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/get-past-chat": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get all messeges that user communicate with specific audience NOTICE THAT all time in chat is at UTC",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "chats"
+                ],
+                "summary": "Get all messeges that user communicate with specific audience",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "audience of this conversation (username)",
+                        "name": "audience",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.PastChatResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.PastChatResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/protected/profile": {
             "get": {
                 "security": [
@@ -977,6 +1097,17 @@ const docTemplate = `{
                 }
             }
         },
+        "models.AllChat": {
+            "type": "object",
+            "properties": {
+                "audience": {
+                    "type": "string"
+                },
+                "messege": {
+                    "$ref": "#/definitions/models.Messege"
+                }
+            }
+        },
         "models.FilteredTrainerInfo": {
             "type": "object",
             "properties": {
@@ -999,6 +1130,20 @@ const docTemplate = `{
                     "$ref": "#/definitions/models.TrainerInfo"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Messege": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "sender": {
                     "type": "string"
                 }
             }
@@ -1141,6 +1286,37 @@ const docTemplate = `{
                 }
             }
         },
+        "responses.AllChatResponse": {
+            "type": "object",
+            "properties": {
+                "allChat": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.AllChat"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.ChatRoomIDResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "roomID": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
         "responses.CurrentUserResponse": {
             "type": "object",
             "properties": {
@@ -1214,6 +1390,23 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "responses.PastChatResponse": {
+            "type": "object",
+            "properties": {
+                "chatMesseges": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Messege"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         },

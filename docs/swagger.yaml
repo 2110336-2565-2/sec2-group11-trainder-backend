@@ -173,6 +173,13 @@ definitions:
       traineeCount:
         type: integer
     type: object
+  models.AllChat:
+    properties:
+      audience:
+        type: string
+      messege:
+        $ref: '#/definitions/models.Messege'
+    type: object
   models.FilteredTrainerInfo:
     properties:
       address:
@@ -188,6 +195,15 @@ definitions:
       trainerInfo:
         $ref: '#/definitions/models.TrainerInfo'
       username:
+        type: string
+    type: object
+  models.Messege:
+    properties:
+      content:
+        type: string
+      createdAt:
+        type: string
+      sender:
         type: string
     type: object
   models.ReturnBooking:
@@ -280,6 +296,26 @@ definitions:
       status:
         type: integer
     type: object
+  responses.AllChatResponse:
+    properties:
+      allChat:
+        items:
+          $ref: '#/definitions/models.AllChat'
+        type: array
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  responses.ChatRoomIDResponse:
+    properties:
+      message:
+        type: string
+      roomID:
+        type: string
+      status:
+        type: integer
+    type: object
   responses.CurrentUserResponse:
     properties:
       message:
@@ -328,6 +364,17 @@ definitions:
         type: string
       username:
         type: string
+    type: object
+  responses.PastChatResponse:
+    properties:
+      chatMesseges:
+        items:
+          $ref: '#/definitions/models.Messege'
+        type: array
+      message:
+        type: string
+      status:
+        type: integer
     type: object
   responses.ProfileResponse:
     properties:
@@ -557,6 +604,85 @@ paths:
       summary: FilterTrainer base on filter input
       tags:
       - Trainer
+  /protected/get-All-Chats:
+    get:
+      consumes:
+      - application/json
+      description: Get all chat on sidebar that user communicate with with their latest
+        messege NOTICE THAT all time in chat is at UTC
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.AllChatResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.AllChatResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all chat on sidebar that user communicate with
+      tags:
+      - chats
+  /protected/get-RoomID:
+    get:
+      consumes:
+      - application/json
+      description: Get roomID to communicate with audience (can omit this function
+        by using the roomID format trainer_{trainerUsername}_trainee_{traineeUsername})  NOTICE
+        THAT all time in chat is at UTC
+      parameters:
+      - description: audience of this conversation (username)
+        in: query
+        name: audience
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ChatRoomIDResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.ChatRoomIDResponse'
+      security:
+      - BearerAuth: []
+      summary: Get roomID to communicate with audience
+      tags:
+      - chats
+  /protected/get-past-chat:
+    get:
+      consumes:
+      - application/json
+      description: Get all messeges that user communicate with specific audience NOTICE
+        THAT all time in chat is at UTC
+      parameters:
+      - description: audience of this conversation (username)
+        in: query
+        name: audience
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.PastChatResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.PastChatResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all messeges that user communicate with specific audience
+      tags:
+      - chats
   /protected/profile:
     get:
       consumes:
