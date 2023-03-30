@@ -188,8 +188,8 @@ definitions:
     properties:
       audience:
         type: string
-      messege:
-        $ref: '#/definitions/models.Messege'
+      message:
+        $ref: '#/definitions/models.Message'
     type: object
   models.Booking:
     properties:
@@ -225,7 +225,7 @@ definitions:
       username:
         type: string
     type: object
-  models.Messege:
+  models.Message:
     properties:
       content:
         type: string
@@ -415,9 +415,9 @@ definitions:
     type: object
   responses.PastChatResponse:
     properties:
-      chatMesseges:
+      chatMessages:
         items:
-          $ref: '#/definitions/models.Messege'
+          $ref: '#/definitions/models.Message'
         type: array
       message:
         type: string
@@ -702,7 +702,7 @@ paths:
       consumes:
       - application/json
       description: Get all chat on sidebar that user communicate with with their latest
-        messege NOTICE THAT all time in chat is at UTC
+        message NOTICE THAT all time in chat is at UTC
       produces:
       - application/json
       responses:
@@ -752,7 +752,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get all messeges that user communicate with specific audience NOTICE
+      description: Get all messages that user communicate with specific audience NOTICE
         THAT all time in chat is at UTC
       parameters:
       - description: audience of this conversation (username)
@@ -773,7 +773,7 @@ paths:
             $ref: '#/definitions/responses.PastChatResponse'
       security:
       - BearerAuth: []
-      summary: Get all messeges that user communicate with specific audience
+      summary: Get all messages that user communicate with specific audience
       tags:
       - chats
   /protected/profile:

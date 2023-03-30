@@ -349,7 +349,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get all chat on sidebar that user communicate with with their latest messege NOTICE THAT all time in chat is at UTC",
+                "description": "Get all chat on sidebar that user communicate with with their latest message NOTICE THAT all time in chat is at UTC",
                 "consumes": [
                     "application/json"
                 ],
@@ -426,7 +426,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get all messeges that user communicate with specific audience NOTICE THAT all time in chat is at UTC",
+                "description": "Get all messages that user communicate with specific audience NOTICE THAT all time in chat is at UTC",
                 "consumes": [
                     "application/json"
                 ],
@@ -436,7 +436,7 @@ const docTemplate = `{
                 "tags": [
                     "chats"
                 ],
-                "summary": "Get all messeges that user communicate with specific audience",
+                "summary": "Get all messages that user communicate with specific audience",
                 "parameters": [
                     {
                         "type": "string",
@@ -1201,8 +1201,8 @@ const docTemplate = `{
                 "audience": {
                     "type": "string"
                 },
-                "messege": {
-                    "$ref": "#/definitions/models.Messege"
+                "message": {
+                    "$ref": "#/definitions/models.Message"
                 }
             }
         },
@@ -1258,7 +1258,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Messege": {
+        "models.Message": {
             "type": "object",
             "properties": {
                 "content": {
@@ -1551,10 +1551,10 @@ const docTemplate = `{
         "responses.PastChatResponse": {
             "type": "object",
             "properties": {
-                "chatMesseges": {
+                "chatMessages": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.Messege"
+                        "$ref": "#/definitions/models.Message"
                     }
                 },
                 "message": {
