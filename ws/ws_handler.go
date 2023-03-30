@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"fmt"
 	"net/http"
 	"trainder-api/utils/tokens"
 
@@ -32,6 +33,7 @@ func (h *Handler) CreateRoom(c *gin.Context) {
 	var req CreateRoomReq
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		fmt.Println("error")
 		return
 	}
 
@@ -120,6 +122,10 @@ type ClientRes struct {
 func (h *Handler) GetClients(c *gin.Context) {
 	var clients []ClientRes
 	roomId := c.Param("roomId")
+
+	// fmt.Println("roomId", roomId)
+	// _, f := h.hub.Rooms[roomId]
+	// fmt.Println("f", f)
 
 	if _, ok := h.hub.Rooms[roomId]; !ok {
 		clients = make([]ClientRes, 0)
