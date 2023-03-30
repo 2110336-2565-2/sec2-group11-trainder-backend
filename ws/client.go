@@ -61,7 +61,7 @@ func (c *Client) readMessage(hub *Hub) {
 
 		hub.Broadcast <- msg
 
-		err = models.AddMessege(msg.RoomID, msg.Content, msg.Username)
+		err = models.AddMessage(msg.RoomID, msg.Content, msg.Username)
 		if err != nil {
 			fmt.Println(err)
 		}

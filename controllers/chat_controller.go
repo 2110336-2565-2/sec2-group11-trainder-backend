@@ -45,7 +45,7 @@ func GetRoomID() gin.HandlerFunc {
 }
 
 // @Summary Get all chat on sidebar that user communicate with
-// @Description Get all chat on sidebar that user communicate with with their latest messege NOTICE THAT all time in chat is at UTC
+// @Description Get all chat on sidebar that user communicate with with their latest message NOTICE THAT all time in chat is at UTC
 // @Tags chats
 // @Accept json
 // @Produce json
@@ -53,7 +53,7 @@ func GetRoomID() gin.HandlerFunc {
 // @Success 200 {object} responses.AllChatResponse
 // @Failure 400 {object} responses.AllChatResponse
 // @Router /protected/get-All-Chats [GET]
-func GetChatsAndLatestMessege() gin.HandlerFunc {
+func GetChatsAndLatestMessage() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		username, err := tokens.ExtractTokenUsername(c)
 		if err != nil {
@@ -62,7 +62,7 @@ func GetChatsAndLatestMessege() gin.HandlerFunc {
 				Message: err.Error(),
 			})
 		}
-		result, err := models.GetAllChatLatestMessege(username)
+		result, err := models.GetAllChatLatestMessage(username)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, responses.AllChatResponse{
 				Status:  http.StatusBadRequest,
@@ -78,8 +78,8 @@ func GetChatsAndLatestMessege() gin.HandlerFunc {
 	}
 }
 
-// @Summary Get all messeges that user communicate with specific audience
-// @Description Get all messeges that user communicate with specific audience NOTICE THAT all time in chat is at UTC
+// @Summary Get all messages that user communicate with specific audience
+// @Description Get all messages that user communicate with specific audience NOTICE THAT all time in chat is at UTC
 // @Tags chats
 // @Accept json
 // @Produce json
@@ -109,7 +109,7 @@ func GetPastChat() gin.HandlerFunc {
 		c.JSON(http.StatusOK, responses.PastChatResponse{
 			Status:       http.StatusOK,
 			Message:      `success!`,
-			ChatMesseges: result,
+			ChatMessages: result,
 		})
 	}
 }

@@ -21,5 +21,5 @@ type AllChatResponse struct {
 type PastChatResponse struct {
 	Status       int              `json:"status"`
 	Message      string           `json:"message,omitempty"`
-	ChatMesseges []models.Messege `json:"chatMesseges,omitempty"`
+	ChatMessages []models.Message `json:"chatMessages,omitempty"`
 }

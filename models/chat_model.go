@@ -13,22 +13,22 @@ import (
 
 var chatCollection *mongo.Collection = configs.GetCollection(configs.DB, "chats")
 
-type Messege struct {
-	CreatedAt time.Time `bson:"createdAt"`
-	Content   string    `bson:"content"`
-	Sender    string    `bson:"sender"`
+type Message struct {
+	CreatedAt time.Time `bson:"createdAt" json:"createdAt"`
+	Content   string    `bson:"content" json:"content"`
+	Sender    string    `bson:"sender" json:"sender"`
 }
 
 type Chat struct {
 	RoomID   string    `bson:"roomID" json:"roomID"`
 	Trainer  string    `bson:"trainer" json:"trainer"`
 	Trainee  string    `bson:"trainee" json:"trainee"`
-	Messeges []Messege `bson:"messeges"`
+	Messages []Message `bson:"messages" json:"messages"`
 }
 
 type AllChat struct {
-	Audience string  `json:"audience"`
-	Messege  Messege `bson:"messege"`
+	Audience string  `bson:"audience" json:"audience"`
+	Message  Message `bson:"message" json:"message"`
 }
 
 // func FindChat(trainer string,trainee string) (chat Chat, err error) {
@@ -62,7 +62,7 @@ func InitChat(trainer string, trainee string) error {
 		"roomID":   rid,
 		"trainer":  trainer,
 		"trainee":  trainee,
-		"messeges": []Messege{},
+		"messages": []Message{},
 	}
 	_, err := chatCollection.InsertOne(ctx, chat)
 	if err != nil {
@@ -73,35 +73,32 @@ func InitChat(trainer string, trainee string) error {
 
 }
 
-func AddMessege(roomID string, content string, sender string) error {
+func AddMessage(roomID string, content string, sender string) error {
 
 	s := strings.Split(roomID, "_")
 	trainer := s[1]
 	trainee := s[3]
 
-	// fmt.Println("AddMessege", trainer, trainee)
-	// fmt.Println(ListCollectionNames())
-	chatexists, err := chatExists(trainer, trainee)
+	chatExists, err := chatExists(trainer, trainee)
 	if err != nil {
 		return fmt.Errorf("failed at chatExists: %v", err)
 	}
-	if !chatexists {
+	if !chatExists {
 		err = InitChat(trainer, trainee)
 		if err != nil {
-			return fmt.Errorf("failed at AddMessege: %v", err)
+			return fmt.Errorf("failed at AddMessage: %v", err)
 		}
 	}
 
-	messege := Messege{
+	message := Message{
 		CreatedAt: time.Now(),
 		Content:   content,
 		Sender:    sender,
 	}
-	// rid := fmt.Sprintf("trainer_%s_trainee_%s", trainer, trainee)
 	filter := bson.M{
 		"roomID": roomID,
 	}
-	update := bson.M{"$push": bson.M{"messeges": messege}}
+	update := bson.M{"$push": bson.M{"messages": message}}
 	_, err = chatCollection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		return err
@@ -110,7 +107,7 @@ func AddMessege(roomID string, content string, sender string) error {
 
 }
 
-func GetAllChatLatestMessege(username string) ([]AllChat, error) {
+func GetAllChatLatestMessage(username string) ([]AllChat, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	var filter bson.M
@@ -130,7 +127,6 @@ func GetAllChatLatestMessege(username string) ([]AllChat, error) {
 	if err != nil {
 		return nil, err
 	}
-	// fmt.Println(cursor)
 	var allChats []AllChat
 	for cursor.Next(ctx) {
 		var chat Chat
@@ -138,38 +134,33 @@ func GetAllChatLatestMessege(username string) ([]AllChat, error) {
 		if err != nil {
 			return nil, err
 		}
-		// fmt.Println("chat.Messeges", chat.Messeges, chat.Messeges[len(chat.Messeges)-1])
-		messege := chat.Messeges[len(chat.Messeges)-1]
-		// fmt.Println(messege.Content, messege.CreatedAt)
+		message := chat.Messages[len(chat.Messages)-1]
 		var result AllChat
 		if trainerFlag {
 			result = AllChat{
 				Audience: chat.Trainee,
-				Messege:  messege,
+				Message:  message,
 			}
 		} else {
 			result = AllChat{
 				Audience: chat.Trainer,
-				Messege:  messege,
+				Message:  message,
 			}
 		}
 
 		allChats = append(allChats, result)
-		// fmt.Println("allChats", allChats)
 	}
 
 	return allChats, nil
 }
 
-func GetPastChat(username string, audience string) ([]Messege, error) {
+func GetPastChat(username string, audience string) ([]Message, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	var filter bson.M
 
-	var messeges []Messege
-	// trainerFlag := false
+	var messages []Message
 	if IsTrainer(username) {
-		// fmt.Println("username is trainer")
 		filter = bson.M{
 			"trainer": username,
 			"trainee": audience,
@@ -180,25 +171,17 @@ func GetPastChat(username string, audience string) ([]Messege, error) {
 			"trainee": username,
 		}
 	}
-	// fmt.Println(username, audience)
 	cursor, err := chatCollection.Find(ctx, filter)
 	if err != nil {
 		return nil, err
 	}
-	// fmt.Println(cursor)
 	for cursor.Next(ctx) {
 		var chat Chat
 		err := cursor.Decode(&chat)
 		if err != nil {
 			return nil, err
 		}
-		messeges = chat.Messeges
+		messages = chat.Messages
 	}
-	return messeges, nil
-	// err := userCollection.FindOne(ctx, filter).Decode(&chat)
-	// if err != nil {
-	// 	return chat, err
-	// }
-	// fmt.Println(chat)
-	// return chat, nil
+	return messages, nil
 }
