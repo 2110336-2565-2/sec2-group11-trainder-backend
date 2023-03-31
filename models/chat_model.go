@@ -111,16 +111,30 @@ func GetAllChatLatestMessage(username string) ([]AllChat, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	var filter bson.M
-	trainerFlag := false
-	if IsTrainer(username) {
-		trainerFlag = true
-		filter = bson.M{
-			"trainer": username,
-		}
-	} else {
-		filter = bson.M{
-			"trainee": username,
-		}
+	// trainerFlag := false
+
+	// if IsTrainer(username) {
+	// 	trainerFlag = true
+	// 	filter = bson.M{
+	// 		"trainer": username,
+	// 	}
+	// } else {
+	// 	filter = bson.M{
+	// 		"trainee": username,
+	// 	}
+	// }
+	// if IsTrainer(username) {
+	// 	trainerFlag = true
+	// }
+	filter = bson.M{
+		"$or": []bson.M{
+			{
+				"trainer": username,
+			},
+			{
+				"trainee": username,
+			},
+		},
 	}
 
 	cursor, err := chatCollection.Find(ctx, filter)
@@ -134,19 +148,28 @@ func GetAllChatLatestMessage(username string) ([]AllChat, error) {
 		if err != nil {
 			return nil, err
 		}
+		audience := chat.Trainer
+		personB := chat.Trainee
+		if username != personB {
+			audience = personB
+		}
 		message := chat.Messages[len(chat.Messages)-1]
 		var result AllChat
-		if trainerFlag {
-			result = AllChat{
-				Audience: chat.Trainee,
-				Message:  message,
-			}
-		} else {
-			result = AllChat{
-				Audience: chat.Trainer,
-				Message:  message,
-			}
+		result = AllChat{
+			Audience: audience,
+			Message:  message,
 		}
+		// if trainerFlag {
+		// 	result = AllChat{
+		// 		Audience: chat.Trainee,
+		// 		Message:  message,
+		// 	}
+		// } else {
+		// 	result = AllChat{
+		// 		Audience: chat.Trainer,
+		// 		Message:  message,
+		// 	}
+		// }
 
 		allChats = append(allChats, result)
 	}
@@ -160,17 +183,29 @@ func GetPastChat(username string, audience string) ([]Message, error) {
 	var filter bson.M
 
 	var messages []Message
-	if IsTrainer(username) {
-		filter = bson.M{
-			"trainer": username,
-			"trainee": audience,
-		}
-	} else {
-		filter = bson.M{
-			"trainer": audience,
-			"trainee": username,
-		}
+	filter = bson.M{
+		"$or": []bson.M{
+			{
+				"trainer": username,
+				"trainee": audience,
+			},
+			{
+				"trainer": audience,
+				"trainee": username,
+			},
+		},
 	}
+	// if IsTrainer(username) {
+	// 	filter = bson.M{
+	// 		"trainer": username,
+	// 		"trainee": audience,
+	// 	}
+	// } else {
+	// 	filter = bson.M{
+	// 		"trainer": audience,
+	// 		"trainee": username,
+	// 	}
+	// }
 	cursor, err := chatCollection.Find(ctx, filter)
 	if err != nil {
 		return nil, err

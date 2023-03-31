@@ -258,7 +258,7 @@ func DeleteBooking() gin.HandlerFunc {
 // @Tags bookings
 // @Accept json
 // @Produce json
-// @Param date query string true "put date in query param in format yyy-mm-dd"
+// @Param date query string true "put date in query param in format yyyy-mm-dd"
 // @Security BearerAuth
 // @Success 200 {object} responses.GetBookingsResponse
 // @Failure 400 {object} responses.GetBookingsResponse
