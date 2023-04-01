@@ -342,7 +342,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/protected/get-All-Chats": {
+        "/protected/get-all-chats": {
             "get": {
                 "security": [
                     {
@@ -371,49 +371,6 @@ const docTemplate = `{
                         "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.AllChatResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/protected/get-RoomID": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get roomID to communicate with audience (can omit this function by using the roomID format trainer_{trainerUsername}_trainee_{traineeUsername})  NOTICE THAT all time in chat is at UTC",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "chats"
-                ],
-                "summary": "Get roomID to communicate with audience",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "audience of this conversation (username)",
-                        "name": "audience",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/responses.ChatRoomIDResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/responses.ChatRoomIDResponse"
                         }
                     }
                 }
@@ -457,6 +414,49 @@ const docTemplate = `{
                         "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.PastChatResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/get-room-id": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get roomID to communicate with audience (can omit this function by using the roomID format trainer_{trainerUsername}_trainee_{traineeUsername})  NOTICE THAT all time in chat is at UTC",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "chats"
+                ],
+                "summary": "Get roomID to communicate with audience",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "audience of this conversation (username)",
+                        "name": "audience",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ChatRoomIDResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ChatRoomIDResponse"
                         }
                     }
                 }
@@ -607,7 +607,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "put date in query param in format yyy-mm-dd",
+                        "description": "put date in query param in format yyyy-mm-dd",
                         "name": "date",
                         "in": "query",
                         "required": true
@@ -715,7 +715,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Update a booking of sepecified bookingId with the specified update input consist of status(pending/confirm/complete) and paymentStatus(pending/paid)",
+                "description": "Update a booking of specified bookingId with the specified update input consist of status(pending/confirm/complete) and paymentStatus(pending/paid)",
                 "consumes": [
                     "application/json"
                 ],
@@ -1162,9 +1162,6 @@ const docTemplate = `{
             ],
             "properties": {
                 "bookingId": {
-                    "type": "string"
-                },
-                "paymentStatus": {
                     "type": "string"
                 },
                 "status": {

@@ -19,7 +19,7 @@ import (
 // @Security BearerAuth
 // @Success 200 {object} responses.ChatRoomIDResponse
 // @Failure 400 {object} responses.ChatRoomIDResponse
-// @Router /protected/get-RoomID [GET]
+// @Router /protected/get-room-id [GET]
 func GetRoomID() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		audience := c.Query("audience")
@@ -52,7 +52,7 @@ func GetRoomID() gin.HandlerFunc {
 // @Security BearerAuth
 // @Success 200 {object} responses.AllChatResponse
 // @Failure 400 {object} responses.AllChatResponse
-// @Router /protected/get-All-Chats [GET]
+// @Router /protected/get-all-chats [GET]
 func GetChatsAndLatestMessage() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		username, err := tokens.ExtractTokenUsername(c)
