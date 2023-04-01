@@ -209,7 +209,7 @@ type NameAndRole struct {
 	UserType  string `json:"usertype"`
 }
 
-func GetName(username string) (NameAndRole, error) {
+func GetNameAndRole(username string) (NameAndRole, error) {
 	var result NameAndRole
 	profile, err := FindProfile(username, "")
 	if err != nil {
@@ -218,7 +218,7 @@ func GetName(username string) (NameAndRole, error) {
 	result = NameAndRole{
 		FirstName: profile.FirstName,
 		LastName:  profile.LastName,
-		UserType:  profile.Username,
+		UserType:  profile.UserType,
 	}
 	return result, nil
 

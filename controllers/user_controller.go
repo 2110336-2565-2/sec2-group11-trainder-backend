@@ -145,13 +145,25 @@ func GetProfile() gin.HandlerFunc {
 	}
 }
 
+// @Summary		Get first name, last name, and role of any user given username
+// @Description	Get first name, last name, and role of any user given username
+// @Tags			Helper
+// @Accept			json
+// @Produce		json
+// @Param			username query string true "username of the person you want"
+// @Success		200		{object}	responses.NameAndRoleResponse
+// @Failure		500	{object}	responses.NameAndRoleResponse
+//
+//	@Security		BearerAuth
+//
+// @Router			/protected/get-name-and-role [GET]
 func GetNameAndRole() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		username := c.Query("username")
 
 		result, err := models.GetNameAndRole(username)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.UserProfileResponse{
+			c.JSON(http.StatusBadRequest, responses.NameAndRoleResponse{
 				Status:  http.StatusInternalServerError,
 				Message: err.Error(),
 			})
