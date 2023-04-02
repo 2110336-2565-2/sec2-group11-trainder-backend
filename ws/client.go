@@ -62,7 +62,7 @@ func (c *Client) readMessage(hub *Hub) {
 
 		err = models.AddMessage(msg.RoomID, msg.Content, msg.Username)
 		if err != nil {
-			log.Printf("error adding messege to database: %v", err)
+			log.Printf("error adding message to database: %v", err)
 		}
 	}
 }
