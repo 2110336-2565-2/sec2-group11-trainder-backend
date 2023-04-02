@@ -3,6 +3,7 @@ package models
 import (
 	"context"
 	"errors"
+	"fmt"
 	"regexp"
 	"strconv"
 	"time"
@@ -200,4 +201,25 @@ func UserTypeCheck(userType string) error {
 		return errors.New(" userType is not valid, valid userType in ['Trainer', 'Trainee'] ")
 	}
 	return nil
+}
+
+type NameAndRole struct {
+	FirstName string `json:"firstname"`
+	LastName  string `json:"lastname"`
+	UserType  string `json:"usertype"`
+}
+
+func GetNameAndRole(username string) (NameAndRole, error) {
+	var result NameAndRole
+	profile, err := FindProfile(username, "")
+	if err != nil {
+		return result, fmt.Errorf("Error from FindProfile in GetName %v", err)
+	}
+	result = NameAndRole{
+		FirstName: profile.FirstName,
+		LastName:  profile.LastName,
+		UserType:  profile.UserType,
+	}
+	return result, nil
+
 }

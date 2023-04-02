@@ -49,3 +49,9 @@ type ReviewableResponse struct {
 	Message   string `json:"message,omitempty"`
 	CanReview bool   `json:"canReview"`
 }
+
+type NameAndRoleResponse struct {
+	Status  int                `json:"status"`
+	Message string             `json:"message,omitempty"`
+	Result  models.NameAndRole `json:"result"`
+}

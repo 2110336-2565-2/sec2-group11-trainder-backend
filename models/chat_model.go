@@ -76,6 +76,9 @@ func InitChat(trainer string, trainee string) error {
 func AddMessage(roomID string, content string, sender string) error {
 
 	s := strings.Split(roomID, "_")
+	if len(s) != 4 {
+		return fmt.Errorf("your roomID might be in wrong format")
+	}
 	trainer := s[1]
 	trainee := s[3]
 

@@ -23,16 +23,16 @@ type ProfileDetails struct {
 
 // CurrentUser godoc
 //
-//	@Summary		get the current user's username
-//	@Description	get the current user's username.  After getting token replied from logging in, put token in ginContext's token field
-//	@Tags			user
-//	@Accept			json
-//	@Produce		json
-//	@Security		BearerAuth
-//	@Success		200	{object}	responses.CurrentUserResponse
-//  @Failure		400	{object}	responses.CurrentUserResponse
-//	@Security		BearerAuth
-//	@Router			/protected/user [get]
+//		@Summary		get the current user's username
+//		@Description	get the current user's username.  After getting token replied from logging in, put token in ginContext's token field
+//		@Tags			user
+//		@Accept			json
+//		@Produce		json
+//		@Security		BearerAuth
+//		@Success		200	{object}	responses.CurrentUserResponse
+//	 @Failure		400	{object}	responses.CurrentUserResponse
+//		@Security		BearerAuth
+//		@Router			/protected/user [get]
 func CurrentUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		username, err := tokens.ExtractTokenUsername(c)
@@ -52,16 +52,16 @@ func CurrentUser() gin.HandlerFunc {
 
 // UpdateProfile godoc
 //
-//	@Summary		updateProfile of the current user
-//	@Description	updateProfile of the current user
-//	@Tags			user
-//	@Accept			json
-//	@Produce		json
-//	@Param			ProfileToUpdate	body		ProfileDetails	true	"put profile input json and pass to  gin.Context"
-//	@Success		200				{object}	responses.ProfileResponse
-//  @Failure		400				{object}	responses.ProfileResponse
-//	@Security		BearerAuth
-//	@Router			/protected/update-profile [post]
+//		@Summary		updateProfile of the current user
+//		@Description	updateProfile of the current user
+//		@Tags			user
+//		@Accept			json
+//		@Produce		json
+//		@Param			ProfileToUpdate	body		ProfileDetails	true	"put profile input json and pass to  gin.Context"
+//		@Success		200				{object}	responses.ProfileResponse
+//	 @Failure		400				{object}	responses.ProfileResponse
+//		@Security		BearerAuth
+//		@Router			/protected/update-profile [post]
 func UpdateProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input ProfileDetails
@@ -142,5 +142,38 @@ func GetProfile() gin.HandlerFunc {
 			User:    result,
 		})
 		_ = result
+	}
+}
+
+// @Summary		Get first name, last name, and role of any user given username
+// @Description	Get first name, last name, and role of any user given username
+// @Tags			Helper
+// @Accept			json
+// @Produce		json
+// @Param			username query string true "username of the person you want"
+// @Success		200		{object}	responses.NameAndRoleResponse
+// @Failure		500	{object}	responses.NameAndRoleResponse
+//
+//	@Security		BearerAuth
+//
+// @Router			/protected/get-name-and-role [GET]
+func GetNameAndRole() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		username := c.Query("username")
+
+		result, err := models.GetNameAndRole(username)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, responses.NameAndRoleResponse{
+				Status:  http.StatusInternalServerError,
+				Message: err.Error(),
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, responses.NameAndRoleResponse{
+			Status:  http.StatusOK,
+			Message: `Successfully GetNameAndRole`,
+			Result:  result,
+		})
 	}
 }

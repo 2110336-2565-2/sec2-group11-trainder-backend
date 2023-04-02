@@ -232,6 +232,15 @@ definitions:
       sender:
         type: string
     type: object
+  models.NameAndRole:
+    properties:
+      firstname:
+        type: string
+      lastname:
+        type: string
+      usertype:
+        type: string
+    type: object
   models.Payment:
     properties:
       chargeID:
@@ -410,6 +419,15 @@ definitions:
         type: string
       username:
         type: string
+    type: object
+  responses.NameAndRoleResponse:
+    properties:
+      message:
+        type: string
+      result:
+        $ref: '#/definitions/models.NameAndRole'
+      status:
+        type: integer
     type: object
   responses.PastChatResponse:
     properties:
@@ -717,6 +735,33 @@ paths:
       summary: Get all chat on sidebar that user communicate with
       tags:
       - chats
+  /protected/get-name-and-role:
+    get:
+      consumes:
+      - application/json
+      description: Get first name, last name, and role of any user given username
+      parameters:
+      - description: username of the person you want
+        in: query
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.NameAndRoleResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.NameAndRoleResponse'
+      security:
+      - BearerAuth: []
+      summary: Get first name, last name, and role of any user given username
+      tags:
+      - Helper
   /protected/get-past-chat:
     get:
       consumes:

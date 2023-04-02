@@ -376,6 +376,49 @@ const docTemplate = `{
                 }
             }
         },
+        "/protected/get-name-and-role": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get first name, last name, and role of any user given username",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Helper"
+                ],
+                "summary": "Get first name, last name, and role of any user given username",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "username of the person you want",
+                        "name": "username",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.NameAndRoleResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.NameAndRoleResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/protected/get-past-chat": {
             "get": {
                 "security": [
@@ -1269,6 +1312,20 @@ const docTemplate = `{
                 }
             }
         },
+        "models.NameAndRole": {
+            "type": "object",
+            "properties": {
+                "firstname": {
+                    "type": "string"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "usertype": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Payment": {
             "type": "object",
             "properties": {
@@ -1542,6 +1599,20 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "responses.NameAndRoleResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "result": {
+                    "$ref": "#/definitions/models.NameAndRole"
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         },

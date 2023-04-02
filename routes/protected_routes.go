@@ -61,4 +61,8 @@ func ProtectedRoute(router *gin.Engine, wsHandler *ws.Handler) {
 
 	// Payment
 	protected.POST("/create-payment", controllers.CreatePayment())
+
+	//helper API
+	protected.GET("/get-name-and-role", controllers.GetNameAndRole())
+
 }
