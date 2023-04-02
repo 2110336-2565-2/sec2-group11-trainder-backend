@@ -15,7 +15,7 @@ import (
 var bookingsCollection *mongo.Collection = configs.GetCollection(configs.DB, "bookings")
 
 type Payment struct {
-	TotalCost float64 `bson:"totalCost" json:"totalCost"`
+	TotalCost int64 `bson:"totalCost" json:"totalCost"`
 	Status    string  `bson:"status" json:"status"`
 	ChargeID  string  `bson:"chargeID" json:"chargeID"`
 }
@@ -52,7 +52,7 @@ func CreateBooking(trainee string, trainer string, date string, startTime string
 	projection := bson.M{"trainerInfo.fee": 1, "_id": 0}
 	var result struct {
 		TrainerInfo struct {
-			Fee float64 `bson:"fee"`
+			Fee int64 `bson:"fee"`
 		} `bson:"trainerInfo"`
 	}
 	if err := userCollection.FindOne(context.Background(), filter, options.FindOne().SetProjection(projection)).Decode(&result); err != nil {
@@ -71,7 +71,7 @@ func CreateBooking(trainee string, trainer string, date string, startTime string
 		return fmt.Errorf("failed to parse end datetime: %v", err)
 	}
 	duration := endDateTime.Sub(startDateTime)
-	totalCost := result.TrainerInfo.Fee * duration.Hours()
+	totalCost := result.TrainerInfo.Fee * int64(duration.Hours())
 
 	// Create booking object
 	booking := bson.M{
@@ -115,8 +115,6 @@ func GetBooking(bookingID string) (result Booking, err error) {
 // merge into one function ()
 func GetUpcomingBookings(Username string) ([]ReturnBooking, error) {
 	now := time.Now().Local()
-	// fmt.Println(time.Now())
-	// fmt.Println(time.Now().UTC(), now.UTC().Truncate(24*time.Hour))
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -141,7 +139,6 @@ func GetUpcomingBookings(Username string) ([]ReturnBooking, error) {
 	if err != nil {
 		return nil, err
 	}
-	// fmt.Println(cursor)
 	var bookings []ReturnBooking
 	for cursor.Next(ctx) {
 		var booking Booking
@@ -152,14 +149,12 @@ func GetUpcomingBookings(Username string) ([]ReturnBooking, error) {
 		var trainerInfo User
 		err = userCollection.FindOne(ctx, bson.M{"username": booking.Trainer}).Decode(&trainerInfo)
 		if err != nil {
-			// fmt.Println(err)
 			return nil, err
 		}
 
 		var traineeInfo User
 		err = userCollection.FindOne(ctx, bson.M{"username": booking.Trainee}).Decode(&traineeInfo)
 		if err != nil {
-			// fmt.Println(err)
 			return nil, err
 		}
 		result := ReturnBooking{
@@ -176,7 +171,6 @@ func GetUpcomingBookings(Username string) ([]ReturnBooking, error) {
 			Payment:          booking.Payment,
 		}
 
-		// fmt.Println(booking)
 		bookings = append(bookings, result)
 	}
 
@@ -241,14 +235,12 @@ func DeleteBooking(bookingObjectId string) error {
 }
 
 func GetSpecificDayBookings(Username string, date string) ([]ReturnBooking, error) {
-	// today, err := time.Parse("2006-01-02 15:04", time.Now().String())
 	startDateTimeStr := date + " " + "00:00"
 	datetime, err := time.Parse("2006-01-02 15:04", startDateTimeStr)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse start datetime: %v", err)
 	}
 	today := datetime.Truncate(24 * time.Hour)
-	// today := time.Now().Truncate(24 * time.Hour)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	var filter bson.M
@@ -273,12 +265,10 @@ func GetSpecificDayBookings(Username string, date string) ([]ReturnBooking, erro
 			},
 		}
 	}
-	// fmt.Println(today.Format("2006-01-02"))
 	cursor, err := bookingsCollection.Find(ctx, filter)
 	if err != nil {
 		return nil, err
 	}
-	// fmt.Println(cursor)
 	var bookings []ReturnBooking
 	for cursor.Next(ctx) {
 		var booking Booking
@@ -289,14 +279,12 @@ func GetSpecificDayBookings(Username string, date string) ([]ReturnBooking, erro
 		var trainerInfo User
 		err = userCollection.FindOne(ctx, bson.M{"username": booking.Trainer}).Decode(&trainerInfo)
 		if err != nil {
-			// fmt.Println(err)
 			return nil, err
 		}
 
 		var traineeInfo User
 		err = userCollection.FindOne(ctx, bson.M{"username": booking.Trainee}).Decode(&traineeInfo)
 		if err != nil {
-			// fmt.Println(err)
 			return nil, err
 		}
 		result := ReturnBooking{
@@ -312,13 +300,8 @@ func GetSpecificDayBookings(Username string, date string) ([]ReturnBooking, erro
 			Status:           booking.Status,
 			Payment:          booking.Payment,
 		}
-		// fmt.Println(bson.M{"$dateToString": bson.M{"format": "%Y-%m-%d", "date": booking.StartDateTime}})
-
-		// fmt.Println("booking", booking)
 		bookings = append(bookings, result)
 	}
 
-	// fmt.Println("bookings", bookings)
 	return bookings, nil
-
 }
