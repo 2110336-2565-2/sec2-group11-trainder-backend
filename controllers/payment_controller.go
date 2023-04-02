@@ -107,7 +107,7 @@ func CreatePayment() gin.HandlerFunc {
 
 		}
 
-		msg := fmt.Sprintf("booking: %s charge: %s  amount: %s %d\n", input.BookingID, charge.ID, charge.Currency, charge.Amount)
+		msg := fmt.Sprintf("booking: %s charge: %s  amount: %s %d.%d\n", input.BookingID, charge.ID, charge.Currency, charge.Amount/100, charge.Amount%100)
 		c.JSON(http.StatusOK,
 			responses.CreatePaymentResponse{
 				Status:  http.StatusOK,
