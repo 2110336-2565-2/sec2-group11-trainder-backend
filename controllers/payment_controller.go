@@ -95,6 +95,15 @@ func CreatePayment() gin.HandlerFunc {
 				})
 			return
 		}
+		if charge.Status != omise.ChargeSuccessful {
+			c.JSON(http.StatusBadRequest,
+				responses.CreatePaymentResponse{
+					Status:  http.StatusBadRequest,
+					Message: fmt.Sprintf("charge fail with status: %s", charge.Status),
+				})
+			return
+
+		}
 
 		err = models.Pay(input.BookingID, charge.ID)
 		if err != nil {
@@ -107,7 +116,7 @@ func CreatePayment() gin.HandlerFunc {
 
 		}
 
-		msg := fmt.Sprintf("booking: %s charge: %s  amount: %s %d.%d\n", input.BookingID, charge.ID, charge.Currency, charge.Amount/100, charge.Amount%100)
+		msg := fmt.Sprintf("booking: %s charge: %s  amount: %s %d.%02d\n", input.BookingID, charge.ID, charge.Currency, charge.Amount/100, charge.Amount%100)
 		c.JSON(http.StatusOK,
 			responses.CreatePaymentResponse{
 				Status:  http.StatusOK,
