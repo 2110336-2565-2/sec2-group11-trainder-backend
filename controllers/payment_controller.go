@@ -96,9 +96,9 @@ func CreatePayment() gin.HandlerFunc {
 			return
 		}
 		if charge.Status != omise.ChargeSuccessful {
-			c.JSON(http.StatusBadRequest,
+			c.JSON(http.StatusOK,
 				responses.CreatePaymentResponse{
-					Status:  http.StatusBadRequest,
+					Status:  http.StatusOK,
 					Message: fmt.Sprintf("charge fail with status: %s", charge.Status),
 				})
 			return
