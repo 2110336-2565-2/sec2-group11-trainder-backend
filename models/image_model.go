@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"io"
 	"mime/multipart"
 
@@ -10,54 +11,55 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func UploadFileToMongo(file multipart.File, handler *multipart.FileHeader) (primitive.ObjectID, error) {
+// func UploadFileToMongo(file multipart.File, handler *multipart.FileHeader) (primitive.ObjectID, error) {
 
-	// Create a new GridFS upload stream
-	uploadStream, err := configs.Bucket.OpenUploadStream(
-		handler.Filename,
-	)
-	if err != nil {
-		return primitive.NilObjectID, err
-	}
-	defer uploadStream.Close()
+// 	// Create a new GridFS upload stream
+// 	uploadStream, err := configs.Bucket.OpenUploadStream(
+// 		handler.Filename,
+// 	)
+// 	if err != nil {
+// 		return primitive.NilObjectID, err
+// 	}
+// 	defer uploadStream.Close()
 
-	// Copy the file data into the GridFS upload stream
-	_, err = io.Copy(uploadStream, file)
-	if err != nil {
-		return primitive.NilObjectID, err
-	}
+// 	// Copy the file data into the GridFS upload stream
+// 	_, err = io.Copy(uploadStream, file)
+// 	if err != nil {
+// 		return primitive.NilObjectID, err
+// 	}
 
-	// Get the ID of the uploaded file
-	fileID := uploadStream.FileID.(primitive.ObjectID)
+// 	// Get the ID of the uploaded file
+// 	fileID := uploadStream.FileID.(primitive.ObjectID)
 
-	return fileID, nil
-}
+// 	return fileID, nil
+// }
 
-func retrieveFileFromMongo(fileID primitive.ObjectID, fileID_str string) (io.ReadCloser, error) {
+func RetrieveFileFromMongo(fileID_str string) (io.ReadCloser, string, error) {
 	fileID, err := primitive.ObjectIDFromHex(fileID_str)
 	if err != nil {
-
-		return nil, err
+		return nil, "", fmt.Errorf("RetrieveFileFromMongo: value store at AvatarUrl is not valid ObjectId: %v", err)
 	}
 
 	// Open a GridFS download stream for the file
 	downloadStream, err := configs.Bucket.OpenDownloadStream(fileID)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
-	return downloadStream, nil
+	filename := downloadStream.GetFile().Name
+
+	return downloadStream, filename, nil
 }
 
-func createHeader(filename string) (*multipart.FileHeader, error) {
-	handler := &multipart.FileHeader{
-		Filename: filename,
-		Size:     1000,
-	}
+// func createHeader(filename string) (*multipart.FileHeader, error) {
+// 	handler := &multipart.FileHeader{
+// 		Filename: filename,
+// 		Size:     1000,
+// 	}
 
-	return handler, nil
+// 	return handler, nil
 
-}
+// }
 
 // func Upload(filename string, file multipart.File) (primitive.ObjectID, error) {
 // 	// file, err := openFile(filename)

@@ -84,7 +84,7 @@ func UpdateUserProfile(username string, firstName string, lastName string, birth
 		"updatedAt":   time.Now(),
 	}
 	if avatarUrl != "" {
-		info["avartarUrl"] = avatarUrl
+		info["avatarUrl"] = avatarUrl
 	}
 
 	result, err = userCollection.UpdateOne(
@@ -93,6 +93,35 @@ func UpdateUserProfile(username string, firstName string, lastName string, birth
 		bson.M{"$set": info},
 	)
 	return
+}
+
+func UpdateAvatarUrl(username string, imageID string) (result *mongo.UpdateResult, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	filter := bson.M{"username": username}
+	update := bson.M{"$set": bson.M{
+		"updatedAt": time.Now(),
+		"avatarUrl": imageID,
+	}}
+	result, err = userCollection.UpdateOne(ctx, filter, update)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return result, nil
+}
+
+func GetAvatarUrl(username string) (string, error) {
+	// ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	// defer cancel()
+	// filter := bson.M{"username": username}
+	profile, err := FindProfile(username, "")
+	if err != nil {
+		return "", fmt.Errorf("Error from FindProfile in GetAvatarUrl %v", err)
+	}
+	fmt.Println("GetAvatarUrl", profile.AvatarUrl)
+
+	return profile.AvatarUrl, nil
 }
 
 func ProfileConditionCheck(firstName string, lastName string, birthDate string, citizenID string, gender string, phoneNumber string) error {
