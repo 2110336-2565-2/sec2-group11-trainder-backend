@@ -8,6 +8,7 @@ import (
 
 	"github.com/omise/omise-go"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/gridfs"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -29,8 +30,23 @@ func ConnectDB() *mongo.Client {
 	fmt.Println("Connected to MongoDB")
 	return client
 }
+func CreateGridFSBucket(client *mongo.Client) *gridfs.Bucket {
+
+	db := client.Database(EnvMongoDBName())
+
+	// Create a new GridFS bucket
+	bucket, err := gridfs.NewBucket(
+		db,
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Create a new GridFS bucket")
+	return bucket
+}
 
 var DB *mongo.Client = ConnectDB()
+var Bucket *gridfs.Bucket = CreateGridFSBucket(DB)
 
 func GetCollection(client *mongo.Client, collectionName string) *mongo.Collection {
 	collection := client.Database(EnvMongoDBName()).Collection(collectionName)
