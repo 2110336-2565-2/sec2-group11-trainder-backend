@@ -4,9 +4,13 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"mime/multipart"
+	"mime"
+	"path/filepath"
+
+	// "mime/multipart"
 	"net/http"
-	"os"
+
+	// "os"
 
 	"trainder-api/models"
 	"trainder-api/responses"
@@ -15,70 +19,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Imagedata struct {
-	Image *multipart.FileHeader `form:"image" binding:"required"`
-}
-
-// func UploadProfile() gin.HandlerFunc {
-// 	fmt.Println("UploadProfile")
-// 	return func(c *gin.Context) {
-// 		file, err := c.FormFile("image")
-// 		if err != nil {
-// 			c.JSON(http.StatusBadRequest, gin.H{"error1": err.Error()})
-// 			return
-// 		}
-
-// 		f, err := file.Open()
-// 		if err != nil {
-// 			c.JSON(http.StatusInternalServerError, gin.H{"error2": err.Error()})
-// 			return
-// 		}
-// 		defer f.Close()
-// 		// Read the contents of the file into memory
-// 		// data, err := ioutil.ReadAll(f)
-// 		// if err != nil {
-// 		// 	c.JSON(http.StatusInternalServerError, gin.H{"error3": err.Error()})
-// 		// 	return
-// 		// }
-
-// 		fileID, err := models.Upload(file.Filename, f)
-// 		if err != nil {
-// 			log.Fatal(err)
-// 		}
-// 		log.Printf("File uploaded with ID: %v\n", fileID)
-
-// 		// Check if the file is a JPG image
-// 		// _, format, err := image.DecodeConfig(bytes.NewReader(data))
-// 		// fmt.Println("format", format)
-// 		// if err != nil || format != "jpeg" {
-// 		// 	c.JSON(http.StatusBadRequest, gin.H{"error4": "Uploaded file is not a JPG image " + format})
-// 		// 	return
-// 		// }
-
-// 		// Save the file to disk
-// 		// err = ioutil.WriteFile("image.jpg", data, 0644)
-// 		// if err != nil {
-// 		// 	c.JSON(http.StatusInternalServerError, gin.H{"error5": err.Error()})
-// 		// 	return
-// 		// }
-
-// 		// Return a success message
-// 		c.JSON(http.StatusOK, gin.H{"message": "Image uploaded successfully"})
-// 		// body, _ := ioutil.ReadAll(c.Request.Body)
-// 		// println(string(body))
-// 		// var input Imagedata
-// 		// if err := c.ShouldBindJSON(&input); err != nil {
-// 		// 	c.JSON(http.StatusBadRequest, responses.ProfileResponse{
-// 		// 		Status:  http.StatusBadRequest,
-// 		// 		Message: err.Error(),
-// 		// 	})
-// 		// 	return
-// 		// }
-
-// 		// fmt.Println(input)
-
-//		}
-//	}
 func UploadProfile() gin.HandlerFunc {
 	fmt.Println("UploadProfile")
 	return func(c *gin.Context) {
@@ -125,6 +65,10 @@ func UploadProfile() gin.HandlerFunc {
 
 	}
 }
+func getContentType(filename string) string {
+	contentType := mime.TypeByExtension(filepath.Ext(filename))
+	return contentType
+}
 
 func GetPicture() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -140,18 +84,32 @@ func GetPicture() gin.HandlerFunc {
 			log.Fatal(err)
 		}
 		defer downloadStream.Close()
-		out, err := os.Create(filename)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer out.Close()
 
-		_, err = io.Copy(out, downloadStream)
-		if err != nil {
-			log.Fatal(err)
-		}
+		fmt.Println(getContentType(filename))
 
-		log.Println("File saved to test_output.jpg")
+		// Set the response headers
+		c.Header("Content-Disposition", "attachment; filename="+filename)
+		c.Header("Content-Type", getContentType(filename))
+
+		// Copy the file data to the response writer
+		_, err = io.Copy(c.Writer, downloadStream)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error3": "Error writing file to response"})
+			return
+		}
+		// fmt.Println("c.Writer")
+		// // out, err := os.Create(filename)
+		// // if err != nil {
+		// // 	log.Fatal(err)
+		// // }
+		// // defer out.Close()
+
+		// // _, err = io.Copy(out, downloadStream)
+		// // if err != nil {
+		// // 	log.Fatal(err)
+		// // }
+
+		log.Println("File send")
 
 	}
 }

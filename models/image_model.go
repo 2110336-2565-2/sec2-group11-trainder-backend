@@ -9,6 +9,7 @@ import (
 	"trainder-api/configs"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/gridfs"
 )
 
 // func UploadFileToMongo(file multipart.File, handler *multipart.FileHeader) (primitive.ObjectID, error) {
@@ -34,7 +35,7 @@ import (
 // 	return fileID, nil
 // }
 
-func RetrieveFileFromMongo(fileID_str string) (io.ReadCloser, string, error) {
+func RetrieveFileFromMongo(fileID_str string) (*gridfs.DownloadStream, string, error) {
 	fileID, err := primitive.ObjectIDFromHex(fileID_str)
 	if err != nil {
 		return nil, "", fmt.Errorf("RetrieveFileFromMongo: value store at AvatarUrl is not valid ObjectId: %v", err)
