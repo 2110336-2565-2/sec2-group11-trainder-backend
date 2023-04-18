@@ -862,6 +862,188 @@ paths:
       summary: Get roomID to communicate with audience
       tags:
       - chats
+  /protected/image:
+    get:
+      consumes:
+      - application/json
+      description: retrieve profile picture by username return json
+      parameters:
+      - description: username of the person you want profile picture
+        in: query
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ImageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.ImageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.ImageResponse'
+      security:
+      - BearerAuth: []
+      summary: retrieve  profile picture
+      tags:
+      - image
+    post:
+      consumes:
+      - image/png
+      description: Upload profile picture
+      parameters:
+      - description: file for uploading
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ImageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.ImageResponse'
+      security:
+      - BearerAuth: []
+      summary: Upload profile picture
+      tags:
+      - image
+  /protected/image2:
+    get:
+      consumes:
+      - application/json
+      description: retrieve profile picture by username return image
+      parameters:
+      - description: username of the person you want profile picture
+        in: query
+        name: username
+        required: true
+        type: string
+      produces:
+      - image/png
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ImageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.ImageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.ImageResponse'
+      security:
+      - BearerAuth: []
+      summary: retrieve  profile picture
+      tags:
+      - image
+  /protected/payment-list:
+    get:
+      consumes:
+      - application/json
+      description: Get Payment list for trainer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.BookingListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.BookingListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.BookingListResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/responses.BookingListResponse'
+      security:
+      - BearerAuth: []
+      summary: Get Payment list
+      tags:
+      - payment
+  /protected/payment-need-payouts:
+    get:
+      consumes:
+      - application/json
+      description: Get Payment list that is needed payout
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.BookingListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.BookingListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.BookingListResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/responses.BookingListResponse'
+      security:
+      - BearerAuth: []
+      summary: Get Payment Need Payout
+      tags:
+      - payment
+  /protected/payout:
+    post:
+      consumes:
+      - application/json
+      description: Mark payment as payout
+      parameters:
+      - description: details for payout
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PayoutForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.RequestPayoutResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.RequestPayoutResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.RequestPayoutResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/responses.RequestPayoutResponse'
+      security:
+      - BearerAuth: []
+      summary: Payout
+      tags:
+      - payment
   /protected/profile:
     get:
       consumes:
