@@ -505,14 +505,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/protected/image": {
+        "/protected/payment-list": {
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "retrieve profile picture by username return json",
+                "description": "Get Payment list for trainer",
                 "consumes": [
                     "application/json"
                 ],
@@ -520,125 +520,135 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "image"
+                    "payment"
                 ],
-                "summary": "retrieve  profile picture",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "username of the person you want profile picture",
-                        "name": "username",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
+                "summary": "Get Payment list",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/responses.ImageResponse"
+                            "$ref": "#/definitions/responses.BookingListResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/responses.ImageResponse"
+                            "$ref": "#/definitions/responses.BookingListResponse"
                         }
                     },
-                    "500": {
-                        "description": "Internal Server Error",
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/responses.ImageResponse"
+                            "$ref": "#/definitions/responses.BookingListResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BookingListResponse"
                         }
                     }
                 }
-            },
+            }
+        },
+        "/protected/payment-need-payouts": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get Payment list that is needed payout",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "payment"
+                ],
+                "summary": "Get Payment Need Payout",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BookingListResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BookingListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BookingListResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BookingListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/payout": {
             "post": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Upload profile picture",
+                "description": "Mark payment as payout",
                 "consumes": [
-                    "image/png"
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "image"
+                    "payment"
                 ],
-                "summary": "Upload profile picture",
+                "summary": "Payout",
                 "parameters": [
                     {
-                        "type": "file",
-                        "description": "file for uploading",
-                        "name": "image",
-                        "in": "formData",
-                        "required": true
+                        "description": "details for payout",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PayoutForm"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/responses.ImageResponse"
+                            "$ref": "#/definitions/responses.RequestPayoutResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/responses.ImageResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/protected/image2": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "retrieve profile picture by username return image",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "image/png"
-                ],
-                "tags": [
-                    "image"
-                ],
-                "summary": "retrieve  profile picture",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "username of the person you want profile picture",
-                        "name": "username",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/responses.ImageResponse"
+                            "$ref": "#/definitions/responses.RequestPayoutResponse"
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/responses.ImageResponse"
+                            "$ref": "#/definitions/responses.RequestPayoutResponse"
                         }
                     },
-                    "500": {
-                        "description": "Internal Server Error",
+                    "403": {
+                        "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/responses.ImageResponse"
+                            "$ref": "#/definitions/responses.RequestPayoutResponse"
                         }
                     }
                 }
@@ -673,6 +683,63 @@ const docTemplate = `{
                         "description": "Unauthorized, the user is not logged in",
                         "schema": {
                             "$ref": "#/definitions/responses.UserProfileResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/request-payout": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Mark payment as needed payout",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "payment"
+                ],
+                "summary": "Request a payout",
+                "parameters": [
+                    {
+                        "description": "details for requesting payout",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.RequestPayoutForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.RequestPayoutResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.RequestPayoutResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.RequestPayoutResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/responses.RequestPayoutResponse"
                         }
                     }
                 }
@@ -1212,6 +1279,18 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.PayoutForm": {
+            "type": "object",
+            "required": [
+                "bookingID"
+            ],
+            "properties": {
+                "bookingID": {
+                    "description": "amount is temp should handle via booking id and calculate",
+                    "type": "string"
+                }
+            }
+        },
         "controllers.ProfileDetails": {
             "type": "object",
             "required": [
@@ -1304,6 +1383,18 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "usertype": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.RequestPayoutForm": {
+            "type": "object",
+            "required": [
+                "bookingID"
+            ],
+            "properties": {
+                "bookingID": {
+                    "description": "amount is temp should handle via booking id and calculate",
                     "type": "string"
                 }
             }
@@ -1626,6 +1717,23 @@ const docTemplate = `{
                 }
             }
         },
+        "responses.BookingListResponse": {
+            "type": "object",
+            "properties": {
+                "bookings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Booking"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
         "responses.ChatRoomIDResponse": {
             "type": "object",
             "properties": {
@@ -1797,6 +1905,20 @@ const docTemplate = `{
         "responses.RegisterResponse": {
             "type": "object",
             "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.RequestPayoutResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
                 "message": {
                     "type": "string"
                 },
