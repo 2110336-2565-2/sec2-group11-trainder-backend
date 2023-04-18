@@ -362,6 +362,17 @@ definitions:
       status:
         type: integer
     type: object
+  responses.BookingListResponse:
+    properties:
+      bookings:
+        items:
+          $ref: '#/definitions/models.Booking'
+        type: array
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
   responses.ChatRoomIDResponse:
     properties:
       message:
@@ -453,17 +464,6 @@ definitions:
         type: array
       message:
         type: string
-      status:
-        type: integer
-    type: object
-  responses.PaymentListResponse:
-    properties:
-      message:
-        type: string
-      payments:
-        items:
-          $ref: '#/definitions/models.Payment'
-        type: array
       status:
         type: integer
     type: object
@@ -866,19 +866,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/responses.PaymentListResponse'
+            $ref: '#/definitions/responses.BookingListResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.PaymentListResponse'
+            $ref: '#/definitions/responses.BookingListResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.PaymentListResponse'
+            $ref: '#/definitions/responses.BookingListResponse'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/responses.PaymentListResponse'
+            $ref: '#/definitions/responses.BookingListResponse'
       security:
       - BearerAuth: []
       summary: Get Payment list
@@ -895,19 +895,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/responses.PaymentListResponse'
+            $ref: '#/definitions/responses.BookingListResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.PaymentListResponse'
+            $ref: '#/definitions/responses.BookingListResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.PaymentListResponse'
+            $ref: '#/definitions/responses.BookingListResponse'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/responses.PaymentListResponse'
+            $ref: '#/definitions/responses.BookingListResponse'
       security:
       - BearerAuth: []
       summary: Get Payment Need Payout

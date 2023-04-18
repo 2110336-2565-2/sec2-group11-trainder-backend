@@ -13,8 +13,8 @@ type RequestPayoutResponse struct {
 	BookingID string `json:"id,omitempty"`
 }
 
-type PaymentListResponse struct {
+type BookingListResponse struct {
 	Status   int              `json:"status"`
 	Message  string           `json:"message,omitempty"`
-	Payments []models.Payment `json:"payments,omitempty"`
+	Bookings []models.Booking `json:"bookings,omitempty"`
 }

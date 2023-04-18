@@ -109,50 +109,37 @@ func Payout(bookingID string) (err error) {
 	return err
 }
 
-func PaymentNeedPayouts() (payments []Payment, err error) {
+func BookingNeedPayouts() (bookings []Booking, err error) {
 	filter := bson.M{"payment.status": "need_payout"}
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	var results []Booking
 
 	cursor, err := bookingsCollection.Find(ctx, filter)
 
 	if err != nil {
-		return payments, err
+		return bookings, err
 	}
-	if err = cursor.All(context.TODO(), &results); err != nil {
-		return payments, err
-	}
-
-	for _, result := range results {
-		cursor.Decode(&result)
-		payments = append(payments, result.Payment)
+	if err = cursor.All(context.TODO(), &bookings); err != nil {
+		return bookings, err
 	}
 
-	return payments, err
+	return bookings, err
 
 }
 
-func GetPaidPayment(username string) (payments []Payment, err error) {
+func GetPaidBookings(username string) (bookings []Booking, err error) {
 	filter := bson.M{"trainer": username, "payment.status": "paid"}
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	var results []Booking
 
 	cursor, err := bookingsCollection.Find(ctx, filter)
 
 	if err != nil {
-		return payments, err
+		return bookings, err
 	}
-	if err = cursor.All(context.TODO(), &results); err != nil {
-		return payments, err
-	}
-
-	for _, result := range results {
-		cursor.Decode(&result)
-		payments = append(payments, result.Payment)
+	if err = cursor.All(context.TODO(), &bookings); err != nil {
+		return bookings, err
 	}
 
-	return payments, err
-
+	return bookings, err
 }

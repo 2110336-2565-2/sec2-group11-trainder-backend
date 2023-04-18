@@ -527,25 +527,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/responses.PaymentListResponse"
+                            "$ref": "#/definitions/responses.BookingListResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/responses.PaymentListResponse"
+                            "$ref": "#/definitions/responses.BookingListResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/responses.PaymentListResponse"
+                            "$ref": "#/definitions/responses.BookingListResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/responses.PaymentListResponse"
+                            "$ref": "#/definitions/responses.BookingListResponse"
                         }
                     }
                 }
@@ -573,25 +573,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/responses.PaymentListResponse"
+                            "$ref": "#/definitions/responses.BookingListResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/responses.PaymentListResponse"
+                            "$ref": "#/definitions/responses.BookingListResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/responses.PaymentListResponse"
+                            "$ref": "#/definitions/responses.BookingListResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/responses.PaymentListResponse"
+                            "$ref": "#/definitions/responses.BookingListResponse"
                         }
                     }
                 }
@@ -1717,6 +1717,23 @@ const docTemplate = `{
                 }
             }
         },
+        "responses.BookingListResponse": {
+            "type": "object",
+            "properties": {
+                "bookings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Booking"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
         "responses.ChatRoomIDResponse": {
             "type": "object",
             "properties": {
@@ -1857,23 +1874,6 @@ const docTemplate = `{
                 },
                 "message": {
                     "type": "string"
-                },
-                "status": {
-                    "type": "integer"
-                }
-            }
-        },
-        "responses.PaymentListResponse": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "payments": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Payment"
-                    }
                 },
                 "status": {
                     "type": "integer"

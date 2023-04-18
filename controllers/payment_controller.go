@@ -281,33 +281,33 @@ func Payout() gin.HandlerFunc {
 // @Accept			json
 // @Produce		json
 // @Security		BearerAuth
-// @Success		200		{object}		responses.PaymentListResponse
-// @Success		400		{object}		responses.PaymentListResponse
-// @Success		401		{object}		responses.PaymentListResponse
-// @Success		403		{object}		responses.PaymentListResponse
+// @Success		200		{object}		responses.BookingListResponse
+// @Success		400		{object}		responses.BookingListResponse
+// @Success		401		{object}		responses.BookingListResponse
+// @Success		403		{object}		responses.BookingListResponse
 // @Router			/protected/payment-list [get]
 func PaymentList() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		username, err := tokens.ExtractTokenUsername(c)
 
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, responses.PaymentListResponse{
+			c.JSON(http.StatusUnauthorized, responses.BookingListResponse{
 				Status:  http.StatusUnauthorized,
 				Message: `Cannot extract username from token`,
 			})
 			return
 		}
 		if !models.IsTrainer(username) {
-			c.JSON(http.StatusForbidden, responses.PaymentListResponse{
+			c.JSON(http.StatusForbidden, responses.BookingListResponse{
 				Status:  http.StatusForbidden,
 				Message: `only trainer can request payout`,
 			})
 			return
 		}
-		payments, err := models.GetPaidPayment(username)
+		payments, err := models.GetPaidBookings(username)
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, responses.PaymentListResponse{
+			c.JSON(http.StatusInternalServerError, responses.BookingListResponse{
 				Status:  http.StatusUnauthorized,
 				Message: err.Error(),
 			})
@@ -316,10 +316,10 @@ func PaymentList() gin.HandlerFunc {
 		}
 		fmt.Println(payments)
 
-		c.JSON(http.StatusOK, responses.PaymentListResponse{
+		c.JSON(http.StatusOK, responses.BookingListResponse{
 			Status:   http.StatusOK,
 			Message:  `success`,
-			Payments: payments,
+			Bookings: payments,
 		})
 
 	}
@@ -331,25 +331,25 @@ func PaymentList() gin.HandlerFunc {
 // @Accept			json
 // @Produce		json
 // @Security		BearerAuth
-// @Success		200		{object}		responses.PaymentListResponse
-// @Success		400		{object}		responses.PaymentListResponse
-// @Success		401		{object}		responses.PaymentListResponse
-// @Success		403		{object}		responses.PaymentListResponse
+// @Success		200		{object}		responses.BookingListResponse
+// @Success		400		{object}		responses.BookingListResponse
+// @Success		401		{object}		responses.BookingListResponse
+// @Success		403		{object}		responses.BookingListResponse
 // @Router			/protected/payment-need-payout [get]
 func PaymentNeedPayouts() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		_, err := tokens.ExtractTokenUsername(c)
 
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, responses.PaymentListResponse{
+			c.JSON(http.StatusUnauthorized, responses.BookingListResponse{
 				Status:  http.StatusUnauthorized,
 				Message: `Cannot extract username from token`,
 			})
 			return
 		}
-		payments, err := models.PaymentNeedPayouts()
+		payments, err := models.BookingNeedPayouts()
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, responses.PaymentListResponse{
+			c.JSON(http.StatusInternalServerError, responses.BookingListResponse{
 				Status:  http.StatusUnauthorized,
 				Message: err.Error(),
 			})
@@ -357,10 +357,10 @@ func PaymentNeedPayouts() gin.HandlerFunc {
 
 		}
 
-		c.JSON(http.StatusOK, responses.PaymentListResponse{
+		c.JSON(http.StatusOK, responses.BookingListResponse{
 			Status:   http.StatusOK,
 			Message:  `success`,
-			Payments: payments,
+			Bookings: payments,
 		})
 
 	}
