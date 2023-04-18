@@ -235,6 +235,17 @@ func IsTrainer(username string) (b bool) {
 	}
 	return true
 }
+func IsAdmin(username string) (b bool) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	filter := bson.D{{Key: "username", Value: username}}
+	var user User
+	err := userCollection.FindOne(ctx, filter).Decode(&user)
+	if err != nil || user.UserType != "Admin" {
+		return false
+	}
+	return true
+}
 
 func GetDistance(lat1 float64, lng1 float64, lat2 float64, lng2 float64) float64 {
 	const PI float64 = math.Pi

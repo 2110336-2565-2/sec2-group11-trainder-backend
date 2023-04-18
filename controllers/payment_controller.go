@@ -229,12 +229,20 @@ func Payout() gin.HandlerFunc {
 			})
 			return
 		}
-		_, err := tokens.ExtractTokenUsername(c)
+		username, err := tokens.ExtractTokenUsername(c)
 
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, responses.RequestPayoutResponse{
 				Status:  http.StatusUnauthorized,
 				Message: `Cannot extract username from token`,
+			})
+			return
+		}
+
+		if !models.IsAdmin(username) {
+			c.JSON(http.StatusForbidden, responses.RequestPayoutResponse{
+				Status:  http.StatusForbidden,
+				Message: `only admin allowed`,
 			})
 			return
 		}
@@ -338,7 +346,7 @@ func PaymentList() gin.HandlerFunc {
 // @Router			/protected/payment-need-payouts [get]
 func PaymentNeedPayouts() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		_, err := tokens.ExtractTokenUsername(c)
+		username, err := tokens.ExtractTokenUsername(c)
 
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, responses.BookingListResponse{
@@ -347,6 +355,14 @@ func PaymentNeedPayouts() gin.HandlerFunc {
 			})
 			return
 		}
+		if !models.IsAdmin(username) {
+			c.JSON(http.StatusForbidden, responses.BookingListResponse{
+				Status:  http.StatusForbidden,
+				Message: `only admin allowed`,
+			})
+			return
+		}
+
 		payments, err := models.BookingNeedPayouts()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, responses.BookingListResponse{
