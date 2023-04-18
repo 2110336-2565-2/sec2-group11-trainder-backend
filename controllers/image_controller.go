@@ -1,8 +1,10 @@
 package controllers
 
 import (
+	"encoding/base64"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"mime"
 	"path/filepath"
@@ -70,7 +72,7 @@ func getContentType(filename string) string {
 	return contentType
 }
 
-func GetPicture() gin.HandlerFunc {
+func GetPicture2() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// id := c.Query("ID")
 		username := c.Query("username")
@@ -111,5 +113,42 @@ func GetPicture() gin.HandlerFunc {
 
 		log.Println("File send")
 
+	}
+}
+
+func GetPicture() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// id := c.Query("ID")
+		username := c.Query("username")
+		imageId, err := models.GetAvatarUrl(username)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error2": err.Error()})
+			return
+		}
+		downloadStream, filename, err := models.RetrieveFileFromMongo(imageId)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer downloadStream.Close()
+
+		// Read the image data into a byte slice
+		imgData, err := ioutil.ReadAll(downloadStream)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error3": "Error reading image data"})
+			return
+		}
+
+		// Encode the image data as a base64 string
+		imgBase64 := base64.StdEncoding.EncodeToString(imgData)
+
+		// Create a JSON response containing the image data
+		resp := gin.H{
+			"image": imgBase64,
+		}
+
+		// Set the response headers and send the JSON response
+		c.Header("Content-Disposition", "attachment; filename="+filename)
+		c.Header("Content-Type", "application/json")
+		c.JSON(http.StatusOK, resp)
 	}
 }

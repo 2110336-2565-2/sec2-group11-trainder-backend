@@ -10,6 +10,6 @@ func AuthRoute(router *gin.Engine) {
 	router.POST("/register", controllers.Register())
 	router.POST("/login", controllers.Login())
 	// router.POST("/image", controllers.UploadProfile())
-	router.GET("/get-image", controllers.GetPicture())
+	router.GET("/image", controllers.GetPicture())
 
 }
