@@ -281,7 +281,6 @@ func Payout() gin.HandlerFunc {
 // @Accept			json
 // @Produce		json
 // @Security		BearerAuth
-// @Param 		input 	body 			PayoutForm	true	"details for payout"
 // @Success		200		{object}		responses.PaymentListResponse
 // @Success		400		{object}		responses.PaymentListResponse
 // @Success		401		{object}		responses.PaymentListResponse
@@ -305,6 +304,24 @@ func PaymentList() gin.HandlerFunc {
 			})
 			return
 		}
+		payments, err := models.GetPaidPayment(username)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, responses.PaymentListResponse{
+				Status:  http.StatusUnauthorized,
+				Message: err.Error(),
+			})
+			return
+
+		}
+		fmt.Println(payments)
+
+		c.JSON(http.StatusOK, responses.PaymentListResponse{
+			Status:   http.StatusOK,
+			Message:  `success`,
+			Payments: payments,
+		})
+
 	}
 }
 

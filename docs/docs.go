@@ -523,17 +523,6 @@ const docTemplate = `{
                     "payment"
                 ],
                 "summary": "Get Payment list",
-                "parameters": [
-                    {
-                        "description": "details for payout",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/controllers.PayoutForm"
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",

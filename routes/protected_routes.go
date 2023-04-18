@@ -64,6 +64,7 @@ func ProtectedRoute(router *gin.Engine, wsHandler *ws.Handler) {
 	protected.POST("/request-payout", controllers.RequestPayout())
 	protected.POST("/payout", controllers.Payout())
 	protected.GET("/payment-list", controllers.PaymentList())
+	protected.GET("/payment-need-payouts", controllers.PaymentNeedPayouts())
 
 	//helper API
 	protected.GET("/get-name-and-role", controllers.GetNameAndRole())

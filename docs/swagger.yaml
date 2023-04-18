@@ -860,13 +860,6 @@ paths:
       consumes:
       - application/json
       description: Get Payment list for trainer
-      parameters:
-      - description: details for payout
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/controllers.PayoutForm'
       produces:
       - application/json
       responses:
