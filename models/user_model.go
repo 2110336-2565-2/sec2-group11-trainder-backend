@@ -119,7 +119,7 @@ func GetAvatarUrl(username string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("Error from FindProfile in GetAvatarUrl %v", err)
 	}
-	fmt.Println("GetAvatarUrl", profile.AvatarUrl)
+	// fmt.Println("GetAvatarUrl", profile.AvatarUrl)
 
 	return profile.AvatarUrl, nil
 }

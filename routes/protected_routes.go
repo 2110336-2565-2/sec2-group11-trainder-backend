@@ -67,5 +67,7 @@ func ProtectedRoute(router *gin.Engine, wsHandler *ws.Handler) {
 
 	// image
 	protected.POST("/image", controllers.UploadProfile())
+	protected.GET("/image", controllers.GetPicture())
+	protected.GET("/image2", controllers.GetPicture2())
 
 }
