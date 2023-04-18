@@ -551,7 +551,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/protected/payment-need-payout": {
+        "/protected/payment-need-payouts": {
             "get": {
                 "security": [
                     {

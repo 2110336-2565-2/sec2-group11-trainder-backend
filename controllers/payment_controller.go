@@ -335,7 +335,7 @@ func PaymentList() gin.HandlerFunc {
 // @Success		400		{object}		responses.BookingListResponse
 // @Success		401		{object}		responses.BookingListResponse
 // @Success		403		{object}		responses.BookingListResponse
-// @Router			/protected/payment-need-payout [get]
+// @Router			/protected/payment-need-payouts [get]
 func PaymentNeedPayouts() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		_, err := tokens.ExtractTokenUsername(c)
