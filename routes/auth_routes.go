@@ -9,4 +9,5 @@ import (
 func AuthRoute(router *gin.Engine) {
 	router.POST("/register", controllers.Register())
 	router.POST("/login", controllers.Login())
+
 }

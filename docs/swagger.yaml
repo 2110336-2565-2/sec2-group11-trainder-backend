@@ -436,6 +436,13 @@ definitions:
       status:
         type: integer
     type: object
+  responses.ImageResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
   responses.LoginResponse:
     properties:
       message:
@@ -855,6 +862,94 @@ paths:
       summary: Get roomID to communicate with audience
       tags:
       - chats
+  /protected/image:
+    get:
+      consumes:
+      - application/json
+      description: retrieve profile picture by username return json
+      parameters:
+      - description: username of the person you want profile picture
+        in: query
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ImageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.ImageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.ImageResponse'
+      security:
+      - BearerAuth: []
+      summary: retrieve  profile picture
+      tags:
+      - image
+    post:
+      consumes:
+      - image/png
+      description: Upload profile picture
+      parameters:
+      - description: file for uploading
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ImageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.ImageResponse'
+      security:
+      - BearerAuth: []
+      summary: Upload profile picture
+      tags:
+      - image
+  /protected/image2:
+    get:
+      consumes:
+      - application/json
+      description: retrieve profile picture by username return image
+      parameters:
+      - description: username of the person you want profile picture
+        in: query
+        name: username
+        required: true
+        type: string
+      produces:
+      - image/png
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ImageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.ImageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.ImageResponse'
+      security:
+      - BearerAuth: []
+      summary: retrieve  profile picture
+      tags:
+      - image
   /protected/payment-list:
     get:
       consumes:
