@@ -70,6 +70,14 @@ definitions:
     - password
     - username
     type: object
+  controllers.PayoutForm:
+    properties:
+      bookingID:
+        description: amount is temp should handle via booking id and calculate
+        type: string
+    required:
+    - bookingID
+    type: object
   controllers.ProfileDetails:
     properties:
       address:
@@ -138,6 +146,14 @@ definitions:
     - phoneNumber
     - username
     - usertype
+    type: object
+  controllers.RequestPayoutForm:
+    properties:
+      bookingID:
+        description: amount is temp should handle via booking id and calculate
+        type: string
+    required:
+    - bookingID
     type: object
   controllers.ReviewDetails:
     properties:
@@ -248,7 +264,7 @@ definitions:
       status:
         type: string
       totalCost:
-        type: number
+        type: integer
     type: object
   models.ReturnBooking:
     properties:
@@ -440,6 +456,17 @@ definitions:
       status:
         type: integer
     type: object
+  responses.PaymentListResponse:
+    properties:
+      message:
+        type: string
+      payments:
+        items:
+          $ref: '#/definitions/models.Payment'
+        type: array
+      status:
+        type: integer
+    type: object
   responses.ProfileResponse:
     properties:
       message:
@@ -449,6 +476,15 @@ definitions:
     type: object
   responses.RegisterResponse:
     properties:
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  responses.RequestPayoutResponse:
+    properties:
+      id:
+        type: string
       message:
         type: string
       status:
@@ -819,6 +855,107 @@ paths:
       summary: Get roomID to communicate with audience
       tags:
       - chats
+  /protected/payment-list:
+    get:
+      consumes:
+      - application/json
+      description: Get Payment list for trainer
+      parameters:
+      - description: details for payout
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PayoutForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.PaymentListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.PaymentListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.PaymentListResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/responses.PaymentListResponse'
+      security:
+      - BearerAuth: []
+      summary: Get Payment list
+      tags:
+      - payment
+  /protected/payment-need-payout:
+    get:
+      consumes:
+      - application/json
+      description: Get Payment list that is needed payout
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.PaymentListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.PaymentListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.PaymentListResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/responses.PaymentListResponse'
+      security:
+      - BearerAuth: []
+      summary: Get Payment Need Payout
+      tags:
+      - payment
+  /protected/payout:
+    post:
+      consumes:
+      - application/json
+      description: Mark payment as payout
+      parameters:
+      - description: details for payout
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PayoutForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.RequestPayoutResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.RequestPayoutResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.RequestPayoutResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/responses.RequestPayoutResponse'
+      security:
+      - BearerAuth: []
+      summary: Payout
+      tags:
+      - payment
   /protected/profile:
     get:
       consumes:
@@ -840,6 +977,42 @@ paths:
       summary: getProfile of the current user
       tags:
       - user
+  /protected/request-payout:
+    post:
+      consumes:
+      - application/json
+      description: Mark payment as needed payout
+      parameters:
+      - description: details for requesting payout
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.RequestPayoutForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.RequestPayoutResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.RequestPayoutResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.RequestPayoutResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/responses.RequestPayoutResponse'
+      security:
+      - BearerAuth: []
+      summary: Request a payout
+      tags:
+      - payment
   /protected/reviewable:
     post:
       consumes:

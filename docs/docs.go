@@ -505,6 +505,166 @@ const docTemplate = `{
                 }
             }
         },
+        "/protected/payment-list": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get Payment list for trainer",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "payment"
+                ],
+                "summary": "Get Payment list",
+                "parameters": [
+                    {
+                        "description": "details for payout",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PayoutForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.PaymentListResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.PaymentListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.PaymentListResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/responses.PaymentListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/payment-need-payout": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get Payment list that is needed payout",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "payment"
+                ],
+                "summary": "Get Payment Need Payout",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.PaymentListResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.PaymentListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.PaymentListResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/responses.PaymentListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/payout": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Mark payment as payout",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "payment"
+                ],
+                "summary": "Payout",
+                "parameters": [
+                    {
+                        "description": "details for payout",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PayoutForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.RequestPayoutResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.RequestPayoutResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.RequestPayoutResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/responses.RequestPayoutResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/protected/profile": {
             "get": {
                 "security": [
@@ -534,6 +694,63 @@ const docTemplate = `{
                         "description": "Unauthorized, the user is not logged in",
                         "schema": {
                             "$ref": "#/definitions/responses.UserProfileResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/request-payout": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Mark payment as needed payout",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "payment"
+                ],
+                "summary": "Request a payout",
+                "parameters": [
+                    {
+                        "description": "details for requesting payout",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.RequestPayoutForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.RequestPayoutResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.RequestPayoutResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.RequestPayoutResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/responses.RequestPayoutResponse"
                         }
                     }
                 }
@@ -1073,6 +1290,18 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.PayoutForm": {
+            "type": "object",
+            "required": [
+                "bookingID"
+            ],
+            "properties": {
+                "bookingID": {
+                    "description": "amount is temp should handle via booking id and calculate",
+                    "type": "string"
+                }
+            }
+        },
         "controllers.ProfileDetails": {
             "type": "object",
             "required": [
@@ -1165,6 +1394,18 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "usertype": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.RequestPayoutForm": {
+            "type": "object",
+            "required": [
+                "bookingID"
+            ],
+            "properties": {
+                "bookingID": {
+                    "description": "amount is temp should handle via booking id and calculate",
                     "type": "string"
                 }
             }
@@ -1336,7 +1577,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "totalCost": {
-                    "type": "number"
+                    "type": "integer"
                 }
             }
         },
@@ -1633,6 +1874,23 @@ const docTemplate = `{
                 }
             }
         },
+        "responses.PaymentListResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "payments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Payment"
+                    }
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
         "responses.ProfileResponse": {
             "type": "object",
             "properties": {
@@ -1647,6 +1905,20 @@ const docTemplate = `{
         "responses.RegisterResponse": {
             "type": "object",
             "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.RequestPayoutResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
                 "message": {
                     "type": "string"
                 },
