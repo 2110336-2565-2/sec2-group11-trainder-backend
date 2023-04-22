@@ -57,7 +57,7 @@ func Pay(bookingID string, chargeId string) (err error) {
 
 }
 
-func RequestPayout(bookingID string) (err error) {
+func RequestPayout(bookingID string, bank string, accountName string, accountNumber string) (err error) {
 	objectID, err := primitive.ObjectIDFromHex(bookingID)
 	if err != nil {
 		return err
@@ -68,7 +68,14 @@ func RequestPayout(bookingID string) (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	updateStatus, err := bookingsCollection.UpdateOne(ctx, filter, bson.M{"$set": bson.M{"payment.status": "need_payout"}})
+	updateStatus, err := bookingsCollection.UpdateOne(ctx, filter, bson.M{
+		"$set": bson.M{
+			"payment.status":        "need_payout",
+			"payment.bank":          bank,
+			"payment.accountName":   accountName,
+			"payment.accountNumber": accountNumber,
+		},
+	})
 
 	if err != nil {
 		if err == mongo.ErrNoDocuments {

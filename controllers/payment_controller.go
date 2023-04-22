@@ -126,7 +126,10 @@ func CreatePayment() gin.HandlerFunc {
 }
 
 type RequestPayoutForm struct {
-	BookingID string `json:"bookingID" binding:"required"` // amount is temp should handle via booking id and calculate
+	BookingID     string `json:"bookingID" binding:"required"`
+	Bank          string `json:"bank" binding:"required"`
+	AccountNumber string `json:"accountNumber" binding:"required"`
+	AccountName   string `json:"accountName" binding:"required"`
 }
 
 // @Summary		Request a payout
@@ -184,7 +187,7 @@ func RequestPayout() gin.HandlerFunc {
 			})
 			return
 		}
-		err = models.RequestPayout(input.BookingID)
+		err = models.RequestPayout(input.BookingID, input.Bank, input.AccountName, input.AccountNumber)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.RequestPayoutResponse{
 				Status:  http.StatusBadRequest,
