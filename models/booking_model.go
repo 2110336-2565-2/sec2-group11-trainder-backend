@@ -15,9 +15,12 @@ import (
 var bookingsCollection *mongo.Collection = configs.GetCollection(configs.DB, "bookings")
 
 type Payment struct {
-	TotalCost int64  `bson:"totalCost" json:"totalCost"`
-	Status    string `bson:"status" json:"status"`
-	ChargeID  string `bson:"chargeID" json:"chargeID"`
+	TotalCost     int64  `bson:"totalCost" json:"totalCost"`
+	Status        string `bson:"status" json:"status"`
+	ChargeID      string `bson:"chargeID" json:"chargeID"`
+	Bank          string `bson:"bank" json:"bank"`
+	AccountName   string `bson:"accountName" json:"accountName"`
+	AccountNumber string `bson:"accountNumber" json:"accountNumber"`
 }
 
 type Booking struct {
