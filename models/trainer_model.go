@@ -122,7 +122,6 @@ func AddReview(trainerUsername string, username string, rating int, comment stri
 }
 
 func FindFilteredTrainer(specialty []string, limit int, feeLowerBound int, feeUpperBound int) ([]FilteredTrainerInfo, error) {
-	// ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	ctx := context.TODO()
 
 	var results []FilteredTrainerInfo
@@ -130,15 +129,11 @@ func FindFilteredTrainer(specialty []string, limit int, feeLowerBound int, feeUp
 	var filterArr []bson.D
 
 	if len(specialty) == 0 {
-		// filter := bson.D{{"trainerInfo.specialty", bson.D{{"$in", specialty}}}}
 		filterArr = append(filterArr, bson.D{{Key: "usertype", Value: "Trainer"}})
-		// opts = options.Find().SetLimit(int64(limit)).SetSort(bson.D{{"trainerInfo.rating", -1}, {"fee", 1}}).SetProjection(bson.D{{"_id", 0}, {"hashedPassword", 0}, {"createdAt", 0}, {"updatedAt", 0}})
 
 	} else {
 		filterArr = append(filterArr, bson.D{{Key: "trainerInfo.specialty", Value: bson.D{{Key: "$in", Value: specialty}}}})
 		filterArr = append(filterArr, bson.D{{Key: "usertype", Value: "Trainer"}})
-		// opts = options.Find().SetLimit(int64(limit)).SetSort(bson.D{{"trainerInfo.rating", -1}, {"fee", 1}}).SetProjection(bson.D{{"_id", 0}, {"hashedPassword", 0}, {"createdAt", 0}, {"updatedAt", 0}})
-
 	}
 
 	// filter by fee
@@ -294,25 +289,20 @@ func GetReviews(username string, limit int) ([]Review, error) {
 	var result struct {
 		ReviewSlice []Review `bson:"reviews"`
 	}
-	// var reviews []Review
 	cursor, err := userCollection.Aggregate(context.Background(), pipeline, limitOptions)
 	if err != nil {
 		return nil, err
 	}
 	defer cursor.Close(context.Background())
-	// var reviews []Review
 	reviews := make([]Review, 0)
 	// Iterate through the results
 	for cursor.Next(context.Background()) {
-		// var result bson.M
 		err := cursor.Decode(&result)
 		if err != nil {
 			return nil, err
 		}
-		// fmt.Println("result.MySlice", result.MySlice)
 
 		for _, r := range result.ReviewSlice {
-			// fmt.Println(r.Username)
 			review := Review{
 				Username:  r.Username,
 				Rating:    r.Rating,
@@ -333,12 +323,10 @@ func Reviewable(traineeUsername string, trainerUsername string) (bool, int, erro
 	if err != nil {
 		return false, 0, fmt.Errorf("Error from Reviewable: failed to getPaidTrainingCount: %v", err)
 	}
-	// fmt.Println("trainingCount", trainingCount)
 	commentCount, err := getCommentCountFromTrainee(traineeUsername, trainerUsername)
 	if err != nil {
 		return false, 0, fmt.Errorf("Error from Reviewable: failed to getCommentCountFromTrainee: %v", err)
 	}
-	// fmt.Println("commentCount", commentCount)
 	commentLeft := trainingCount - commentCount
 	if commentLeft > 0 {
 		return true, commentLeft, nil
@@ -405,7 +393,6 @@ func getCommentCountFromTrainee(traineeUsername string, trainerUsername string) 
 	}
 	limitOptions := options.Aggregate().SetMaxTime(2 * time.Second)
 
-	// var reviews []Review
 	cursor, err := userCollection.Aggregate(context.Background(), pipeline, limitOptions)
 	if err != nil {
 		return 0, fmt.Errorf("Error from getCommentCountFromTrainee: %v", err)
