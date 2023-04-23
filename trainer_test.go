@@ -80,8 +80,10 @@ func TestFilterTrainerWithInvalidSpecialty(t *testing.T) {
 	var specialties []string
 	specialties = append(specialties, "Bla Bla")
 
-	_, err := models.FindFilteredTrainer(specialties, 1, 0, 0)
+	result, err := models.FindFilteredTrainer(specialties, 1, 0, 0)
 
 	assert.Equal(t, nil, err)
+
+	assert.Equal(t, len(result), 0)
 
 }
