@@ -1,7 +1,9 @@
 package main
 
 import (
+	"log"
 	"math"
+	"os"
 	"testing"
 	"trainder-api/models"
 
@@ -9,6 +11,75 @@ import (
 	"golang.org/x/exp/slices"
 )
 
+type UserInfo struct {
+	Username    string
+	Password    string
+	UserType    string
+	FirstName   string
+	LastName    string
+	BirthDate   string
+	CitizenId   string
+	Gender      string
+	PhoneNumber string
+	Address     string
+	Lat         float64
+	Lng         float64
+	AvatarUrl   string
+}
+
+func addTestUser() {
+	testUserInfo := UserInfo{
+		Username:    "__test",
+		Password:    "123456789",
+		UserType:    "Trainer",
+		FirstName:   "",
+		LastName:    "Trainder",
+		BirthDate:   "2000-01-01",
+		Gender:      "Other",
+		PhoneNumber: "0000000000",
+		Address:     "-",
+		AvatarUrl:   "",
+		Lat:         0,
+		Lng:         0,
+	}
+
+	_, err := models.CreateUser(testUserInfo.Username, testUserInfo.Password,
+		testUserInfo.UserType, testUserInfo.FirstName, testUserInfo.LastName,
+		testUserInfo.BirthDate, testUserInfo.CitizenId, testUserInfo.Gender,
+		testUserInfo.PhoneNumber, testUserInfo.Address, testUserInfo.AvatarUrl,
+		testUserInfo.Lat, testUserInfo.Lng)
+	if err != nil {
+		log.Fatal(err.Error())
+		return
+	}
+
+	var specialties []string
+	specialties = append(specialties, "Weight Loss")
+	specialties = append(specialties, "Rehabilitation")
+
+	_, err = models.UpdateTrainerProfile(testUserInfo.Username, specialties, 0, 100, 0, "")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+}
+
+func deleteTestUser() {
+	err := models.DeleteUser("__test")
+	if err != nil {
+		panic(err.Error())
+	}
+}
+
+func TestMain(m *testing.M) {
+	addTestUser()
+	code := m.Run()
+
+	deleteTestUser()
+
+	os.Exit(code)
+
+}
 func TestFilterTrainerWithLimit(t *testing.T) {
 	var specialties []string
 
@@ -34,7 +105,6 @@ func TestFilterTrainerWithNoFeeLimit(t *testing.T) {
 func TestFilterTrainerWithOneSpecialty(t *testing.T) {
 	var specialties []string
 	specialties = append(specialties, "Weight Loss")
-	specialties = append(specialties, "Rehabilitation")
 
 	result, err := models.FindFilteredTrainer(specialties, 1, 0, 0)
 
@@ -57,6 +127,7 @@ func TestFilterTrainerWithOneSpecialty(t *testing.T) {
 func TestFilterTrainerWithManySpecialty(t *testing.T) {
 	var specialties []string
 	specialties = append(specialties, "Weight Loss")
+	specialties = append(specialties, "Rehabilitation")
 
 	result, err := models.FindFilteredTrainer(specialties, 1, 0, 0)
 
