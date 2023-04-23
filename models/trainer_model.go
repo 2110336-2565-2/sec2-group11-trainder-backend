@@ -168,18 +168,12 @@ func FindFilteredTrainer(specialty []string, limit int, feeLowerBound int, feeUp
 		{Key: "citizenId", Value: 0},
 		{Key: "phoneNumber", Value: 0},
 		{Key: "userType", Value: 0}})
-	cur, err := userCollection.Find(ctx, filter, opts)
-
-	if err != nil {
-		return nil, err
-	}
+	cur, _ := userCollection.Find(ctx, filter, opts)
 
 	defer cur.Close(ctx)
 	for cur.Next(ctx) {
 		var user User
-		if err := cur.Decode(&user); err != nil {
-			return nil, err
-		}
+		_ = cur.Decode(&user)
 		result := FilteredTrainerInfo{
 			FirstName:   user.FirstName,
 			LastName:    user.LastName,
@@ -190,9 +184,6 @@ func FindFilteredTrainer(specialty []string, limit int, feeLowerBound int, feeUp
 			TrainerInfo: user.TrainerInfo,
 		}
 		results = append(results, result)
-	}
-	if err := cur.Err(); err != nil {
-		return nil, err
 	}
 
 	return results, nil

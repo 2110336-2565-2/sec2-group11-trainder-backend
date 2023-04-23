@@ -17,6 +17,8 @@ require (
 
 require github.com/omise/omise-go v1.0.9
 
+require golang.org/x/exp v0.0.0-20230420155640-133eef4313cb // indirect
+
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/bytedance/sonic v1.8.7 // indirect
