@@ -188,7 +188,9 @@ func GetPicture() gin.HandlerFunc {
 		// id := c.Query("ID")
 		username := c.Query("username")
 		imageId, err := models.GetAvatarUrl(username)
-		if imageId != "" && (!isObjectID(imageId)) {
+		// if imageId != "" && (!isObjectID(imageId)) {
+		if !isObjectID(imageId) {
+
 			c.JSON(http.StatusBadRequest, responses.ImageResponse{
 				Status:  http.StatusBadRequest,
 				Message: "there is no profile picture for this user",
