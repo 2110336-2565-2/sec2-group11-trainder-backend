@@ -141,7 +141,7 @@ func TestUserHandler(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, w.Code)
 }
-func TestUpdateHanlder(t *testing.T) {
+func TestUpdateHandler(t *testing.T) {
 	hub := ws.NewHub()
 	wsHandler := ws.NewHandler(hub)
 	go hub.Run()
