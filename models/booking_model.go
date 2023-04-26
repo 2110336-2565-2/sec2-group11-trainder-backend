@@ -210,29 +210,34 @@ func UpdateBooking(bookingObjectId string, status string, username string) error
 	if err != nil {
 		return fmt.Errorf("couldn't find bookingDoc")
 	}
-	startTime := bookingDoc.StartDateTime
-	endTime := bookingDoc.EndDateTime
-	filter = bson.M{
-		"trainer": username,
-		"status":  bson.M{"$in": []string{"confirm", "complete"}},
-		"$or": []bson.M{
-			{"$and": []bson.M{
-				{"startDateTime": bson.M{"$gte": startTime}},
-				{"startDateTime": bson.M{"$lt": endTime}},
-			}},
-			{"$and": []bson.M{
-				{"endDateTime": bson.M{"$gt": startTime}},
-				{"endDateTime": bson.M{"$lte": endTime}},
-			}},
-		},
+
+	// Only check time slot when confirming booking
+	if status == "confirm" {
+		startTime := bookingDoc.StartDateTime
+		endTime := bookingDoc.EndDateTime
+		filter = bson.M{
+			"trainer": username,
+			"status":  bson.M{"$in": []string{"confirm", "complete"}},
+			"$or": []bson.M{
+				{"$and": []bson.M{
+					{"startDateTime": bson.M{"$gte": startTime}},
+					{"startDateTime": bson.M{"$lt": endTime}},
+				}},
+				{"$and": []bson.M{
+					{"endDateTime": bson.M{"$gt": startTime}},
+					{"endDateTime": bson.M{"$lte": endTime}},
+				}},
+			},
+		}
+		count, err := bookingsCollection.CountDocuments(ctx, filter)
+		if err != nil {
+			return fmt.Errorf("couldn't update status")
+		}
+		if count > 0 {
+			return fmt.Errorf("trainer has already confirmed another booking")
+		}
 	}
-	count, err := bookingsCollection.CountDocuments(ctx, filter)
-	if err != nil {
-		return fmt.Errorf("couldn't update status")
-	}
-	if count > 0 {
-		return fmt.Errorf("trainer has already confirmed another booking")
-	}
+
 	res, err := bookingsCollection.UpdateOne(
 		ctx,
 		bson.M{"_id": objectID},

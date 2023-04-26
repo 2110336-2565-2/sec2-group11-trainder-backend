@@ -298,7 +298,7 @@ func Payout() gin.HandlerFunc {
 }
 
 // @Summary		Get Payment list
-// @Description	Get Payment list for trainer
+// @Description	Get Payment list for trainer that is complete and paid
 // @Tags			payment
 // @Accept			json
 // @Produce		json
