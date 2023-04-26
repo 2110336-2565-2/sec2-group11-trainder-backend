@@ -651,7 +651,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get Payment list for trainer",
+                "description": "Get Payment list for trainer that is complete and paid",
                 "consumes": [
                     "application/json"
                 ],
@@ -877,6 +877,12 @@ const docTemplate = `{
                     },
                     "403": {
                         "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/responses.RequestPayoutResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/responses.RequestPayoutResponse"
                         }
@@ -1529,11 +1535,22 @@ const docTemplate = `{
         "controllers.RequestPayoutForm": {
             "type": "object",
             "required": [
+                "accountName",
+                "accountNumber",
+                "bank",
                 "bookingID"
             ],
             "properties": {
+                "accountName": {
+                    "type": "string"
+                },
+                "accountNumber": {
+                    "type": "string"
+                },
+                "bank": {
+                    "type": "string"
+                },
                 "bookingID": {
-                    "description": "amount is temp should handle via booking id and calculate",
                     "type": "string"
                 }
             }
@@ -1698,6 +1715,15 @@ const docTemplate = `{
         "models.Payment": {
             "type": "object",
             "properties": {
+                "accountName": {
+                    "type": "string"
+                },
+                "accountNumber": {
+                    "type": "string"
+                },
+                "bank": {
+                    "type": "string"
+                },
                 "chargeID": {
                     "type": "string"
                 },

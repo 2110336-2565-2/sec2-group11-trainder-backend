@@ -134,8 +134,8 @@ func BookingNeedPayouts() (bookings []Booking, err error) {
 
 }
 
-func GetPaidBookings(username string) (bookings []Booking, err error) {
-	filter := bson.M{"trainer": username, "payment.status": "paid"}
+func GetCompleteAndPaidBookings(username string) (bookings []Booking, err error) {
+	filter := bson.M{"trainer": username, "status": "complete", "payment.status": "paid"}
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
