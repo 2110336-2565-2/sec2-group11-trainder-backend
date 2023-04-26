@@ -143,6 +143,7 @@ type RequestPayoutForm struct {
 // @Success		400		{object}		responses.RequestPayoutResponse
 // @Success		401		{object}		responses.RequestPayoutResponse
 // @Success		403		{object}		responses.RequestPayoutResponse
+// @Success		500		{object}		responses.RequestPayoutResponse
 // @Router			/protected/request-payout [post]
 func RequestPayout() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -159,7 +160,7 @@ func RequestPayout() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, responses.RequestPayoutResponse{
 				Status:  http.StatusUnauthorized,
-				Message: `Cannot extract username from token`,
+				Message: "Cannot extract username from token",
 			})
 			return
 		}
@@ -176,17 +177,27 @@ func RequestPayout() gin.HandlerFunc {
 		if username != paymentInfo.TrainerUsername {
 			c.JSON(http.StatusForbidden, responses.RequestPayoutResponse{
 				Status:  http.StatusForbidden,
-				Message: `only trainer can request payout`,
+				Message: "only `trainer` can request payout",
 			})
 			return
 		}
+
+		if paymentInfo.BookingStatus != "complete" {
+			c.JSON(http.StatusForbidden, responses.RequestPayoutResponse{
+				Status:  http.StatusForbidden,
+				Message: "only `complete` payment can be payout",
+			})
+			return
+		}
+
 		if paymentInfo.PaymentStatus != "paid" {
 			c.JSON(http.StatusForbidden, responses.RequestPayoutResponse{
 				Status:  http.StatusForbidden,
-				Message: `only paid payment can be payout`,
+				Message: "only `paid` payment can be payout",
 			})
 			return
 		}
+
 		err = models.RequestPayout(input.BookingID, input.Bank, input.AccountName, input.AccountNumber)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.RequestPayoutResponse{
