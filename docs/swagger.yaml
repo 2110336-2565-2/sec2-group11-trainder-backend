@@ -149,10 +149,18 @@ definitions:
     type: object
   controllers.RequestPayoutForm:
     properties:
+      accountName:
+        type: string
+      accountNumber:
+        type: string
+      bank:
+        type: string
       bookingID:
-        description: amount is temp should handle via booking id and calculate
         type: string
     required:
+    - accountName
+    - accountNumber
+    - bank
     - bookingID
     type: object
   controllers.ReviewDetails:
@@ -259,6 +267,12 @@ definitions:
     type: object
   models.Payment:
     properties:
+      accountName:
+        type: string
+      accountNumber:
+        type: string
+      bank:
+        type: string
       chargeID:
         type: string
       status:
@@ -954,7 +968,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get Payment list for trainer
+      description: Get Payment list for trainer that is complete and paid
       produces:
       - application/json
       responses:
@@ -1094,6 +1108,10 @@ paths:
             $ref: '#/definitions/responses.RequestPayoutResponse'
         "403":
           description: Forbidden
+          schema:
+            $ref: '#/definitions/responses.RequestPayoutResponse'
+        "500":
+          description: Internal Server Error
           schema:
             $ref: '#/definitions/responses.RequestPayoutResponse'
       security:
