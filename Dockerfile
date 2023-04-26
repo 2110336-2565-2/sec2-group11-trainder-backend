@@ -13,6 +13,6 @@ RUN mkdir /app
 WORKDIR /app
 COPY --from=builder /trainder-api/trainder-api /app
 
-EXPOSE 8000
+EXPOSE 8080
 
 CMD ["/app/trainder-api"]
