@@ -326,7 +326,7 @@ func PaymentList() gin.HandlerFunc {
 			})
 			return
 		}
-		payments, err := models.GetPaidBookings(username)
+		payments, err := models.GetCompleteAndPaidBookings(username)
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, responses.BookingListResponse{
