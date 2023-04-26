@@ -362,8 +362,8 @@ func getCommentCountFromTrainee(traineeUsername string, trainerUsername string) 
 		return 0, err
 	}
 
+	// Trainer doesn't have any reviews
 	if len(result.Reviews) == 0 {
-		fmt.Println("Reviews field is empty")
 		return 0, nil
 	}
 
@@ -399,6 +399,8 @@ func getCommentCountFromTrainee(traineeUsername string, trainerUsername string) 
 		}
 		return result.Count, nil
 	}
-	return 0, fmt.Errorf("Error from getCommentCountFromTrainee: %v", err)
 
+	// Trainee never review this trainer so cursor.Next() doesn't exists
+	// Return 0 (comment count) with no error
+	return 0, nil
 }
