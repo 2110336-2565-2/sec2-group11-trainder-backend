@@ -218,7 +218,7 @@ func RequestPayout() gin.HandlerFunc {
 }
 
 type PayoutForm struct {
-	BookingID string `json:"bookingID" binding:"required"` // amount is temp should handle via booking id and calculate
+	BookingID string `json:"bookingID" binding:"required"`
 }
 
 // @Summary		Payout
@@ -235,7 +235,7 @@ type PayoutForm struct {
 // @Router			/protected/payout [post]
 func Payout() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var input RequestPayoutForm
+		var input PayoutForm
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, responses.RequestPayoutResponse{
 				Status:  http.StatusBadRequest,
