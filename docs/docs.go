@@ -1431,7 +1431,6 @@ const docTemplate = `{
             ],
             "properties": {
                 "bookingID": {
-                    "description": "amount is temp should handle via booking id and calculate",
                     "type": "string"
                 }
             }
